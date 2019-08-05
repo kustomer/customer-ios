@@ -29,7 +29,7 @@
 
 @interface KUSChatMessagesDataSource : KUSPaginatedDataSource
 
-- (instancetype)initForNewConversationWithUserSession:(KUSUserSession *)userSession;
+- (instancetype)initForNewConversationWithUserSession:(KUSUserSession *)userSession formId:(NSString *)formId;
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession sessionId:(NSString *)sessionId;
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession NS_UNAVAILABLE;
 

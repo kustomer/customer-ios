@@ -203,8 +203,10 @@
     
     BOOL shouldCreateNewSessionWithMessage = _chatSessionsDataSource.messageToCreateNewChatSession != nil;
     if (shouldCreateNewSessionWithMessage) {
-        KUSChatViewController *chatViewController = [[KUSChatViewController alloc] initWithUserSession:_userSession forNewSessionWithMessage:_chatSessionsDataSource.messageToCreateNewChatSession];
+        NSString *formId = _chatSessionsDataSource.formIdForConversationalForm;
+        KUSChatViewController *chatViewController = [[KUSChatViewController alloc] initWithUserSession:_userSession forNewSessionWithMessage:_chatSessionsDataSource.messageToCreateNewChatSession andFormId:formId];
         [self.navigationController pushViewController:chatViewController animated:NO];
+        [_chatSessionsDataSource setFormIdForConversationalForm:nil];
         return;
     }
     

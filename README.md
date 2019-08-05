@@ -73,9 +73,26 @@ Enabling the ability for your users to upload images to conversations requires c
 ```
 
 ```objective-c
-// Convenience method that will present the chat interface on the topmost view controller.
+// Convenience methods that will present the chat interface on the topmost view controller.
+
+// Present new or recent chat conversation if there is any.
 [Kustomer presentSupport];
 
+// Present new chat conversation with message.
+[Kustomer presentSupportWithMessage:@"MESSAGE"];
+
+// Present new chat conversation with message and set custom attributes for that conversation.
+[Kustomer presentSupportWithMessage:@"MESSAGE" customAttributes:@{ @"customAttributeStr" : @"value" }];
+
+// Present new chat conversation with message and set chat assistant form for that conversation.
+[Kustomer presentSupportWithMessage:@"MESSAGE" formId:@"FORM_ID"];
+
+// Present new chat conversation with message, set chat assistant form and custom attributes for that conversation.
+[Kustomer presentSupportWithMessage:@"MESSAGE" formId:@"FORM_ID" customAttributes:@{ @"customAttributeStr" : @"value" }];
+```
+
+
+```objective-c
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 [Kustomer presentKnowledgeBase];
 

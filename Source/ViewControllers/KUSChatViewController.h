@@ -14,7 +14,7 @@
 
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession forChatSession:(KUSChatSession *)session;
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession forNewSessionWithBackButton:(BOOL)showBackButton;
-- (instancetype)initWithUserSession:(KUSUserSession *)userSession forNewSessionWithMessage:(NSString *)message;
+- (instancetype)initWithUserSession:(KUSUserSession *)userSession forNewSessionWithMessage:(NSString *)message andFormId:(NSString *)formId;
 - (instancetype)init NS_UNAVAILABLE;
 
 @end

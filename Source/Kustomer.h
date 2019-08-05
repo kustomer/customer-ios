@@ -41,8 +41,10 @@ FOUNDATION_EXPORT const unsigned char KustomerVersionString[];
 
 // A convenience method that will present the support interface on the topmost view controller
 + (void)presentSupport;
-+ (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes;
 + (void)presentSupportWithMessage:(NSString *) message;
++ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId;
++ (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes;
++ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes;
 
 // A convenience method that will present the knowledgebase interface on the topmost view controller
 + (void)presentKnowledgeBase;

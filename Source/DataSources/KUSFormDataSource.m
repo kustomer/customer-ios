@@ -9,8 +9,9 @@
 #import "KUSFormDataSource.h"
 #import "KUSObjectDataSource_Private.h"
 
-@interface KUSFormDataSource () <KUSObjectDataSourceListener>
-
+@interface KUSFormDataSource () <KUSObjectDataSourceListener> {
+    NSString *_Nullable _formId;
+}
 @end
 
 @implementation KUSFormDataSource
@@ -26,14 +27,36 @@
     return self;
 }
 
+- (instancetype)initWithUserSession:(KUSUserSession *)userSession formId:(NSString *)formId
+{
+    self = [self initWithUserSession:userSession];
+    if (self) {
+        _formId = formId;
+    }
+    return self;
+}
+
+#pragma mark - Public methods
+
+- (NSString *)getConversationalFormId
+{
+    NSString* formId = _formId;
+    if (formId == nil) {
+        formId = [self.userSession.userDefaults formId];
+    }
+    if (formId == nil) {
+        KUSChatSettings *chatSettings = self.userSession.chatSettingsDataSource.object;
+        formId = chatSettings.activeFormId;
+    }
+    return formId;
+}
+
 #pragma mark - KUSObjectDataSource subclass methods
 
 - (void)performRequestWithCompletion:(KUSRequestCompletion)completion
 {
-    NSString* formId = [self.userSession.userDefaults formId];
-    
-    KUSChatSettings *chatSettings = self.userSession.chatSettingsDataSource.object;
-    [self.userSession.requestManager getEndpoint:[NSString stringWithFormat:@"/c/v1/chat/forms/%@", formId ?: chatSettings.activeFormId]
+    NSString *formId = [self getConversationalFormId];
+    [self.userSession.requestManager getEndpoint:[NSString stringWithFormat:@"/c/v1/chat/forms/%@", formId]
                                    authenticated:YES
                                       completion:completion];
 }
@@ -47,12 +70,13 @@
 
 - (void)fetch
 {
-    if (!self.userSession.chatSettingsDataSource.didFetch) {
+    NSString *formId = [self getConversationalFormId];
+    if (!formId && !self.userSession.chatSettingsDataSource.didFetch) {
         [self.userSession.chatSettingsDataSource fetch];
         return;
     }
-    KUSChatSettings *chatSettings = self.userSession.chatSettingsDataSource.object;
-    if (chatSettings.activeFormId) {
+    
+    if (formId) {
         [super fetch];
     }
 }

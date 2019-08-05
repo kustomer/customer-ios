@@ -170,14 +170,24 @@ static NSString *kKustomerOrgNameKey = @"orgName";
 
 + (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
 {
-    [[self sharedInstance] presentSupportWithMessage:message customAttributes:customAttributes];
+    [[self sharedInstance] presentSupportWithMessage:message formId:nil customAttributes:customAttributes];
 }
 
 + (void)presentSupportWithMessage:(NSString *) message
 {
-    [Kustomer presentSupportWithMessage:message customAttributes: nil];
+    [Kustomer presentSupportWithMessage:message formId:nil customAttributes:nil];
 }
 
++ (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId
+{
+
+    [Kustomer presentSupportWithMessage:message formId:formId customAttributes: nil];
+}
+
++ (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
+{
+    [[self sharedInstance] presentSupportWithMessage:message formId:formId customAttributes:customAttributes];
+}
 
 #pragma mark - Lifecycle methods
 
@@ -367,12 +377,17 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
     [self.userSession.userDefaults setShouldHideNewConversationButtonInClosedChat:status];
 }
 
-- (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
+- (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
 {
     NSAssert(message.length, @"Requires a valid message to create chat session.");
     if (message.length == 0) {
         return;
     }
+    
+    if (formId != nil) {
+        [self.userSession.chatSessionsDataSource setFormIdForConversationalForm:formId];
+    }
+    
     [self.userSession.chatSessionsDataSource setMessageToCreateNewChatSession:message];
     
     if (customAttributes.count) {
