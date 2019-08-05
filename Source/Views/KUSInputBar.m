@@ -103,6 +103,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
         [_attachmentButton setImage:attachmentButtonImage forState:UIControlStateNormal];
         [_attachmentButton addTarget:self action:@selector(_pressAttach) forControlEvents:UIControlEventTouchUpInside];
         _attachmentButton.hidden = YES;
+        [_attachmentButton setAccessibilityIdentifier:@"inputBarAttachmentButton"];
         [self addSubview:_attachmentButton];
 
         _textView = [[KUSTextView alloc] init];
@@ -110,10 +111,12 @@ static NSString *kCellIdentifier = @"ImageAttachment";
         _textView.returnKeyType = UIReturnKeySend;
         _textView.autocorrectionType = UITextAutocorrectionTypeYes;
         _textView.enablesReturnKeyAutomatically = YES;
+        [_textView setAccessibilityIdentifier:@"inputBarTextView"];
         [self addSubview:_textView];
 
         _sendButton = [[UIButton alloc] init];
         [_sendButton addTarget:self action:@selector(_pressSend) forControlEvents:UIControlEventTouchUpInside];
+        [_sendButton setAccessibilityIdentifier:@"inputBarSendButton"];
         [self addSubview:_sendButton];
 
         [self _updateSendButton];

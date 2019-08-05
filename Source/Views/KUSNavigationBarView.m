@@ -92,24 +92,28 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
         _userSession = userSession;
 
         _avatarsView = [[KUSMultipleAvatarsView alloc] initWithUserSession:_userSession];
+        [_avatarsView setAccessibilityIdentifier:@"avatarsView"];
         [self addSubview:_avatarsView];
 
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textAlignment = NSTextAlignmentCenter;
         _nameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _nameLabel.numberOfLines = 1;
+        [_nameLabel setAccessibilityIdentifier:@"nameLabel"];
         [self addSubview:_nameLabel];
         
         _waitingLabel = [[UILabel alloc] init];
         _waitingLabel.textAlignment = NSTextAlignmentCenter;
         _waitingLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _waitingLabel.numberOfLines = 2;
+        [_waitingLabel setAccessibilityIdentifier:@"waitingLabel"];
         [self addSubview:_waitingLabel];
 
         _greetingLabel = [[UILabel alloc] init];
         _greetingLabel.textAlignment = NSTextAlignmentCenter;
         _greetingLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _greetingLabel.numberOfLines = 2;
+        [_greetingLabel setAccessibilityIdentifier:@"greetingLabel"];
         [self addSubview:_greetingLabel];
 
         _separatorView = [[UIView alloc] init];
@@ -118,17 +122,20 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
         _backButton = [[KUSFadingButton alloc] init];
         _backButton.hidden = YES;
         [_backButton addTarget:self action:@selector(_onBackButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_backButton setAccessibilityIdentifier:@"backButton"];
         [self addSubview:_backButton];
 
         _unreadCountLabel = [[UILabel alloc] init];
         _unreadCountLabel.textAlignment = NSTextAlignmentCenter;
         _unreadCountLabel.layer.masksToBounds = YES;
         _unreadCountLabel.layer.cornerRadius = 4.0;
+        [_unreadCountLabel setAccessibilityIdentifier:@"unreadCountLabel"];
         [_backButton addSubview:_unreadCountLabel];
 
         _dismissButton = [[KUSFadingButton alloc] init];
         _dismissButton.hidden = YES;
         [_dismissButton addTarget:self action:@selector(_onDismissButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_dismissButton setAccessibilityIdentifier:@"dismissButton"];
         [self addSubview:_dismissButton];
 
         [_userSession.chatSessionsDataSource addListener:self];

@@ -78,32 +78,37 @@ CGFloat KUSChatSessionTableViewCellHeight = 88.0;
         _closedView = [[UIView alloc] init];
         _closedView.layer.cornerRadius = 5.0;
         _closedView.layer.masksToBounds = YES;
+        [_closedView setAccessibilityIdentifier:@"sessionClosedView"];
         [self.contentView addSubview:_closedView];
         
         _avatarImageView = [[KUSAvatarImageView alloc] initWithUserSession:userSession];
+        [_avatarImageView setAccessibilityIdentifier:@"sessionAvatarImageView"];
         [self.contentView addSubview:_avatarImageView];
 
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textAlignment = isRTL ? NSTextAlignmentRight : NSTextAlignmentLeft;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [_titleLabel setAccessibilityIdentifier:@"sessionTitleLabel"];
         [self.contentView addSubview:_titleLabel];
 
         _subtitleLabel = [[UILabel alloc] init];
         _subtitleLabel.textAlignment = isRTL ? NSTextAlignmentRight : NSTextAlignmentLeft;
-//        _subtitleLabel.textAlignment = NSTextAlignmentNatural;
         _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [_subtitleLabel setAccessibilityIdentifier:@"sessionSubTitleLabel"];
         [self.contentView addSubview:_subtitleLabel];
 
         _dateLabel = [[UILabel alloc] init];
         _dateLabel.textAlignment = isRTL ? NSTextAlignmentLeft: NSTextAlignmentRight;
         _dateLabel.adjustsFontSizeToFitWidth = YES;
         _dateLabel.minimumScaleFactor = 10.0 / 12.0;
+        [_dateLabel setAccessibilityIdentifier:@"sessionDateLabel"];
         [self.contentView addSubview:_dateLabel];
 
         _unreadCountLabel = [[UILabel alloc] init];
         _unreadCountLabel.textAlignment = NSTextAlignmentCenter;
         _unreadCountLabel.layer.masksToBounds = YES;
         _unreadCountLabel.layer.cornerRadius = 4.0;
+        [_unreadCountLabel setAccessibilityIdentifier:@"sessionUnreadCountLabel"];
         [self.contentView addSubview:_unreadCountLabel];
 
         _closedLabel = [[UILabel alloc] init];
@@ -111,6 +116,7 @@ CGFloat KUSChatSessionTableViewCellHeight = 88.0;
         _closedLabel.textAlignment = isRTL ? NSTextAlignmentLeft : NSTextAlignmentRight;
         _closedLabel.adjustsFontSizeToFitWidth = YES;
         _closedLabel.minimumScaleFactor = 10.0 / 12.0;
+        [_closedLabel setAccessibilityIdentifier:@"sessionClosedLabel"];
         [self.contentView addSubview:_closedLabel];
         
         [_userSession.chatSettingsDataSource addListener:self];

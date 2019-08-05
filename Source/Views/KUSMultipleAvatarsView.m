@@ -113,11 +113,13 @@ static const NSUInteger kKUSDefaultMaximumAvatarsToDisplay = 3;
         NSString *userId = [_userIds objectAtIndex:i];
         KUSAvatarImageView *userAvatarView = [[KUSAvatarImageView alloc] initWithUserSession:_userSession];
         [userAvatarView setUserId:userId];
+        [userAvatarView setAccessibilityIdentifier:@"agentAvatarImageView"];
         [avatarViews addObject:userAvatarView];
     }
 
     if (avatarViews.count < self.maximumAvatarsToDisplay) {
         KUSAvatarImageView *companyAvatarView = [[KUSAvatarImageView alloc] initWithUserSession:_userSession];
+        [companyAvatarView setAccessibilityIdentifier:@"companyAvatarImageView"];
         [avatarViews addObject:companyAvatarView];
     }
 

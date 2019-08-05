@@ -97,6 +97,7 @@
     [self.createSessionButton addTarget:self
                                  action:@selector(_createSession)
                        forControlEvents:UIControlEventTouchUpInside];
+    [self.createSessionButton setAccessibilityIdentifier:@"createSessionButton"];
     [self.view addSubview:self.createSessionButton];
     
     _chatSessionsDataSource = _userSession.chatSessionsDataSource;

@@ -244,6 +244,7 @@ static const CGFloat kTimestampTopPadding = 4.0;
         }   break;
     }
 
+    [_labelView setAccessibilityIdentifier:currentUser ? @"customerMessageLabel" : @"agentMessageLabel"];
     _errorButton.frame = (CGRect) {
         .origin.x = isRTL ? CGRectGetMaxX(_bubbleView.frame) + kMinBubbleHeight + 5.0 : _bubbleView.frame.origin.x - kMinBubbleHeight - 5.0,
         .origin.y = _bubbleView.frame.origin.y + (_bubbleView.frame.size.height - kMinBubbleHeight) / 2.0,
@@ -262,6 +263,7 @@ static const CGFloat kTimestampTopPadding = 4.0;
         .size.width = timestampWidth,
         .size.height = MAX([[self class] heightForTimestamp] - kTimestampTopPadding, 0.0)
     };
+    [_timestampLabel setAccessibilityIdentifier:currentUser ? @"customerMessageTimestampLabel" : @"agentMessageTimestampLabel"];
 }
 
 #pragma mark - Internal logic methods
