@@ -163,6 +163,7 @@
 		63F61A7E1FFAC86400E56766 /* KUSMultipleAvatarsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F61A7C1FFAC86400E56766 /* KUSMultipleAvatarsView.m */; };
 		6D7CDE24CE12E0916484305C /* Pods_Kustomer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4074C2A1E9213757162ED660 /* Pods_Kustomer.framework */; };
 		7C3913946A295179BE2E925B /* Pods_KustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D624913E5C7AD4492EF0D39B /* Pods_KustomerTests.framework */; };
+		C702A328230D98470052EBB0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9CDC11F089BF000120F3E /* ViewController.m */; };
 		C707369822527A4800F9E3BB /* KUSVolumeControlTimerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C707369722527A4800F9E3BB /* KUSVolumeControlTimerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C707369A22527A6E00F9E3BB /* KUSVolumeControlTimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C707369922527A6E00F9E3BB /* KUSVolumeControlTimerManager.m */; };
 		C70A6ACE2212EC53004B4F9C /* KUSDescribeConversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C70A6ACD2212EC53004B4F9C /* KUSDescribeConversationTests.m */; };
@@ -1496,6 +1497,7 @@
 				D6DBA35F226711B200276475 /* KUSTypingIndicator.m in Sources */,
 				633D8FE71F239F9500BAFAC9 /* KUSChatPlaceholderTableViewCell.m in Sources */,
 				636531AA1F1BBCCD00433A50 /* KUSChatViewController.m in Sources */,
+				C702A328230D98470052EBB0 /* ViewController.m in Sources */,
 				C77880FC216CDBAC006375BC /* KUSMLFormValuesPickerCollectionViewCell.m in Sources */,
 				63270E9A1F4A717600E25BF5 /* KUSDate.m in Sources */,
 				C730E14D20E5159D00EF2AB8 /* KUSEndChatButtonView.m in Sources */,
@@ -1768,6 +1770,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = KustomerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1783,6 +1786,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = KustomerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

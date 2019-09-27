@@ -15,6 +15,14 @@
 FOUNDATION_EXPORT double KustomerVersionNumber;
 FOUNDATION_EXPORT const unsigned char KustomerVersionString[];
 
+#define DEPRECATED_PRESENT_SUPPORT DEPRECATED_MSG_ATTRIBUTE("use presentSupportWithAttributes:(KUSChatAttributes) instead");
+
+typedef NSDictionary<NSString *, id>* KUSChatAttributes;
+static NSString* const kKUSMessageAttribute = @"KUSMessageAttributeKey";
+static NSString* const kKUSFormIdAttribute = @"KUSFormIdAttributeKey";
+static NSString* const kKUSScheduleIdAttribute = @"KUSScheduleIdAttributeKey";
+static NSString* const kKUSCustomAttributes = @"KUSCustomAttributesKey";
+
 @protocol KustomerDelegate;
 @interface Kustomer : NSObject
 
@@ -41,10 +49,11 @@ FOUNDATION_EXPORT const unsigned char KustomerVersionString[];
 
 // A convenience method that will present the support interface on the topmost view controller
 + (void)presentSupport;
-+ (void)presentSupportWithMessage:(NSString *) message;
-+ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId;
-+ (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes;
-+ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes;
++ (void)presentSupportWithAttributes:(KUSChatAttributes)attributes;
++ (void)presentSupportWithMessage:(NSString *) message DEPRECATED_PRESENT_SUPPORT;
++ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId DEPRECATED_PRESENT_SUPPORT;
++ (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes DEPRECATED_PRESENT_SUPPORT;
++ (void)presentSupportWithMessage:(NSString *)message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes DEPRECATED_PRESENT_SUPPORT;
 
 // A convenience method that will present the knowledgebase interface on the topmost view controller
 + (void)presentKnowledgeBase;

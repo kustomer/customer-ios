@@ -78,17 +78,29 @@ Enabling the ability for your users to upload images to conversations requires c
 // Present new or recent chat conversation if there is any.
 [Kustomer presentSupport];
 
-// Present new chat conversation with message.
-[Kustomer presentSupportWithMessage:@"MESSAGE"];
+// Present new chat conversation with chatAttributes a.k.a Key-Pair values.
 
-// Present new chat conversation with message and set custom attributes for that conversation.
-[Kustomer presentSupportWithMessage:@"MESSAGE" customAttributes:@{ @"customAttributeStr" : @"value" }];
+KUSChatAttributes chatAttributes = @{
+    // Initial message to start a new conversation
+    // if not specified then it will show either the most recent session or new window to start a new conversation
+    kKUSMessageAttribute: @"MESSAGE",
 
-// Present new chat conversation with message and set chat assistant form for that conversation.
-[Kustomer presentSupportWithMessage:@"MESSAGE" formId:@"FORM_ID"];
+    // Custom schedule id, if not specified then SDK will use the schedule id specified on the admin panel
+    // This can be access by an admin panel via Administration > Business Schedules
+    kKUSScheduleIdAttribute: @"SCHEDULE_ID",
 
-// Present new chat conversation with message, set chat assistant form and custom attributes for that conversation.
-[Kustomer presentSupportWithMessage:@"MESSAGE" formId:@"FORM_ID" customAttributes:@{ @"customAttributeStr" : @"value" }];
+    // Custom form id, if not specified then SDK will use the conversational assistant form specified on the admin panel
+    // This can be access be an admin panel via Channels > Chat > Conversational Assitant
+    kKUSFormIdAttribute: @"FORM_ID",
+
+    // Attach custom attributes to the user's next new conversation
+    // These key-value pairs must be enabled on the Conversation Klass via the admin portal.
+    // This can be done by an admin via Settings > Platform Settings > Klasses > Conversation
+    kKUSCustomAttributes: @{
+        @"customAttributeStr": @"value"
+    }
+};
+[Kustomer presentSupportWithAttributes:chatAttributes];
 ```
 
 
