@@ -12,25 +12,25 @@ PODS:
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (2.0.0)
   - OCMock (3.4.3)
-  - SDWebImage (4.1.0):
-    - SDWebImage/Core (= 4.1.0)
-  - SDWebImage/Core (4.1.0)
+  - SDWebImage (5.2.1):
+    - SDWebImage/Core (= 5.2.1)
+  - SDWebImage/Core (5.2.1)
   - SocketRocket (0.5.1)
   - SpinKit (1.2.0)
-  - TSMarkdownParser (2.1.3)
+  - TSMarkdownParser (2.1.5)
   - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
   - libPusher (< 2.0.0, >= 1.6.2)
   - NYTPhotoViewer (= 2.0.0)
   - OCMock (~> 3.4)
-  - SDWebImage (< 5.0.0, >= 4.0.0)
+  - SDWebImage (< 6.0.0, >= 5.0.0)
   - SpinKit (~> 1.1)
   - TSMarkdownParser (< 3.0.0, >= 2.0.0)
   - TTTAttributedLabel (< 3.0.0, >= 2.0.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - FLAnimatedImage
     - libPusher
     - NYTPhotoViewer
@@ -46,12 +46,12 @@ SPEC CHECKSUMS:
   libPusher: b7fcf16e2db51c37915613652311d66065743ead
   NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
   OCMock: 43565190abc78977ad44a61c0d20d7f0784d35ab
-  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  SDWebImage: 336f6958a13d5e8347a317cd68a9f6ee9aaaaf03
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
-  TSMarkdownParser: 114779f14d46e7fc6d9880d4797e5abcc01f92c3
+  TSMarkdownParser: 3224ea196ecc7148fa7e03bc438f9390d4edfb6d
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 4599a55ec4223bae317bbfd756aaf98144b391b2
+PODFILE CHECKSUM: 05dad11b8c24a2d2b3b3e6be5cde01355d690800
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.1
