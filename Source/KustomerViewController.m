@@ -38,6 +38,17 @@
     if (self.isBeingPresented || self.movingToParentViewController) {
         KUSUserSession *userSession = [Kustomer sharedInstance].userSession;
         [userSession.pushClient setSupportViewControllerPresented:YES];
+        
+        //Connecting to Presence channel when Kustomer support chat screen shown for existing user
+        [self connectToCustomerPresenceChannel:userSession];
+    }
+}
+
+- (void) connectToCustomerPresenceChannel: (KUSUserSession *)userSession {
+    
+    NSString *customerId = [userSession.chatSessionsDataSource _customerId];
+    if(customerId) {
+        [userSession.pushClient connectToCustomerPresenceChannel:customerId];
     }
 }
 
@@ -48,6 +59,9 @@
     if (self.isBeingDismissed || self.movingFromParentViewController) {
         KUSUserSession *userSession = [Kustomer sharedInstance].userSession;
         [userSession.pushClient setSupportViewControllerPresented:NO];
+        
+        //Disconnecting from Presence channel when Kustomer support is exited
+        [userSession.pushClient disconnectFromCustomerPresenceChannel];
     }
 }
 

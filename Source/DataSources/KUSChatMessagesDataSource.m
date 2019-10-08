@@ -303,16 +303,6 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     }
 }
 
-- (NSString *)_customerId
-{
-    for (int i = 0; i < self.count; i++) {
-        if (self.allObjects[i].customerId) {
-            return self.allObjects[i].customerId;
-        }
-    }
-    return nil;
-}
-
 - (void)_hideTypingIndicatorAfterDelay
 {
     if (_hideTypingTimer) {

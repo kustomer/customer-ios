@@ -93,6 +93,16 @@
     return [_fetchedModels indexOfObjectIdenticalTo:internalObject];
 }
 
+- (NSString *)_customerId
+{
+    for (int i = 0; i < self.count; i++) {
+        if (self.allObjects[i].customerId) {
+            return self.allObjects[i].customerId;
+        }
+    }
+    return nil;
+}
+
 #pragma mark - Listener methods
 
 - (void)addListener:(id<KUSPaginatedDataSourceListener>)listener

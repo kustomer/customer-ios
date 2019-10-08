@@ -769,7 +769,17 @@
     [self _checkShouldShowCloseChatButtonView];
     [_chatMessagesDataSource startListeningForTypingUpdate];
     
+    //Connecting to Presence channel after Customer Id is created for new user
+    [self connectToCustomerPresenceChannel];
+    
     [self.view setNeedsLayout];
+}
+
+- (void) connectToCustomerPresenceChannel {
+    NSString *customerId = [_userSession.chatSessionsDataSource _customerId];
+    if(customerId) {
+        [_userSession.pushClient connectToCustomerPresenceChannel:customerId];
+    }
 }
 
 - (void)chatMessagesDataSourceDidFetchSatisfactionForm:(KUSChatMessagesDataSource *)dataSource

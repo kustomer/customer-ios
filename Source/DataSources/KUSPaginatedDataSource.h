@@ -28,6 +28,7 @@
 - (__kindof KUSModel *)objectAtIndex:(NSUInteger)index;
 - (NSUInteger)indexOfObject:(__kindof KUSModel *)object;
 - (__kindof KUSModel *)firstObject;
+- (NSString *)_customerId;
 
 // Listener methods
 - (void)addListener:(id<KUSPaginatedDataSourceListener>)listener;
