@@ -25,21 +25,21 @@
 #import "RTSpinKitUtils.h"
 
 // Animations
-#import "RTSpinKit9CubeGridAnimation.h"
-#import "RTSpinKitBounceAnimation.h"
-#import "RTSpinKitChasingDotsAnimation.h"
-#import "RTSpinKitCircleAnimation.h"
-#import "RTSpinKitCircleFlipAnimation.h"
-#import "RTSpinKitFadingCircleAltAnimation.h"
-#import "RTSpinKitFadingCircleAnimation.h"
-#import "RTSpinKitPlaneAnimation.h"
-#import "RTSpinKitPulseAnimation.h"
+//#import "RTSpinKit9CubeGridAnimation.h"
+//#import "RTSpinKitBounceAnimation.h"
+//#import "RTSpinKitChasingDotsAnimation.h"
+//#import "RTSpinKitCircleAnimation.h"
+//#import "RTSpinKitCircleFlipAnimation.h"
+//#import "RTSpinKitFadingCircleAltAnimation.h"
+//#import "RTSpinKitFadingCircleAnimation.h"
+//#import "RTSpinKitPlaneAnimation.h"
+//#import "RTSpinKitPulseAnimation.h"
 #import "RTSpinKitThreeBounceAnimation.h"
-#import "RTSpinKitWanderingCubesAnimation.h"
-#import "RTSpinKitWaveAnimation.h"
-#import "RTSpinKitWordPressAnimation.h"
-#import "RTSpinKitArcAnimation.h"
-#import "RTSpinKitArcAltAnimation.h"
+//#import "RTSpinKitWanderingCubesAnimation.h"
+//#import "RTSpinKitWaveAnimation.h"
+//#import "RTSpinKitWordPressAnimation.h"
+//#import "RTSpinKitArcAnimation.h"
+//#import "RTSpinKitArcAltAnimation.h"
 
 CATransform3D RTSpinKit3DRotationWithPerspective(CGFloat perspective,
                                                         CGFloat angle,
@@ -55,51 +55,10 @@ CATransform3D RTSpinKit3DRotationWithPerspective(CGFloat perspective,
 NSObject<RTSpinKitAnimating>* RTSpinKitAnimationFromStyle(RTSpinKitViewStyle style)
 {
     switch (style) {
-        case RTSpinKitViewStylePlane:
-            return [[RTSpinKitPlaneAnimation alloc] init];
-
-        case RTSpinKitViewStyleCircleFlip:
-            return [[RTSpinKitCircleFlipAnimation alloc] init];
-
-        case RTSpinKitViewStyleBounce:
-            return [[RTSpinKitBounceAnimation alloc] init];
-
-        case RTSpinKitViewStyleWave:
-            return [[RTSpinKitWaveAnimation alloc] init];
-
-        case RTSpinKitViewStyleWanderingCubes:
-            return [[RTSpinKitWanderingCubesAnimation alloc] init];
-
-        case RTSpinKitViewStylePulse:
-            return [[RTSpinKitPulseAnimation alloc] init];
-
-        case RTSpinKitViewStyleChasingDots:
-            return [[RTSpinKitChasingDotsAnimation alloc] init];
-
+            
         case RTSpinKitViewStyleThreeBounce:
             return [[RTSpinKitThreeBounceAnimation alloc] init];
-
-        case RTSpinKitViewStyleCircle:
-            return [[RTSpinKitCircleAnimation alloc] init];
-
-        case RTSpinKitViewStyle9CubeGrid:
-            return [[RTSpinKit9CubeGridAnimation alloc] init];
-
-        case RTSpinKitViewStyleWordPress:
-            return [[RTSpinKitWordPressAnimation alloc] init];
-
-        case RTSpinKitViewStyleFadingCircle:
-            return [[RTSpinKitFadingCircleAnimation alloc] init];
-
-        case RTSpinKitViewStyleFadingCircleAlt:
-            return [[RTSpinKitFadingCircleAltAnimation alloc] init];
-
-        case RTSpinKitViewStyleArc:
-            return [[RTSpinKitArcAnimation alloc] init];
-			
-		case RTSpinKitViewStyleArcAlt:
-			return [[RTSpinKitArcAltAnimation alloc] init];
-
+        
         default:
             NSCAssert(NO, @"Unicorns exist");
     }

@@ -1,5 +1,5 @@
 //
-// RTSpinKitBounceAnimation.h
+// RTSpinKitThreeBounceAnimation.h
 // SpinKit
 //
 // Copyright (c) 2014 Ramon Torres
@@ -22,9 +22,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
+#import <UIKit/UIKit.h>
 #import "RTSpinKitAnimating.h"
 
-@interface RTSpinKitBounceAnimation : NSObject<RTSpinKitAnimating>
+@interface RTSpinKitThreeBounceAnimation : NSObject<RTSpinKitAnimating>
 
 @end

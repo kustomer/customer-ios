@@ -30,6 +30,7 @@
 static const CGFloat kRTSpinKitViewDefaultSpinnerSize = 37.0;
 
 @interface RTSpinKitView ()
+@property (nonatomic, strong) id<RTSpinKitAnimating> animator;
 @end
 
 @implementation RTSpinKitView
@@ -42,14 +43,14 @@ static const CGFloat kRTSpinKitViewDefaultSpinnerSize = 37.0;
 
     return self;
 }
-
--(id)initWithFrame:(CGRect)frame {
-    self = [self initWithStyle:RTSpinKitViewStylePlane];
-    if (self) {
-        self.frame = frame;
-    }
-    return self;
-}
+//
+//-(id)initWithFrame:(CGRect)frame {
+//    self = [self initWithStyle:RTSpinKitViewStylePlane];
+//    if (self) {
+//        self.frame = frame;
+//    }
+//    return self;
+//}
 
 -(instancetype)initWithStyle:(RTSpinKitViewStyle)style {
     return [self initWithStyle:style color:[UIColor grayColor]];
@@ -72,6 +73,22 @@ static const CGFloat kRTSpinKitViewDefaultSpinnerSize = 37.0;
     return self;
 }
 
+//-(instancetype)initWithAnimator:(id<RTSpinKitAnimating>)animator
+//                          color:(UIColor*)color
+//                    spinnerSize:(CGFloat)spinnerSize {
+//    self = [self initWithFrame:CGRectMake(0.0, 0.0, spinnerSize, spinnerSize)];
+//    if (self) {
+//        _style = RTSpinKitViewStyleCustom;
+//        _animator = animator;
+//        _color = color;
+//        _spinnerSize = spinnerSize;
+//        _hidesWhenStopped = YES;
+//        [self applyAnimation];
+//        [self sizeToFit];
+//    }
+//    return self;
+//}
+
 -(void)setStyle:(RTSpinKitViewStyle)style {
     _style = style;
     [self applyAnimation];
@@ -90,7 +107,10 @@ static const CGFloat kRTSpinKitViewDefaultSpinnerSize = 37.0;
     self.layer.sublayers = nil;
 
     CGSize size = CGSizeMake(self.spinnerSize, self.spinnerSize);
-    NSObject<RTSpinKitAnimating> *animation = RTSpinKitAnimationFromStyle(self.style);
+    NSObject<RTSpinKitAnimating> *animation = self.animator;
+    if (animation == nil) {
+        animation = RTSpinKitAnimationFromStyle(self.style);
+    }
     [animation setupSpinKitAnimationInLayer:self.layer withSize:size color:self.color];
 }
 
@@ -155,9 +175,29 @@ static const CGFloat kRTSpinKitViewDefaultSpinnerSize = 37.0;
 }
 
 -(void)setColor:(UIColor *)color {
+    [self setColor:color animated:NO];
+}
+
+-(void)setColor:(UIColor *)color animated:(BOOL)animated {
+    UIColor *previousColor = _color;
+    
     _color = color;
-    for (CALayer *l in self.layer.sublayers) {
-        l.backgroundColor = color.CGColor;
+
+    if (animated) {
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
+        animation.fromValue = (id)previousColor.CGColor;
+        animation.toValue = (id)color.CGColor;
+        animation.duration = 0.5;
+        animation.removedOnCompletion = YES;
+
+        for (CALayer *l in self.layer.sublayers) {
+            l.backgroundColor = color.CGColor;
+            [l addAnimation:animation forKey:@"change-color"];
+        }
+    } else {
+        for (CALayer *l in self.layer.sublayers) {
+            l.backgroundColor = color.CGColor;
+        }
     }
 }
 

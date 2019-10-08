@@ -9,14 +9,12 @@ target 'Kustomer' do
   pod 'SDWebImage', '>= 5.0.0', '< 6.0.0'
   pod 'TTTAttributedLabel', '>= 2.0.0', '< 3.0.0'
   pod 'NYTPhotoViewer', '2.0.0'
-  pod 'OCMock', '~> 3.4'
-  pod 'SpinKit', '~> 1.1'
-
 end
 
 target 'KustomerTests' do
   inherit! :search_paths
   # Pods for testing
+  pod 'OCMock', '~> 3.4'
 end
 
 target 'KustomerExample' do
