@@ -1,5 +1,14 @@
 # Changelog for Kustomer iOS SDK'
 
+## 0.2.4
+
+Release Date: 10/09/2019
+
+* You can now check business hours
+* Wrap chat Greeting text and Waiting text to multiple lines without truncation. 
+* Updated SDWebImage library version to 5.2.2
+* Removed SpinKit Library from pod file
+
 ## 0.2.3
 * Wrap chat Greeting text to 2 lines and truncate past that. 
 * Optimized & Improved Performance of API calls that fetch Satisfaction Forms data
