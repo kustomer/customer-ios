@@ -275,6 +275,11 @@
     _messageToCreateNewChatSession = [messageToCreateNewChatSession copy];
 }
 
+- (void)setFormIdForConversationalForm:(NSString *)formIdForConversationalForm
+{
+    _formIdForConversationalForm = [formIdForConversationalForm copy];
+}
+
 #pragma mark - Internal methods
 
 - (void)_checkShouldFlushCustomAttributesToChatSessionId:(NSString *)chatSessionId

@@ -20,7 +20,7 @@
 #import "KUSNewSessionButton.h"
 #import "KUSSessionsTableView.h"
 
-@interface KUSSessionsViewController () <KUSNavigationBarViewDelegate, KUSPaginatedDataSourceListener, UITableViewDataSource, UITableViewDelegate> {
+@interface KUSSessionsViewController () <KUSNavigationBarViewDelegate, KUSPaginatedDataSourceListener, KUSObjectDataSourceListener, UITableViewDataSource, UITableViewDelegate> {
     KUSUserSession *_userSession;
 
     KUSChatSessionsDataSource *_chatSessionsDataSource;
@@ -97,15 +97,17 @@
     [self.createSessionButton addTarget:self
                                  action:@selector(_createSession)
                        forControlEvents:UIControlEventTouchUpInside];
+    [self.createSessionButton setAccessibilityIdentifier:@"createSessionButton"];
     [self.view addSubview:self.createSessionButton];
     
     _chatSessionsDataSource = _userSession.chatSessionsDataSource;
     [_chatSessionsDataSource addListener:self];
     [_chatSessionsDataSource fetchLatest];
-
-    BOOL shouldCreateNewSessionWithMessage = _chatSessionsDataSource.messageToCreateNewChatSession != nil;
     
-    if (_chatSessionsDataSource.didFetch || shouldCreateNewSessionWithMessage) {
+    [[_userSession scheduleDataSource] addListener:self];
+    [[_userSession scheduleDataSource] fetch];
+
+    if ([self _shouldHandleFirstLoad]) {
         [self _handleFirstLoadIfNecessary];
     } else {
         self.tableView.hidden = YES;
@@ -188,10 +190,31 @@
 - (void)userTappedRetryButton
 {
     [_chatSessionsDataSource fetchLatest];
+    [[_userSession scheduleDataSource] fetch];
+    
     [self showLoadingIndicatorWithText:@"Loading..."];
 }
 
 #pragma mark - Internal methods
+
+- (void)_updateViewIfFirstLoadNeeded
+{
+    if ([self _shouldHandleFirstLoad]) {
+        [self hideLoadingIndicator];
+        [self _handleFirstLoadIfNecessary];
+        self.tableView.hidden = NO;
+        self.createSessionButton.hidden = NO;
+    }
+}
+
+- (BOOL)_shouldHandleFirstLoad
+{
+    BOOL shouldCreateNewSessionWithMessage = _chatSessionsDataSource.messageToCreateNewChatSession != nil;
+    BOOL scheduleFetched = [_userSession scheduleDataSource].didFetch;
+    BOOL chatSessionFetched = _chatSessionsDataSource.didFetch;
+    
+    return scheduleFetched && (chatSessionFetched || shouldCreateNewSessionWithMessage);
+}
 
 - (void)_handleFirstLoadIfNecessary
 {
@@ -202,8 +225,10 @@
     
     BOOL shouldCreateNewSessionWithMessage = _chatSessionsDataSource.messageToCreateNewChatSession != nil;
     if (shouldCreateNewSessionWithMessage) {
-        KUSChatViewController *chatViewController = [[KUSChatViewController alloc] initWithUserSession:_userSession forNewSessionWithMessage:_chatSessionsDataSource.messageToCreateNewChatSession];
+        NSString *formId = _chatSessionsDataSource.formIdForConversationalForm;
+        KUSChatViewController *chatViewController = [[KUSChatViewController alloc] initWithUserSession:_userSession forNewSessionWithMessage:_chatSessionsDataSource.messageToCreateNewChatSession andFormId:formId];
         [self.navigationController pushViewController:chatViewController animated:NO];
+        [_chatSessionsDataSource setFormIdForConversationalForm:nil];
         return;
     }
     
@@ -236,10 +261,7 @@
 
 - (void)paginatedDataSourceDidLoad:(KUSPaginatedDataSource *)dataSource
 {
-    [self hideLoadingIndicator];
-    [self _handleFirstLoadIfNecessary];
-    self.tableView.hidden = NO;
-    self.createSessionButton.hidden = NO;
+    [self _updateViewIfFirstLoadNeeded];
 }
 
 - (void)paginatedDataSource:(KUSPaginatedDataSource *)dataSource didReceiveError:(NSError *)error
@@ -248,6 +270,30 @@
     [self showErrorWithText:errorText];
     self.tableView.hidden = YES;
     self.createSessionButton.hidden = YES;
+}
+
+#pragma mark - KUSObjectDataSourceListener methods
+
+- (void)objectDataSourceDidLoad:(KUSObjectDataSource *)dataSource
+{
+    [self _updateViewIfFirstLoadNeeded];
+}
+
+- (void)objectDataSource:(KUSObjectDataSource *)dataSource didReceiveError:(NSError *)error
+{
+    NSNumber *statusCode = error.userInfo[@"status"];
+    BOOL isNotFoundError = statusCode != nil && [statusCode integerValue] == 404;
+    BOOL isScheduleDataSource = [dataSource isKindOfClass:[KUSScheduleDataSource class]];
+    
+    if (isScheduleDataSource && isNotFoundError ) {
+        [self _updateViewIfFirstLoadNeeded];
+        
+    } else {
+        NSString *errorText = error.localizedDescription ?: [[KUSLocalization sharedInstance] localizedString:@"Something went wrong. Please try again."];
+        [self showErrorWithText:errorText];
+        self.tableView.hidden = YES;
+        self.createSessionButton.hidden = YES;
+    }
 }
 
 #pragma mark - UITableViewDataSource methods

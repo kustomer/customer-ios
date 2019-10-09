@@ -29,6 +29,9 @@
 - (void)disconnectFromChatAcitvityChannel;
 - (void)sendChatActivityForSessionId:(NSString *)sessionId activityData:(NSDictionary *)activityData;
 
+//Customer Presence Channel methods
+- (void)connectToCustomerPresenceChannel:(NSString *)customerId;
+- (void)disconnectFromCustomerPresenceChannel;
 
 @end
 

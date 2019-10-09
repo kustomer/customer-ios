@@ -6,7 +6,7 @@
 //  Copyright © 2019 Kustomer. All rights reserved.
 //
 
-#import <SpinKit/RTSpinKitView.h>
+#import "RTSpinKitView.h"
 #import "KUSTypingIndicatorTableViewCell.h"
 #import "KUSChatMessageTableViewCell.h"
 

@@ -60,7 +60,6 @@
         }
 
         [self.chatSettingsDataSource fetch];
-        [self.scheduleDataSource fetch];
         [self pushClient];
 
         [self.chatSessionsDataSource addListener:self];

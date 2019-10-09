@@ -49,6 +49,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     BOOL _nonBusinessHours;
     
     KUSSessionQueuePollingManager *sessionQueuePollingManager;
+    KUSFormDataSource *_formDataSource;
     
     // Typing indicator variables
     NSDate *_lastTypingStatusSentAt;
@@ -87,13 +88,18 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     return self;
 }
 
-- (instancetype)initForNewConversationWithUserSession:(KUSUserSession *)userSession
+- (instancetype)initForNewConversationWithUserSession:(KUSUserSession *)userSession formId:(NSString *)formId
 {
     self = [self _initWithUserSession:userSession];
     if (self) {
         _createdLocally = YES;
-        [self.userSession.formDataSource addListener:self];
-        [self.userSession.formDataSource fetch];
+        if (formId) {
+            _formDataSource = [[KUSFormDataSource alloc] initWithUserSession:userSession formId:formId];
+        } else {
+            _formDataSource = self.userSession.formDataSource;
+        }
+        [_formDataSource addListener:self];
+        [_formDataSource fetch];
     }
     return self;
 }
@@ -121,17 +127,22 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
 - (void)objectDataSourceDidLoad:(KUSObjectDataSource *)dataSource
 {
-    if (_form == nil && [dataSource isKindOfClass:[KUSFormDataSource class]]) {
-        _form = dataSource.object;
-    }
-    
     if ([dataSource isKindOfClass:[KUSSatisfactionResponseDataSource class]]) {
         for (id<KUSChatMessagesDataSourceListener> listener in [self.listeners copy]) {
             if ([listener respondsToSelector:@selector(chatMessagesDataSourceDidFetchSatisfactionForm:)]) {
                 [listener chatMessagesDataSourceDidFetchSatisfactionForm:self];
             }
         }
+        return;
     }
+    
+    if (_form == nil && [dataSource isKindOfClass:[KUSFormDataSource class]]) {
+        _form = dataSource.object;
+        if (_form != nil && _form.questions.count == 0) {
+            [self _clearFormAndSendMessageIfNecessary];
+        }
+    }
+    
     [self _insertFormMessageIfNecessary];
 }
 
@@ -139,6 +150,14 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 {
     if ([dataSource isKindOfClass:[KUSSatisfactionResponseDataSource class]]) {
         return;
+    }
+    
+    if ([dataSource isKindOfClass:[KUSFormDataSource class]]) {
+        NSNumber *statusCode = error.userInfo[@"status"];
+        if (statusCode != nil && [statusCode integerValue] == 400) {
+            [self _clearFormAndSendMessageIfNecessary];
+            return;
+        }
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [dataSource fetch];
@@ -228,6 +247,19 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
 #pragma mark - Internal Logic methods
 
+- (void)_clearFormAndSendMessageIfNecessary
+{
+    if ([self isActualSessionExist]) {
+        return;
+    }
+    _formDataSource = nil;
+    if (self.allObjects.count) {
+        KUSChatMessage *firstMessage = self.allObjects.lastObject;
+        [self removeObjects:self.allObjects];
+        [self sendMessageWithText:firstMessage.body attachments:nil];
+    }
+}
+
 - (void)_startVolumeControlFormTrackingAfterDelay:(NSTimeInterval)delay
 {
     [[KUSVolumeControlTimerManager sharedInstance] createVolumeControlTimerForSession:_sessionId
@@ -269,16 +301,6 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
             }
         }
     }
-}
-
-- (NSString *)_customerId
-{
-    for (int i = 0; i < self.count; i++) {
-        if (self.allObjects[i].customerId) {
-            return self.allObjects[i].customerId;
-        }
-    }
-    return nil;
 }
 
 - (void)_hideTypingIndicatorAfterDelay
@@ -506,8 +528,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 - (void)sendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments value:(NSString *)value
 {
     _isProactiveCampaign = ![self isAnyMessageByCurrentUser];
-    KUSChatSettings *chatSettings = self.userSession.chatSettingsDataSource.object;
-    if (chatSettings.activeFormId && ![self isActualSessionExist]) {
+    if ([_formDataSource getConversationalFormId] && ![self isActualSessionExist]) {
         NSAssert(attachments.count == 0, @"Should not have been able to send attachments without a _sessionId");
         
         
@@ -615,6 +636,12 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
                          callback(NO, error);
                      }
                      return;
+                 }
+                 
+                 if (![self isActualSessionExist] && _sessionId != nil) {
+                     KUSChatSession *tempSession = [self.userSession.chatSessionsDataSource objectWithId:_sessionId];
+                     [self.userSession.chatMessagesDataSources removeObjectForKey:_sessionId];
+                     [self.userSession.chatSessionsDataSource removeObjects: @[tempSession]];
                  }
 
                  // Grab the session id
@@ -1010,8 +1037,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
 - (void)_insertFormMessageIfNecessary
 {
-    KUSChatSettings *chatSettings = self.userSession.chatSettingsDataSource.object;
-    if (chatSettings.activeFormId == nil) {
+    if ([_formDataSource getConversationalFormId] == nil) {
         return;
     }
     if ([self count] == 0) {

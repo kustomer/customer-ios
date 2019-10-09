@@ -11,4 +11,8 @@
 
 @interface KUSFormDataSource : KUSObjectDataSource
 
+
+- (instancetype)initWithUserSession:(KUSUserSession *)userSession formId:(NSString *)formId;
+- (NSString *)getConversationalFormId;
+
 @end

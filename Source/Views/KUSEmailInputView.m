@@ -54,6 +54,7 @@
         self.infoLabel.textAlignment = NSTextAlignmentCenter;
         self.infoLabel.adjustsFontSizeToFitWidth = YES;
         self.infoLabel.minimumScaleFactor = 10.0 / 12.0;
+        [self.infoLabel setAccessibilityIdentifier:@"emailInfoLabel"];
         [self addSubview:self.infoLabel];
 
         self.textField = [[UITextField alloc] init];
@@ -68,6 +69,7 @@
         self.textField.returnKeyType = UIReturnKeySend;
         self.textField.layer.borderWidth = 1.0;
         self.textField.layer.masksToBounds = YES;
+        [self.textField setAccessibilityIdentifier:@"emailTextField"];
         [self addSubview:self.textField];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -79,6 +81,7 @@
         [self.submitButton addTarget:self
                               action:@selector(_userWantsToSubmit)
                     forControlEvents:UIControlEventTouchUpInside];
+        [self.submitButton setAccessibilityIdentifier:@"emailSubmitButton"];
         [self addSubview:self.submitButton];
 
         self.separatorView = [[UIView alloc] init];

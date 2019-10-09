@@ -30,6 +30,7 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
     PTPusher *_pusherClient;
     PTPusherChannel *_pusherChannel;
     PTPusherPrivateChannel *_chatActivityChannel;
+    PTPusherPresenceChannel *_customerPresenceChannel;
 
     NSMutableDictionary<NSString *, KUSChatSession *> *_previousChatSessions;
     NSString *_pendingNotificationSessionId;
@@ -89,6 +90,11 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
 - (NSString *)_chatActivityChannelNameForSessionId:(NSString *)sessionId
 {
     return [NSString stringWithFormat:@"private-external-%@-chat-activity-%@", _userSession.orgId, sessionId];
+}
+
+- (NSString *)_presenceChannelNameForCustomerId:(NSString *)customerId
+{
+    return [NSString stringWithFormat:@"external-%@-customer-activity-%@", _userSession.orgId, customerId];
 }
 
 #pragma mark - Internal methods
@@ -315,6 +321,26 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
     
     [_chatActivityChannel triggerEventNamed:@"client-kustomer.app.chat.activity.typing"
                                        data:activityData];
+}
+
+- (void)connectToCustomerPresenceChannel:(NSString *)customerId
+{
+    if(nil == _customerPresenceChannel) {
+        
+        NSString *presenceChannelName = [self _presenceChannelNameForCustomerId:customerId];
+        KUSLogPusher(@"Connecting to presence channel %@",presenceChannelName);
+        _customerPresenceChannel = (PTPusherPresenceChannel *) [_pusherClient subscribeToPresenceChannelNamed:presenceChannelName];
+    }
+    
+}
+
+- (void)disconnectFromCustomerPresenceChannel
+{
+    if (_customerPresenceChannel) {
+        KUSLogPusher(@"Disconnecting from presence channel");
+        [_customerPresenceChannel unsubscribe];
+        _customerPresenceChannel = nil;
+    }
 }
 
 #pragma mark - Property methods

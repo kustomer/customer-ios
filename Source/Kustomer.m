@@ -170,14 +170,29 @@ static NSString *kKustomerOrgNameKey = @"orgName";
 
 + (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
 {
-    [[self sharedInstance] presentSupportWithMessage:message customAttributes:customAttributes];
+    [[self sharedInstance] presentSupportWithMessage:message formId:nil customAttributes:customAttributes];
 }
 
 + (void)presentSupportWithMessage:(NSString *) message
 {
-    [Kustomer presentSupportWithMessage:message customAttributes: nil];
+    [Kustomer presentSupportWithMessage:message formId:nil customAttributes:nil];
 }
 
++ (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId
+{
+
+    [Kustomer presentSupportWithMessage:message formId:formId customAttributes: nil];
+}
+
++ (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
+{
+    [[self sharedInstance] presentSupportWithMessage:message formId:formId customAttributes:customAttributes];
+}
+
++ (void)presentSupportWithAttributes:(KUSChatAttributes)attributes
+{
+    [[self sharedInstance] presentSupportWithAttributes:attributes];
+}
 
 #pragma mark - Lifecycle methods
 
@@ -367,18 +382,58 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
     [self.userSession.userDefaults setShouldHideNewConversationButtonInClosedChat:status];
 }
 
-- (void)presentSupportWithMessage:(NSString *) message customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
+- (void)presentSupportWithMessage:(NSString *) message formId:(NSString *)formId customAttributes:(NSDictionary<NSString *, NSObject *> *)customAttributes
 {
     NSAssert(message.length, @"Requires a valid message to create chat session.");
     if (message.length == 0) {
         return;
     }
+    
+    if (formId != nil) {
+        [self.userSession.chatSessionsDataSource setFormIdForConversationalForm:formId];
+    }
+    
     [self.userSession.chatSessionsDataSource setMessageToCreateNewChatSession:message];
     
     if (customAttributes.count) {
         [self describeNextConversation:customAttributes];
     }
     
+    [Kustomer presentSupport];
+}
+
+- (void)presentSupportWithAttributes:(KUSChatAttributes)attributes
+{
+    NSString *message = [attributes objectForKey:kKUSMessageAttribute];
+    BOOL isValidMessage = message != nil &&
+                            [message isKindOfClass:[NSString class]] &&
+                            message.length != 0;
+    if (isValidMessage) {
+        [self.userSession.chatSessionsDataSource setMessageToCreateNewChatSession:message];
+    }
+
+    NSString *formId = [attributes objectForKey:kKUSFormIdAttribute];
+    BOOL isValidFormId = formId != nil &&
+                            [formId isKindOfClass:[NSString class]] &&
+                            formId.length != 0;
+    if (isValidFormId) {
+        [self.userSession.chatSessionsDataSource setFormIdForConversationalForm:formId];
+    }
+    
+    NSString *scheduleId = [attributes objectForKey:kKUSScheduleIdAttribute];
+    BOOL isValidScheduleId = scheduleId != nil &&
+                                [scheduleId isKindOfClass:[NSString class]] &&
+                                scheduleId.length != 0;
+    if (isValidScheduleId) {
+        [self.userSession.scheduleDataSource setScheduleId:scheduleId];
+    }
+    NSDictionary<NSString *, NSObject *> *customAttributes = [attributes objectForKey:kKUSCustomAttributes];
+    BOOL hasCustomAttributes = customAttributes != nil &&
+                                [customAttributes isKindOfClass:[NSDictionary class]] &&
+                                customAttributes.count != 0;
+    if (hasCustomAttributes) {
+        [self describeNextConversation:customAttributes];
+    }
     [Kustomer presentSupport];
 }
 

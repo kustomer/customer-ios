@@ -26,7 +26,7 @@ The Kustomer iOS SDK requires a valid API Key with role `org.tracking`. See [Get
 The preferred installation method is with [CocoaPods](https://cocoapods.org). Add the following to your `Podfile`:
 
 ```ruby
-pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.2.3'
+pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.2.4'
 ```
 
 #### Carthage
@@ -34,7 +34,7 @@ pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => 
 For [Carthage](https://github.com/Carthage/Carthage), add the following to your `Cartfile`:
 
 ```ogdl
-github "kustomer/customer-ios" ~> 0.2.3
+github "kustomer/customer-ios" ~> 0.2.4
 ```
 
 ## Setup
@@ -64,6 +64,7 @@ KustomerViewController *kustomerViewController = [[KustomerViewController alloc]
 Enabling the ability for your users to upload images to conversations requires certain app privacy descriptions. If neither of these is present, the image attachments button will be hidden.
 - [NSCameraUsageDescription](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/plist/info/NSCameraUsageDescription) is required to enable taking a photo
 - [NSPhotoLibraryUsageDescription](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/plist/info/NSPhotoLibraryUsageDescription) is required to enable picking from your Camera Roll
+- [NSPhotoLibraryAddUsageDescription](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW73) is required to save images to your Photos Library
 
 ### Additional API Reference
 
@@ -73,9 +74,38 @@ Enabling the ability for your users to upload images to conversations requires c
 ```
 
 ```objective-c
-// Convenience method that will present the chat interface on the topmost view controller.
+// Convenience methods that will present the chat interface on the topmost view controller.
+
+// Present new or recent chat conversation if there is any.
 [Kustomer presentSupport];
 
+// Present new chat conversation with chatAttributes a.k.a Key-Pair values.
+
+KUSChatAttributes chatAttributes = @{
+    // Initial message to start a new conversation
+    // if not specified then it will show either the most recent session or new window to start a new conversation
+    kKUSMessageAttribute: @"MESSAGE",
+
+    // Custom schedule id, if not specified then SDK will use the schedule id specified on the admin panel
+    // This can be access by an admin panel via Administration > Business Schedules
+    kKUSScheduleIdAttribute: @"SCHEDULE_ID",
+
+    // Custom form id, if not specified then SDK will use the conversational assistant form specified on the admin panel
+    // This can be access be an admin panel via Channels > Chat > Conversational Assitant
+    kKUSFormIdAttribute: @"FORM_ID",
+
+    // Attach custom attributes to the user's next new conversation
+    // These key-value pairs must be enabled on the Conversation Klass via the admin portal.
+    // This can be done by an admin via Settings > Platform Settings > Klasses > Conversation
+    kKUSCustomAttributes: @{
+        @"customAttributeStr": @"value"
+    }
+};
+[Kustomer presentSupportWithAttributes:chatAttributes];
+```
+
+
+```objective-c
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 [Kustomer presentKnowledgeBase];
 

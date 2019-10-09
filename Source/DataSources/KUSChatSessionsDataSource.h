@@ -16,6 +16,7 @@
 @interface KUSChatSessionsDataSource : KUSPaginatedDataSource
 
 @property (nonatomic, copy) NSString *messageToCreateNewChatSession;
+@property (nonatomic, copy) NSString *formIdForConversationalForm;
 
 - (void)upsertNewSessions:(NSArray<KUSChatSession *> *)chatSessions;
 - (void)createSessionWithTitle:(NSString *)title completion:(void(^)(NSError *error, KUSChatSession *session))completion;

@@ -11,6 +11,6 @@
 
 @interface KUSScheduleDataSource : KUSObjectDataSource
 
+@property (nonatomic, strong) NSString* scheduleId;
 - (BOOL)isActiveBusinessHours;
-
 @end
