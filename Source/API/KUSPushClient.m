@@ -23,7 +23,7 @@ static const NSTimeInterval KUSShouldConnectToPusherRecencyThreshold = 60.0;
 static const NSTimeInterval KUSLazyPollingTimerInterval = 30.0;
 static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
 
-@interface KUSPushClient () <KUSObjectDataSourceListener, KUSPaginatedDataSourceListener, PTPusherDelegate, KUSChatMessagesDataSourceListener> {
+@interface KUSPushClient () <KUSObjectDataSourceListener, KUSPaginatedDataSourceListener, PTPusherDelegate, KUSChatMessagesDataSourceListener,PTPusherPresenceChannelDelegate> {
     __weak KUSUserSession *_userSession;
 
     KUSTimer *_pollingTimer;
@@ -114,17 +114,25 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
     if (!_isPusherTrackingStarted) {
         _isPusherTrackingStarted = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(KUSShouldConnectToPusherRecencyThreshold * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+           
             _isPusherTrackingStarted = NO;
-            
-            [_userSession.statsManager updateStats:^(BOOL sessionUpdated) {
-                // Get latest session on update to avoid packet loss during socket connection
-                if (sessionUpdated) {
-                    _didPusherLossPackets = YES;
-                    [_userSession.chatSessionsDataSource fetchLatest];
-                }
+            BOOL isPusherConnected = _pusherClient && _pusherClient.connection.isConnected;
+            if(!isPusherConnected) {
                 
-                [self _connectToChannelsIfNecessary];
-            }];
+                KUSLogPusher("Pusher Not connected");
+                [_userSession.statsManager updateStats:^(BOOL sessionUpdated) {
+                    // Get latest session on update to avoid packet loss during socket connection
+                    if (sessionUpdated) {
+                        _didPusherLossPackets = YES;
+                        [_userSession.chatSessionsDataSource fetchLatest];
+                    }
+                    
+                    [self _connectToChannelsIfNecessary];
+                }];
+            }else{
+                KUSLogPusher("Pusher is connected");
+            }
+            
         });
     }
     
@@ -570,6 +578,20 @@ withAuthOperation:(PTPusherChannelAuthorizationOperation *)operation
     KUSLogPusherError(@"Pusher did fail to subscribe to channel: %@ with error: %@", channel.name, error);
     
     [self _updatePollingTimer];
+}
+
+#pragma mark PTPusherPresenceChannelDelegate methods
+
+- (void)presenceChannelDidSubscribe:(PTPusherPresenceChannel *)channel {
+    KUSLogPusher(@"presenceChannelDidSubscribe %@",channel);
+}
+
+- (void)presenceChannel:(PTPusherPresenceChannel *)channel memberAdded:(PTPusherChannelMember *)member {
+    KUSLogPusher(@"presenceChannel memberAdded %@ - member %@",channel,member.userInfo);
+}
+
+- (void)presenceChannel:(PTPusherPresenceChannel *)channel memberRemoved:(PTPusherChannelMember *)member{
+    KUSLogPusher(@"presenceChannel memberRemoved %@ - member %@",channel,member.userInfo);
 }
 
 @end

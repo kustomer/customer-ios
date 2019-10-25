@@ -22,6 +22,7 @@
     NSDictionary<NSString *, NSObject *> *_pendingCustomChatSessionAttributes;
     NSDictionary<NSString *, NSObject *> *_pendingCustomChatSessionAttributesForNextConversation;
     NSMutableDictionary<NSString *, NSDate *> *_localLastSeenAtBySessionId;
+    BOOL _isNewSession;
 }
 
 @end
@@ -278,6 +279,19 @@
 - (void)setFormIdForConversationalForm:(NSString *)formIdForConversationalForm
 {
     _formIdForConversationalForm = [formIdForConversationalForm copy];
+}
+
+- (BOOL)didFetch
+{
+    if (_isNewSession) {
+        return YES;
+    }
+    return [super didFetch];
+}
+
+- (void)markSessionAsNew
+{
+    _isNewSession = YES;
 }
 
 #pragma mark - Internal methods

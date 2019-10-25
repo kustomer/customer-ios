@@ -51,4 +51,10 @@
 // Returns the total open pro-active campaign sessions count
 - (NSUInteger)openProactiveCampaignsCount;
 
+// Returns whether Sessions data was fetched
+- (BOOL)didFetch;
+
+// Mark the current session as new for a new user
+- (void)markSessionAsNew;
+
 @end

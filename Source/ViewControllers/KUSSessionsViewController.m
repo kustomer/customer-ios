@@ -102,7 +102,8 @@
     
     _chatSessionsDataSource = _userSession.chatSessionsDataSource;
     [_chatSessionsDataSource addListener:self];
-    [_chatSessionsDataSource fetchLatest];
+    //TODO Swapna removing fetching of sessions on view load
+    //[_chatSessionsDataSource fetchLatest];
     
     [[_userSession scheduleDataSource] addListener:self];
     [[_userSession scheduleDataSource] fetch];
@@ -121,7 +122,8 @@
     [super viewWillAppear:animated];
 
     [_createSessionButton updateButton];
-    [_chatSessionsDataSource fetchLatest];
+    //TODO Swapna removing fetching of sessions on view appear
+    //[_chatSessionsDataSource fetchLatest];
 }
 
 - (void)viewWillLayoutSubviews

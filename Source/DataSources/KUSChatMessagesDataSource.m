@@ -1356,24 +1356,29 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     
     NSString *previousChannel = [lastMessage.body lowercaseString];
     KUSFormQuestion *vcFormQuestion = [self _getNextVCFormQuestion:_vcformQuestionIndex previousMessage:previousChannel];
-    NSDictionary *json = @{
-       @"type": @"chat_message",
-       @"id": vcFormQuestion.oid,
-       @"attributes": @{
-           @"body": vcFormQuestion.prompt,
-           @"direction": @"out",
-           @"createdAt": [KUSDate stringFromDate:createdAt]
+    if(vcFormQuestion) {
+        NSDictionary *json = @{
+           @"type": @"chat_message",
+           @"id": vcFormQuestion.oid,
+           @"attributes": @{
+               @"body": vcFormQuestion.prompt,
+               @"direction": @"out",
+               @"createdAt": [KUSDate stringFromDate:createdAt]
+            }
+        };
+        KUSChatMessage *formMessage = [[KUSChatMessage alloc] initWithJSON:json];
+        [self _insertDelayedMessage:formMessage];
+        
+        _formQuestion = vcFormQuestion;
+        // If first options response input, update view by remove options component
+        if (_vcformQuestionIndex == 1) {
+            [self notifyAnnouncersDidChangeContent];
         }
-    };
-    KUSChatMessage *formMessage = [[KUSChatMessage alloc] initWithJSON:json];
-    [self _insertDelayedMessage:formMessage];
-    
-    _formQuestion = vcFormQuestion;
-    // If first options response input, update view by remove options component
-    if (_vcformQuestionIndex == 1) {
-        [self notifyAnnouncersDidChangeContent];
+        _vcformQuestionIndex++;
+    }else{
+        return;
     }
-    _vcformQuestionIndex++;
+    
 }
 
 - (void)_submitVCFormResponses
@@ -1414,7 +1419,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         } else if (i == 1) {
             if ([[property lowercaseString] isEqualToString:@"email"]) {
                 [formMessage setObject:@"customer_email" forKey:@"property"];
-            } else {
+            } else if([[property lowercaseString] isEqualToString:@"voice"] || [[property lowercaseString] isEqualToString:@"sms"]){
                 [formMessage setObject:@"customer_phone" forKey:@"property"];
             }
         }
@@ -1557,10 +1562,16 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
             propery = @"customer_email";
             channel = @"email";
             prompt = [[KUSLocalization sharedInstance] localizedString:@"volume_control_email_question"];
-        } else {
+        } else if ([[previousMessage lowercaseString] isEqualToString:@"voice"] || [[previousMessage lowercaseString] isEqualToString:@"sms"]){
             propery = @"customer_phone";
             channel = @"phone number";
             prompt = [[KUSLocalization sharedInstance] localizedString:@"volume_control_phone_question"];
+        } else { //If previous message is none from email,voice or sms - choose i'll wait option
+            [self _endVolumeControlTracking];
+            
+            // Update Listeners that chat ended
+            [self notifyAnnouncersDidChangeContent];
+            return nil;
         }
 
         KUSFormQuestion *question = [[KUSFormQuestion alloc]

@@ -13,6 +13,7 @@
 
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession;
 - (void)updateStats:(void (^)(BOOL sessionUpdated))completion;
+- (void)getStats:(void (^)(NSDate* lastActivity))completion;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

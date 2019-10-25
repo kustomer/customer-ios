@@ -18,9 +18,9 @@
 {
     NSString* lang = [[KUSLocalization sharedInstance] currentLanguage];
     [self.userSession.requestManager performRequestType:KUSRequestTypeGet
-                                               endpoint:@"/c/v1/chat/settings"
+                                               endpoint:@"/p/v1/chat/settings"
                                                  params:@{ @"lang": lang }
-                                          authenticated:YES
+                                          authenticated:NO
                                              completion:completion];
 //    [self.userSession.requestManager getEndpoint:@"/c/v1/chat/settings"
 //                                   authenticated:YES
