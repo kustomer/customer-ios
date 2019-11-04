@@ -22,9 +22,6 @@
                                                  params:@{ @"lang": lang }
                                           authenticated:NO
                                              completion:completion];
-//    [self.userSession.requestManager getEndpoint:@"/c/v1/chat/settings"
-//                                   authenticated:YES
-//                                      completion:completion];
 }
 
 - (Class)modelClass

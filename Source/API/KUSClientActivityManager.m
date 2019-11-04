@@ -125,7 +125,7 @@
     // Check that settings is fetched and no history is not enabled
     if (_userSession.chatSettingsDataSource.didFetch) {
         KUSChatSettings *settings = [_userSession.chatSettingsDataSource object];
-        if (!settings.noHistory) {
+        if (settings.campaignsEnabled) {
             _currentPageStartTime = CACurrentMediaTime();
             [self _requestClientActivityWithCurrentPageSeconds:0];
             return;
@@ -145,7 +145,7 @@
         [_userSession.chatSettingsDataSource removeListener:self];
         
         KUSChatSettings *settings = [_userSession.chatSettingsDataSource object];
-        if (!settings.noHistory) {
+        if (settings.campaignsEnabled) {
             _currentPageStartTime = CACurrentMediaTime();
             [self _requestClientActivityWithCurrentPageSeconds:0];
         }

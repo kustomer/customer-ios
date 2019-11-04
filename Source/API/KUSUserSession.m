@@ -308,8 +308,11 @@
         [[KUSVolumeControlTimerManager sharedInstance] reset];
     }
     
-    [self.chatSettingsDataSource addListener:self];
-    [self.chatSettingsDataSource fetch];
+    if(!self.chatSettingsDataSource.didFetch) {
+        [self.chatSettingsDataSource addListener:self];
+        [self.chatSettingsDataSource fetch];
+    }
+    
 }
 
 
@@ -326,6 +329,7 @@
         }
         if(chatSettings.campaignsEnabled) {
             //Initialize pusher when campaigns is enabled
+            KUSLogDebug("Proactive chat is enabled");
             [self pushClient];
         }
     }
