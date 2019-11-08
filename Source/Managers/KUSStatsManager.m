@@ -33,22 +33,30 @@
 - (void)updateStats:(void (^)(BOOL sessionUpdated))completion
 {
     // Fetch last activity time of the client
+    
+    [self getStats:^(NSDate *lastActivity) {
+        BOOL sessionUpdated = (_lastActivity == nil && lastActivity != nil) || ([_lastActivity compare:lastActivity] != NSOrderedSame);
+        _lastActivity = lastActivity;
+        completion(sessionUpdated);
+    }];
+}
+
+
+-(void) getStats:(void (^)(NSDate* lastActivity))completion {
+    
     [_userSession.requestManager
-     getEndpoint:@"/c/v1/chat/customers/stats"
-     authenticated:YES
-     completion:^(NSError *error, NSDictionary *response) {
-         if (error != nil) {
-             completion(false);
-             return;
-         }
-         NSDictionary* json = response[@"data"];
-         NSDate* lastActivity = DateFromKeyPath(json, @"attributes.lastActivity");
-         
-         BOOL sessionUpdated = (_lastActivity == nil && lastActivity != nil) || ([_lastActivity compare:lastActivity] != NSOrderedSame);
-         
-         _lastActivity = lastActivity;
-         completion(sessionUpdated);
-     }];
+    getEndpoint:@"/c/v1/chat/customers/stats"
+    authenticated:YES
+    completion:^(NSError *error, NSDictionary *response) {
+        if (error != nil) {
+            completion(false);
+            return;
+        }
+        NSDictionary* json = response[@"data"];
+        NSDate* lastActivity = DateFromKeyPath(json, @"attributes.lastActivity");
+    
+        completion(lastActivity);
+    }];
 }
 
 @end

@@ -61,4 +61,5 @@
 
 - (void)describeCustomer:(KUSCustomerDescription *)customerDescription completion:(void(^)(BOOL, NSError *))completion;
 
+- (void) initializeWithReset:(BOOL )reset;
 @end

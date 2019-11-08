@@ -11,7 +11,7 @@
 #import "KUSLog.h"
 #import "KUSVolumeControlTimerManager.h"
 
-@interface KUSUserSession () <KUSPaginatedDataSourceListener>
+@interface KUSUserSession () <KUSPaginatedDataSourceListener,KUSObjectDataSourceListener>
 
 @property (nonatomic, copy, readonly) NSString *orgId;
 @property (nonatomic, copy, readonly) NSString *orgName;
@@ -53,17 +53,8 @@
             _organizationName = [firstLetter stringByAppendingString:[_orgName substringFromIndex:1]];
         }
 
-        if (reset) {
-            [self.trackingTokenDataSource reset];
-            [self.userDefaults reset];
-            [[KUSVolumeControlTimerManager sharedInstance] reset];
-        }
+        [self initializeWithReset:reset];
 
-        [self.chatSettingsDataSource fetch];
-        [self pushClient];
-
-        [self.chatSessionsDataSource addListener:self];
-        [self.chatSessionsDataSource fetchLatest];
     }
     return self;
 }
@@ -271,9 +262,17 @@
 - (void)paginatedDataSourceDidLoad:(KUSPaginatedDataSource *)dataSource
 {
     if (dataSource == self.chatSessionsDataSource) {
+        
         [self.chatSessionsDataSource removeListener:self];
+        
+        BOOL hasActiveSession = false;
 
         for (KUSChatSession *chatSession in self.chatSessionsDataSource.allObjects) {
+            
+            //Check for any active session
+            if(!hasActiveSession && !chatSession.lockedAt) {
+                hasActiveSession = true;
+            }
             // Fetch any messages that might contribute to unread count
             KUSChatMessagesDataSource *messagesDataSource = [self chatMessagesDataSourceForSessionId:chatSession.oid];
             BOOL hasUnseen = chatSession.lastSeenAt == nil || [chatSession.lastMessageAt laterDate:chatSession.lastSeenAt] == chatSession.lastMessageAt;
@@ -281,7 +280,74 @@
                 [messagesDataSource fetchLatest];
             }
         }
+        
+        if(hasActiveSession){
+            //Connect to pusher at the time of initialization, for showing agent messages within the client app
+            [self pushClient];
+        }
     }
+}
+
+#pragma mark - KUSObjectDataSourceListener methods
+
+- (void)objectDataSourceDidLoad:(KUSObjectDataSource *)dataSource
+{
+    //Check if settings is loaded
+    if (dataSource == self.chatSettingsDataSource) {
+        [self.chatSettingsDataSource removeListener:self];
+        [self initializeChat];
+    }
+}
+
+#pragma mark - Chat initialization methods
+
+- (void) initializeWithReset:(BOOL)reset {
+    if (reset) {
+        [self.trackingTokenDataSource reset];
+        [self.userDefaults reset];
+        [[KUSVolumeControlTimerManager sharedInstance] reset];
+    }
+    
+    if(!self.chatSettingsDataSource.didFetch) {
+        [self.chatSettingsDataSource addListener:self];
+        [self.chatSettingsDataSource fetch];
+    }
+    
+}
+
+
+-(void) initializeChat {
+    
+    KUSChatSettings *chatSettings = self.chatSettingsDataSource.object;
+    if(chatSettings.enabled) { //Chat is enabled in the settings
+        
+        //Check for Tracking token present
+        NSString *cachedTrackingToken = [self.userDefaults trackingToken];
+        
+        if (cachedTrackingToken || chatSettings.campaignsEnabled) {
+            [self fetchStatsAndSessions];
+        }
+        if(chatSettings.campaignsEnabled) {
+            //Initialize pusher when campaigns is enabled
+            KUSLogDebug("Proactive chat is enabled");
+            [self pushClient];
+        }
+    }
+}
+
+-(void) fetchStatsAndSessions {
+    
+    [self.statsManager getStats:^(NSDate *lastActivity) {
+        
+        if(lastActivity) {
+            //Fetch sessions if last activity timestamp is present
+            [self.chatSessionsDataSource addListener:self];
+            [self.chatSessionsDataSource fetchLatest];
+        }else{
+            //Mark the current session as new for a new user
+            [self.chatSessionsDataSource markSessionAsNew];
+        }
+    }];
 }
 
 @end

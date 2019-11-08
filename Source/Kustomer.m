@@ -318,10 +318,11 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
      params:@{ @"externalToken" : externalToken }
      authenticated:YES
      completion:^(NSError *error, NSDictionary *response) {
-       [weakUserSession.trackingTokenDataSource fetch];
+       //[weakUserSession.trackingTokenDataSource fetch];
        if (handler)  {
          handler(error == nil);
        }
+        [weakUserSession initializeWithReset:NO];
      }];
 }
 
@@ -335,6 +336,7 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
     // Update the new userSession with the previous state
     [self.userSession.delegateProxy setDelegate:self.delegate];
     [self.userSession.activityManager setCurrentPageName:currentPageName];
+    [self.userSession.userDefaults reset];
 }
 
 - (void)setCurrentPageName:(NSString *)currentPageName

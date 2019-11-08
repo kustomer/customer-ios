@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, KUSVolumeControlMode) {
 @property (nonatomic, copy, readonly) NSURL *teamIconURL;
 @property (nonatomic, copy, readonly) NSString *greeting;
 @property (nonatomic, copy, readonly) NSString *activeFormId;
+@property (nonatomic, assign, readonly) BOOL campaignsEnabled;
 @property (nonatomic, copy, readonly) NSString *pusherAccessKey;
 @property (nonatomic, assign, readonly) BOOL enabled;
 

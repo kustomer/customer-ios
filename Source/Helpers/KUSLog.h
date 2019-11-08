@@ -13,6 +13,7 @@ typedef NS_OPTIONS(NSUInteger, KUSLogOptions) {
     KUSLogOptionErrors              = 1 << 1,
     KUSLogOptionRequests            = 1 << 2,
     KUSLogOptionPusher              = 1 << 3,
+    KUSLogOptionDebug               = 1 << 4,
     KUSLogOptionAll                 = 0xFFFFFF
 };
 
@@ -30,3 +31,4 @@ typedef NS_OPTIONS(NSUInteger, KUSLogOptions) {
 #define KUSLogRequest(fmt, ...) KUSLog(KUSLogOptionRequests, fmt, ##__VA_ARGS__);
 #define KUSLogPusher(fmt, ...) KUSLog(KUSLogOptionPusher, fmt, ##__VA_ARGS__);
 #define KUSLogPusherError(fmt, ...) KUSLog(KUSLogOptionErrors | KUSLogOptionPusher, fmt, ##__VA_ARGS__);
+#define KUSLogDebug(fmt, ...) KUSLog(KUSLogOptionDebug, fmt, ##__VA_ARGS__);

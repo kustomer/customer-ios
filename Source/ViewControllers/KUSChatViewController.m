@@ -189,7 +189,8 @@
     [self.view addSubview:self.inputBarView];
 
     [_chatMessagesDataSource addListener:self];
-    [_chatMessagesDataSource fetchLatest];
+    //TODO Swapna removing fetching of messages on view load
+//    [_chatMessagesDataSource fetchLatest];
     if (!_chatMessagesDataSource.didFetch) {
         [self showLoadingIndicator];
     }
@@ -235,7 +236,8 @@
         }
     }
 
-    [_userSession.chatSessionsDataSource updateLastSeenAtForSessionId:_chatSessionId completion:nil];
+    //TODO Swapna removing fetching of messages on view appear
+    //[_userSession.chatSessionsDataSource updateLastSeenAtForSessionId:_chatSessionId completion:nil];
     [_chatMessagesDataSource startListeningForTypingUpdate];
 }
 
