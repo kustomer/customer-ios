@@ -1,10 +1,13 @@
 # Changelog for Kustomer iOS SDK'
 
-## 0.2.5
+## 0.3.0
 
-Release Date: 10/09/2019
+Release Date: 11/08/2019
 
 * Removed stats call when pusher is connected
+* Chat initialization improvements
+* Removed frequent calls to sessions and messages
+* Fixed messages truncation issue for large messages
 
 ## 0.2.4
 

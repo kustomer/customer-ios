@@ -277,7 +277,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         }
         
         // End Control Tracking and Automatically marked it Closed, if form not end
-        if (!strongSelf->_vcFormEnd) {
+        if (!strongSelf->_vcFormEnd && [UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
             [strongSelf endChat:@"timed_out" withCompletion:^(BOOL ended) {
                 if (ended) {
                     [strongSelf _endVolumeControlTracking];
@@ -1284,7 +1284,6 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     if (_vcFormEnd) {
         return YES;
     }
-    
     
     // Check that last message is VC form last message
     KUSChatMessage *lastMessage = [self latestMessage];

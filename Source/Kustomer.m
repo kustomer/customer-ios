@@ -318,7 +318,7 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
      params:@{ @"externalToken" : externalToken }
      authenticated:YES
      completion:^(NSError *error, NSDictionary *response) {
-       [weakUserSession.trackingTokenDataSource fetch];
+       //[weakUserSession.trackingTokenDataSource fetch];
        if (handler)  {
          handler(error == nil);
        }

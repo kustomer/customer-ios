@@ -189,6 +189,7 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
 
 - (void)_onPollTick
 {
+    KUSLogPusher(@"Poll Tick called");
     [_userSession.statsManager updateStats:^(BOOL sessionUpdated) {
         // Get latest session on update
         if (sessionUpdated) {
@@ -534,6 +535,10 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
     KUSLogPusher(@"Pusher connection did connect");
 
     [self _updatePollingTimer];
+    
+    if(_didPusherLossPackets){
+        [self _onPollTick];
+    }
 }
 
 - (void)pusher:(PTPusher *)pusher connection:(PTPusherConnection *)connection didDisconnectWithError:(NSError *)error willAttemptReconnect:(BOOL)willAttemptReconnect
@@ -541,10 +546,11 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
     if (error) {
         KUSLogPusherError(@"Pusher connection did disconnect with error: %@", error);
     } else {
-        KUSLogPusher(@"Pusher connection did disconnect");
+        KUSLogPusher(@"Pusher connection did disconnect and willAttemptReconnect: %d",willAttemptReconnect);
     }
 
     [self _updatePollingTimer];
+    _didPusherLossPackets = YES;
 }
 
 - (void)pusher:(PTPusher *)pusher connection:(PTPusherConnection *)connection failedWithError:(NSError *)error

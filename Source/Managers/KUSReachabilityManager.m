@@ -146,7 +146,7 @@
             KUSChatSession *previousChatSession = [_previousChatSessions objectForKey:chatSession.oid];
             KUSChatMessagesDataSource *messagesDataSource = [userSession chatMessagesDataSourceForSessionId:chatSession.oid];
             if (previousChatSession) {
-                KUSChatMessage *latestChatMessage = messagesDataSource.allObjects.firstObject;
+                
                 NSDate *previousSessionLastMessageAt = previousChatSession.lastMessageAt;
                 BOOL isUpdatedSession;
                 if (previousSessionLastMessageAt == nil) {
@@ -156,11 +156,15 @@
                 }
                 NSDate *sessionLastSeenAt = [userSession.chatSessionsDataSource lastSeenAtForSessionId:chatSession.oid];
                 BOOL lastSeenBeforeMessage = [chatSession.lastMessageAt compare:sessionLastSeenAt] == NSOrderedDescending;
-                BOOL lastMessageAtNewerThanLocalLastMessage = latestChatMessage == nil || [chatSession.lastMessageAt compare:latestChatMessage.createdAt] == NSOrderedDescending;
+                
+                //removing this flag, since it is not fetching the agent messages which might have been sent before the last local message
+                //KUSChatMessage *latestChatMessage = messagesDataSource.allObjects.firstObject;
+                //BOOL lastMessageAtNewerThanLocalLastMessage = latestChatMessage == nil || [chatSession.lastMessageAt compare:latestChatMessage.createdAt] == NSOrderedDescending;
+                
                 BOOL chatSessionSetToLock = chatSession.lockedAt != nil && ![chatSession.lockedAt isEqual:previousChatSession.lockedAt];
                 
                 // Check that new message arrived or not
-                if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
+                if (isUpdatedSession && lastSeenBeforeMessage) {
                     [messagesDataSource fetchLatest];
                 }
                 // Check that session lock state changed
