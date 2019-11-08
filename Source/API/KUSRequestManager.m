@@ -162,8 +162,6 @@ typedef void (^KUSTrackingTokenCompletion)(NSError *error, NSString *trackingTok
     };
 
     void (^performRequestWithTrackingToken)(NSString *) = ^void(NSString *trackingToken) {
-        KUSLogRequest(@"Performing request: %@ %@%@%@", KUSRequestTypeToString(type),
-                      URL.path, URL.query.length ? @"?" : @"", URL.query ?: @"");
 
         NSURL *finalURL = (type == KUSRequestTypeGet ? KUSURLFromURLAndQueryParams(URL, params) : URL);
         NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:finalURL];
@@ -176,6 +174,8 @@ typedef void (^KUSTrackingTokenCompletion)(NSError *error, NSString *trackingTok
         for (NSString *headerField in additionalHeaders) {
             [urlRequest setValue:additionalHeaders[headerField] forHTTPHeaderField:headerField];
         }
+        KUSLogRequest(@"Performing request: %@ %@%@%@ ", KUSRequestTypeToString(type),
+        URL.path, URL.query.length ? @"?" : @"", URL.query ?: @"");
 
         if (type != KUSRequestTypeGet) {
             if (bodyData) {

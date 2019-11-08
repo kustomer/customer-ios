@@ -35,6 +35,7 @@
         _waitMessage = NSStringFromKeyPath(json, @"attributes.waitMessage");
         _singleSessionChat = BOOLFromKeyPath(json, @"attributes.singleSessionChat");
         _noHistory = BOOLFromKeyPath(json, @"attributes.noHistory");
+        _campaignsEnabled = BOOLFromKeyPath(json, @"attributes.campaignsEnabled");
         
         _customWaitMessage = NSStringFromKeyPath(json, @"attributes.volumeControl.customWaitMessage");
         _timeOut = IntegerFromKeyPath(json, @"attributes.volumeControl.timeout");

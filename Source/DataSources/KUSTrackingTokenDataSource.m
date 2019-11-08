@@ -62,7 +62,8 @@
 {
     _wantsReset = YES;
     [self cancel];
-    [self fetch];
+    //TODO Swapna removing fetching of token again on reset
+    //[self fetch];
 }
 
 #pragma mark - Internal methods
