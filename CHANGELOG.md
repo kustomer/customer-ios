@@ -1,5 +1,13 @@
 # Changelog for Kustomer iOS SDK'
 
+## 0.3.1
+
+Release Date: 11/22/2019
+
+* Hiding waiting label when Chat is disabled, or when Agent has replied in a conversation
+* Updated message font to system font
+* Minor bug fixed to in satisfaction survey form
+
 ## 0.3.0
 
 Release Date: 11/08/2019

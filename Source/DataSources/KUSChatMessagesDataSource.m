@@ -371,6 +371,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         for (KUSChatMessage *message in self.allObjects) {
             if (!KUSChatMessageSentByUser(message) && message.sentById) {
                 _didAgentReply = true;
+                break;
             }
         }
     }
