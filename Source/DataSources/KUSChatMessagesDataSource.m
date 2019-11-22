@@ -59,6 +59,8 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     
     NSMutableArray<void(^)(BOOL success, NSError *error)> *_onSessionCreationCallbacks;
     NSMutableDictionary<NSString *, void(^)(void)> *_messageRetryBlocksById;
+    
+    BOOL _didAgentReply;
 }
 @property (nonatomic, strong) KUSSatisfactionResponseDataSource *satisfactionResponseDataSource;
 
@@ -360,6 +362,20 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         }
     }
     return NO;
+}
+
+- (BOOL)didAgentReply
+{
+    if(!_didAgentReply) {
+        
+        for (KUSChatMessage *message in self.allObjects) {
+            if (!KUSChatMessageSentByUser(message) && message.sentById) {
+                _didAgentReply = true;
+            }
+        }
+    }
+    
+    return _didAgentReply;
 }
 
 - (NSString *)firstOtherUserId

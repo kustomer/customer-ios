@@ -41,7 +41,7 @@ NSDictionary<NSString *, id> *KUSAttributedFontWithSize(NSDictionary<NSString *,
     UIFont *currentFont = [attributes objectForKey:NSFontAttributeName];
     UIFont *newFont = nil;
     if (currentFont && currentFont.pointSize != fontSize) {
-        newFont = [UIFont fontWithName:currentFont.fontName size:fontSize];
+        newFont = [UIFont fontWithName:currentFont.familyName size:fontSize];
         [mutableAttributes setObject:newFont forKey:NSFontAttributeName];
 
     }

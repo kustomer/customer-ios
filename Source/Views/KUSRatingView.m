@@ -105,7 +105,7 @@ static const CGFloat kKUSScaleLabelTopPadding = 11.0;
             @"0_5": @[@"number1", @"number2", @"number3", @"number4", @"number5"],
             @"1_5": @[@"emoji1", @"emoji2", @"emoji3", @"emoji4", @"emoji5"],
             @"1_3": @[@"emoji1", @"emoji3", @"emoji5"],
-            @"1_2": @[@"emoji1, @emoji5"],
+            @"1_2": @[@"emoji1", @"emoji5"],
             @"2_2": @[@"thumbsDown", @"thumbsUp"],
             @"2_3": @[@"thumbsDown", @"negative", @"thumbsUp"]
         };
