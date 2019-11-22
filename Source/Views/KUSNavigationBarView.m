@@ -317,12 +317,6 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
         } else {
             greetingLabelText = chatSettings.greeting;
         }
-    } else {
-        if (![_userSession.scheduleDataSource isActiveBusinessHours]) {
-            greetingLabelText = chatSettings.offhoursMessage;
-        } else if (!chatSettings.volumeControlEnabled) {
-            greetingLabelText = chatSettings.greeting;
-        }
     }
     return greetingLabelText;
 }
@@ -331,7 +325,10 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
 {
     KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
     NSString *waitingLabelText;
-    if (chatSettings.volumeControlEnabled) {
+    
+    if (!self.extraLarge && ![_userSession.scheduleDataSource isActiveBusinessHours]) {
+        waitingLabelText = chatSettings.offhoursMessage;
+    } else if (chatSettings.volumeControlEnabled) {
         if (_waitingMessage) {
             waitingLabelText = _waitingMessage;
         } else if (chatSettings.useDynamicWaitMessage) {
@@ -354,9 +351,7 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
             return KUSMessageLabelAll;
         } else {
             
-            if (![_userSession.scheduleDataSource isActiveBusinessHours]) {
-                return KUSMessageLabelGreeting;
-            } else if ([self _shouldShowWaitingLabel]) {
+            if ([self _shouldShowWaitingLabel]) {
                 return KUSMessageLabelWaiting;
             } else {
                 return KUSMessageLabelNone;
@@ -369,7 +364,7 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
 - (BOOL)_shouldShowWaitingLabel
 {
     KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
-    BOOL shouldShowWaitingLabel = chatSettings.enabled && chatSettings.volumeControlEnabled;
+    BOOL shouldShowWaitingLabel = chatSettings.enabled && (chatSettings.volumeControlEnabled || ![_userSession.scheduleDataSource isActiveBusinessHours]);
     
     if(_chatMessagesDataSource) {
         shouldShowWaitingLabel = shouldShowWaitingLabel && !_chatMessagesDataSource.didAgentReply;
