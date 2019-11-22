@@ -39,6 +39,7 @@
 - (NSString *)sessionId;
 - (BOOL)isAnyMessageByCurrentUser;
 - (BOOL)shouldAllowAttachments;
+- (BOOL)didAgentReply;
 - (NSString *)firstOtherUserId;
 - (NSArray<NSString *> *)otherUserIds;
 - (NSUInteger)unreadCountAfterDate:(NSDate *)date;
