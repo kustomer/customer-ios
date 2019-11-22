@@ -346,9 +346,9 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
 - (KUSMessageLabel)_messageLabelsToShow
 {
     if (self.showsLabels) {
-        KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
+        
         if (self.extraLarge) {
-            if (!chatSettings.volumeControlEnabled) {
+            if (![self _shouldShowWaitingLabel]) {
                 return KUSMessageLabelGreeting;
             }
             return KUSMessageLabelAll;
@@ -356,14 +356,26 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
             
             if (![_userSession.scheduleDataSource isActiveBusinessHours]) {
                 return KUSMessageLabelGreeting;
-            } else if (chatSettings.volumeControlEnabled) {
+            } else if ([self _shouldShowWaitingLabel]) {
                 return KUSMessageLabelWaiting;
             } else {
-                return KUSMessageLabelGreeting;
+                return KUSMessageLabelNone;
             }
         }
     }
     return KUSMessageLabelNone;
+}
+
+- (BOOL)_shouldShowWaitingLabel
+{
+    KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
+    BOOL shouldShowWaitingLabel = chatSettings.enabled && chatSettings.volumeControlEnabled;
+    
+    if(_chatMessagesDataSource) {
+        shouldShowWaitingLabel = shouldShowWaitingLabel && !_chatMessagesDataSource.didAgentReply;
+    }
+    
+    return shouldShowWaitingLabel;
 }
 
 - (void)_updateTextLabels
