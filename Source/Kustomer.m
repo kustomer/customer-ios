@@ -366,7 +366,28 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
 
 - (void)isChatAvailable:(void (^)(BOOL success, BOOL enabled))block
 {
-    [self.userSession.chatSettingsDataSource isChatAvailable:block];
+    [self.userSession.chatSettingsDataSource isChatAvailable:^(BOOL success, BOOL enabled) {
+        if(success && enabled) {
+            //Chat Settings is enabled
+            //Check if within Business Hours and outside of Holidays
+            [self checkBusinessHoursAvailability:block];
+        }else if(success){
+            block(YES,NO);
+        }else{
+            block(NO,NO);
+        }
+    }];
+}
+
+- (void)checkBusinessHoursAvailability:(void (^)(BOOL success, BOOL enabled))block
+{
+    //Check if Business Schedule was already fetched
+    if([self.userSession.scheduleDataSource didFetch]) {
+        block(YES,[self.userSession.scheduleDataSource isActiveBusinessHours]);
+    }else{
+        //Fetch Business Schedule and check if within Business Hours and outside of Holidays
+        [self.userSession.scheduleDataSource fetchBusinessHours:block];
+    }
 }
 
 - (void)setFormId:(NSString *)formId

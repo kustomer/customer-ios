@@ -26,7 +26,7 @@ The Kustomer iOS SDK requires a valid API Key with role `org.tracking`. See [Get
 The preferred installation method is with [CocoaPods](https://cocoapods.org). Add the following to your `Podfile`:
 
 ```ruby
-pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.1'
+pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.2'
 ```
 
 #### Carthage
@@ -34,7 +34,7 @@ pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => 
 For [Carthage](https://github.com/Carthage/Carthage), add the following to your `Cartfile`:
 
 ```ogdl
-github "kustomer/customer-ios" ~> 0.3.1
+github "kustomer/customer-ios" ~> 0.3.2
 ```
 
 ## Setup
@@ -188,11 +188,12 @@ customerDescription.custom = @{ @"customAttributeStr": @"value" };
 
 ```objective-c
 /*
- Check the "turned on/off" status of your chat asynchronously. For example if chat is turned off, you may want to disable the button or deflect customers to contact an email)
+ Check the "turned on/off" status of your chat alongwith within Business Hours and outside of Holidays settings asynchronously. For example if chat is turned off or outside of business hours, you may want to disable the button or deflect customers to contact an email)
 */
 [Kustomer isChatAvailable:^(BOOL success, BOOL enabled) {
     // success variable show if the API call was successful or not.
-    // enabled represent chat management settings. This is only valid if success is true as well.
+    // enabled represent chat management settings and within Business Hours and outside of Holidays.
+    // enabled flag is only valid if success flag is true as well.
 }];
 ```
 
