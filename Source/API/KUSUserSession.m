@@ -296,6 +296,8 @@
     if (dataSource == self.chatSettingsDataSource) {
         [self.chatSettingsDataSource removeListener:self];
         [self initializeChat];
+    }else if (dataSource == self.scheduleDataSource) {
+        [self.scheduleDataSource removeListener:self];
     }
 }
 
@@ -308,9 +310,18 @@
         [[KUSVolumeControlTimerManager sharedInstance] reset];
     }
     
+    //Fetching Business Hours and Holidays
+    if(!self.scheduleDataSource.didFetch) {
+        [self.scheduleDataSource addListener:self];
+        [self.scheduleDataSource fetch];
+    }
+    
+    //Fetching Chat Settings
     if(!self.chatSettingsDataSource.didFetch) {
         [self.chatSettingsDataSource addListener:self];
         [self.chatSettingsDataSource fetch];
+    }else{
+        [self initializeChat];
     }
     
 }

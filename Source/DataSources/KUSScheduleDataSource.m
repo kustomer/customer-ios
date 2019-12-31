@@ -34,7 +34,7 @@
 - (void)performRequestWithCompletion:(KUSRequestCompletion)completion
 {
     NSString *scheduleIdToFetch = [self scheduleIdToFetch];
-    NSString *endpoint = [NSString stringWithFormat:@"/c/v1/schedules/%@?include=holidays", scheduleIdToFetch];
+    NSString *endpoint = [NSString stringWithFormat:@"/p/v1/schedules/%@?include=holidays", scheduleIdToFetch];
     [self.userSession.requestManager getEndpoint:endpoint
                                    authenticated:YES
                                       completion:^(NSError *error, NSDictionary *response) {
@@ -131,5 +131,16 @@
     return NO;
 }
 
+- (void)fetchBusinessHours:(void (^)(BOOL success, BOOL enabled))block
+{
+    [self performRequestWithCompletion:^(NSError *error, NSDictionary *response) {
+        
+        if (error || _lastFetchedScheduleId == nil) {
+            block(NO, NO);
+        } else {
+            block(YES, [self isActiveBusinessHours]);
+        }
+    }];
+}
 
 @end
