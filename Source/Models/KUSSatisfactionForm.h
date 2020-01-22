@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, KUSSatisfactionScaleType) {
 @interface KUSSatisfactionForm : KUSForm
 
 @property (nonatomic, copy, readonly) NSString *ratingPrompt;
+@property (nonatomic, copy, readonly) NSString *introduction;
 @property (nonatomic, assign, readonly) KUSSatisfactionScaleType scaleType;
 @property (nonatomic, copy, readonly) NSString *scaleLabelHigh;
 @property (nonatomic, copy, readonly) NSString *scaleLabelLow;

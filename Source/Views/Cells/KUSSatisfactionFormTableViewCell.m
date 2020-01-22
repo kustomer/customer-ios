@@ -27,6 +27,7 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
     KUSSatisfactionForm *_satisfactionForm;
     KUSAvatarImageView *_avatarImageView;
     UILabel *_satisfactionQuestion;
+    UILabel *_introductionQuestion;
     UILabel *_commentQuestion;
     UITextView *_commentBox;
     UIButton *_submitButton;
@@ -44,12 +45,14 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
     if (self == [KUSSatisfactionFormTableViewCell class]) {
         KUSSatisfactionFormTableViewCell *appearance = [KUSSatisfactionFormTableViewCell appearance];
         [appearance setSatisfactionQuestionColor:[UIColor blackColor]];
+        [appearance setIntroductionQuestionColor:[UIColor blackColor]];
         [appearance setCommentQuestionColor:[UIColor blackColor]];
         [appearance setSubmitButtonTextColor:[UIColor whiteColor]];
         [appearance setSubmitButtonBackgroundColor:[KUSColor blueColor]];
         [appearance setCommentBoxTextColor:[UIColor blackColor]];
         [appearance setCommentBoxBorderColor:[[UIColor blackColor] colorWithAlphaComponent:0.2]];
-        [appearance setSatisfactionQuestionFont:[UIFont boldSystemFontOfSize:13.0]];
+        [appearance setSatisfactionQuestionFont:[UIFont systemFontOfSize:13.0]];
+        [appearance setIntroductionQuestionFont:[UIFont boldSystemFontOfSize:15.0]];
         [appearance setCommentQuestionFont:[UIFont boldSystemFontOfSize:13.0]];
         [appearance setSubmitButtonFont:[UIFont boldSystemFontOfSize:14.0]];
     }
@@ -123,7 +126,14 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
         _satisfactionQuestion = [[UILabel alloc] init];
         _satisfactionQuestion.userInteractionEnabled = NO;
         _satisfactionQuestion.numberOfLines = 0;
+        _satisfactionQuestion.textAlignment = NSTextAlignmentCenter;
         [_formView addSubview:_satisfactionQuestion];
+      
+        _introductionQuestion = [[UILabel alloc] init];
+        _introductionQuestion.userInteractionEnabled = NO;
+        _introductionQuestion.numberOfLines = 0;
+        _introductionQuestion.textAlignment = NSTextAlignmentCenter;
+        [_formView addSubview:_introductionQuestion];
         
         _ratingView = [[KUSRatingView alloc] init];
         _ratingView.delegate = self;
@@ -180,13 +190,25 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
     
     CGFloat maxContentWidth = _formView.bounds.size.width - (kRowSidePadding * 2);
     
+    CGSize boundingSizeForIntroductionQuestion = [[self class] boundingSizeForText:_introductionQuestion.text
+                                                                          maxWidth:maxContentWidth - 1
+                                                                              font:_introductionQuestionFont];
+    
+    _introductionQuestion.frame = (CGRect) {
+        .origin.x = kRowSidePadding,
+        .origin.y = kCellVerticalPadding,
+        .size.height = boundingSizeForIntroductionQuestion.height,
+        .size.width = maxContentWidth
+    };
+    
+    CGFloat satisfactionQuestionOriginY = _introductionQuestion.frame.origin.y + boundingSizeForIntroductionQuestion.height + kCellVerticalPadding;
     CGSize boundingSizeForSatisfactionQuestion = [[self class] boundingSizeForText:_satisfactionQuestion.text
                                                                           maxWidth:maxContentWidth - 1
                                                                               font:_satisfactionQuestionFont];
     
     _satisfactionQuestion.frame = (CGRect) {
         .origin.x = kRowSidePadding,
-        .origin.y = kCellVerticalPadding,
+        .origin.y = satisfactionQuestionOriginY,
         .size.height = boundingSizeForSatisfactionQuestion.height,
         .size.width = maxContentWidth
     };
@@ -241,6 +263,7 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
 {
     _satisfactionForm = satisfactionForm;
     [_satisfactionQuestion setText:satisfactionForm.ratingPrompt];
+    [_introductionQuestion setText:satisfactionForm.introduction];
     [_commentQuestion setText:satisfactionForm.questions.firstObject.prompt];
     [_ratingView setRatingOptions:satisfactionForm.scaleType
                      optionsCount:satisfactionForm.scaleOptions
@@ -279,6 +302,12 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
     [_satisfactionQuestion setFont:_satisfactionQuestionFont];
 }
 
+- (void)setIntroductionQuestionFont:(UIFont *)introductionQuestionFont
+{
+    _introductionQuestionFont = introductionQuestionFont;
+    [_introductionQuestion setFont:_introductionQuestionFont];
+}
+
 - (void)setCommentQuestionFont:(UIFont *)commentQuestionFont
 {
     _commentQuestionFont = commentQuestionFont;
@@ -295,6 +324,12 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
 {
     _satisfactionQuestionColor = satisfactionQuestionColor;
     [_satisfactionQuestion setTextColor:_satisfactionQuestionColor];
+}
+
+- (void)setIntroductionQuestionColor:(UIColor *)introductionQuestionColor
+{
+    _introductionQuestionColor = introductionQuestionColor;
+    [_introductionQuestion setTextColor:_introductionQuestionColor];
 }
 
 - (void)setCommentQuestionColor:(UIColor *)commentQuestionColor
