@@ -152,7 +152,7 @@
     return userDataSource;
 }
 
-#pragma mark - Managers & Push client 
+#pragma mark - Managers & Push client
 
 - (KUSRequestManager *)requestManager
 {
@@ -295,9 +295,14 @@
     //Check if settings is loaded
     if (dataSource == self.chatSettingsDataSource) {
         [self.chatSettingsDataSource removeListener:self];
-        [self initializeChat];
+        //Fetching Business Hours and Holidays
+        if(!self.scheduleDataSource.didFetch) {
+          [self.scheduleDataSource addListener:self];
+          [self.scheduleDataSource fetch];
+        }
     }else if (dataSource == self.scheduleDataSource) {
         [self.scheduleDataSource removeListener:self];
+        [self initializeChat];
     }
 }
 
@@ -309,21 +314,12 @@
         [self.userDefaults reset];
         [[KUSVolumeControlTimerManager sharedInstance] reset];
     }
-    
-    //Fetching Business Hours and Holidays
-    if(!self.scheduleDataSource.didFetch) {
-        [self.scheduleDataSource addListener:self];
-        [self.scheduleDataSource fetch];
-    }
-    
-    //Fetching Chat Settings
+  
+    //Fetching Chat Setting
     if(!self.chatSettingsDataSource.didFetch) {
-        [self.chatSettingsDataSource addListener:self];
-        [self.chatSettingsDataSource fetch];
-    }else{
-        [self initializeChat];
+      [self.chatSettingsDataSource addListener:self];
+      [self.chatSettingsDataSource fetch];
     }
-    
 }
 
 
@@ -362,3 +358,4 @@
 }
 
 @end
+

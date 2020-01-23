@@ -71,6 +71,10 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
                                maxWidth:formContentMaxWidth - 1
                                    font:appearance.satisfactionQuestionFont].height;
     height += kCellVerticalPadding;
+    height += [self boundingSizeForText:satisfactionForm.introduction
+                              maxWidth:formContentMaxWidth - 1
+                                  font:appearance.introductionQuestionFont].height;
+    height += kCellVerticalPadding;
     height += [KUSRatingView heightOfRatingViewForForm:satisfactionForm maxWidth:formContentMaxWidth];
     height += kCellVerticalPadding;
     
@@ -141,6 +145,7 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
         
         _commentQuestion = [[UILabel alloc] init];
         _commentQuestion.userInteractionEnabled = NO;
+        _commentQuestion.textAlignment = NSTextAlignmentCenter;
         _commentQuestion.numberOfLines = 0;
         [_formView addSubview:_commentQuestion];
         
