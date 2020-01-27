@@ -14,12 +14,14 @@
 @interface KUSSatisfactionFormTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UIColor *satisfactionQuestionColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *introductionQuestionColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *commentQuestionColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *commentBoxBorderColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *commentBoxTextColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *submitButtonBackgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *submitButtonTextColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIFont *satisfactionQuestionFont UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIFont *introductionQuestionFont UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIFont *commentQuestionFont UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIFont *submitButtonFont UI_APPEARANCE_SELECTOR;
 

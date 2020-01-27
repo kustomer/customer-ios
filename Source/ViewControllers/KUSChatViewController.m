@@ -189,8 +189,10 @@
     [self.view addSubview:self.inputBarView];
 
     [_chatMessagesDataSource addListener:self];
-    //TODO Swapna removing fetching of messages on view load
-//    [_chatMessagesDataSource fetchLatest];
+    
+    if (!_chatMessagesDataSource.didFetch && !_chatMessagesDataSource.isFetching) {
+        [_chatMessagesDataSource fetchLatest];
+    }
     if (!_chatMessagesDataSource.didFetch) {
         [self showLoadingIndicator];
     }

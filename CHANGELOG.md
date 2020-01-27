@@ -1,4 +1,13 @@
-# Changelog for Kustomer iOS SDK'
+# Changelog for Kustomer iOS SDK
+
+## 0.3.2
+
+Release Date: 01/27/2019
+
+* Re initializing chat when identify API is called
+* Added functionality in isChatAvailable API to Check if chat is within Business Hours and outside of Holidays along with Chat settings enabled
+* Added introduction message to satisfaction surveys
+* Updated font and centered satisfaction rating title, introduction message, and follow-up question
 
 ## 0.3.1
 

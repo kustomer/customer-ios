@@ -24,6 +24,7 @@
     self = [super initWithJSON:json];
     if (self) {
         _ratingPrompt = NSStringFromKeyPath(json, @"attributes.ratingPrompt");
+        _introduction = NSStringFromKeyPath(json, @"attributes.introduction");
         _scaleLabelHigh = NSStringFromKeyPath(json, @"attributes.scale.labelHigh");
         _scaleLabelLow = NSStringFromKeyPath(json, @"attributes.scale.labelLow");
         _scaleType = KUSSatisfactionScaleTypeFromString(NSStringFromKeyPath(json, @"attributes.scale.type"));
