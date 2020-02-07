@@ -12,6 +12,10 @@
 #import "KUSLog.h"
 #import "KUSUserSession.h"
 #import "KUSReachabilityManager.h"
+#import "KUSSessionsTableView.h"
+#import "KUSChatTableView.h"
+#import "KUSChatMessageTableViewCell.h"
+
 
 static NSString *kKustomerOrgIdKey = @"org";
 static NSString *kKustomerOrgNameKey = @"orgName";
@@ -237,6 +241,8 @@ static NSString *kKustomerOrgNameKey = @"orgName";
     
     //Intialize Reachability manager to get callbacks for newtwork state change
     [KUSReachabilityManager.sharedInstance startObservingNetworkChange];
+    
+    [self setAppearanceDefaults];
 }
 
 - (void)setDelegate:(__weak id<KustomerDelegate>)delegate
@@ -277,6 +283,13 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
 {
     NSAssert(_userSession, @"Kustomer needs to be initialized before use");
     return _userSession;
+}
+
+- (void)setAppearanceDefaults
+{
+    [[KUSChatTableView appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[KUSChatMessageTableViewCell appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[KUSSessionsTableView appearance] setBackgroundColor:[UIColor whiteColor]];
 }
 
 #pragma mark - Internal methods

@@ -291,7 +291,9 @@ You must set the language before calling `initializeWithAPIKey` method. The SDK 
 
 ### Appearance
 
-The majority of the user interface for the support screens can be configured using `UIAppearance`. As an example, if you are designing a Halloween-themed support interface, you could re-skin the Kustomer iOS support screens using the following:
+The majority of the user interface for the support screens can be configured using `UIAppearance`. You must call `[Kustomer initializeWithAPIKey:kKustomerAPIKey]` before changing any appearance values.
+
+As an example, if you are designing a Halloween-themed support interface, you could re-skin the Kustomer iOS support screens using the following:
 
 ##### Sessions screen:
 ```objective-c
