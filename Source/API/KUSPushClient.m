@@ -103,7 +103,11 @@ static const NSTimeInterval KUSActivePollingTimerInterval = 7.5;
 {
     KUSChatSettings *chatSettings = _userSession.chatSettingsDataSource.object;
     if (_pusherClient == nil && chatSettings.pusherAccessKey) {
-        _pusherClient = [PTPusher pusherWithKey:chatSettings.pusherAccessKey delegate:self encrypted:YES];
+        if(chatSettings.pusherCluster.length > 0){
+            _pusherClient = [PTPusher pusherWithKey:chatSettings.pusherAccessKey delegate:self encrypted:YES cluster:chatSettings.pusherCluster];
+        }else{
+            _pusherClient = [PTPusher pusherWithKey:chatSettings.pusherAccessKey delegate:self encrypted:YES];
+        }
         _pusherClient.authorizationURL = [self _pusherAuthURL];
     }
     

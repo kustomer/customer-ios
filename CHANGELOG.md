@@ -1,5 +1,12 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.3
+
+Release Date: n/a
+
+* Support Additional Pusher "Clusters"
+
+
 ## 0.3.2
 
 Release Date: 01/27/2019
