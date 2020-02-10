@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ 일 전";
 "com.kustomer.param_week_ago" = "%@ 주 전";
 "com.kustomer.param_weeks_ago" = "%@ 주 전";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "다음 파일 ({fileNames})을 업로드하지 못했습니다. 크기가 {maxSize} MB보다 크거나 {totalSize} MB의 모든 첨부 파일의 총 크기를 초과했습니다.";
+"com.kustomer.derived.okbutton" = "승인";

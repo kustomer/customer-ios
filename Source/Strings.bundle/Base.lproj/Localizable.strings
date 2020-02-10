@@ -60,3 +60,7 @@
 "com.kustomer.param_days_ago" = "%@ days ago";
 "com.kustomer.param_week_ago" = "%@ week ago";
 "com.kustomer.param_weeks_ago" = "%@ weeks ago";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Failed to upload the file(s). Their size was larger than {maxSize}MB or exceeded the total size of all attachments of {totalSize}MB";
+"com.kustomer.derived.okbutton" = "Ok";
+"com.kustomer.Tap to play" = "Tap to play";

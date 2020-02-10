@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ gün önce";
 "com.kustomer.param_week_ago" = "%@ hafta önce";
 "com.kustomer.param_weeks_ago" = "%@ hafta önce";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Şu dosyalar yüklenemedi: {fileNames}. Boyutları {maxSize} MB'den büyüktü veya {totalSize} MB eklerinin tümünün toplam boyutunu aştı";
+"com.kustomer.derived.okbutton" = "Tamam";

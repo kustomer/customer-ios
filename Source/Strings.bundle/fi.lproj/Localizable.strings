@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ päivää sitten";
 "com.kustomer.param_week_ago" = "%@ viikko sitten";
 "com.kustomer.param_weeks_ago" = "%@ viikkoa sitten";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Seuraavan tiedoston lataaminen epäonnistui: {fileNames}. Niiden koko oli suurempi kuin {maxSize} MB tai ylitti {totalSize} MB: n kaikkien liitetiedostojen kokonaiskoon";
+"com.kustomer.derived.okbutton" = "kunnossa";

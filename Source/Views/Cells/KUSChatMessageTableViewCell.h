@@ -44,5 +44,6 @@
 - (void)chatMessageTableViewCell:(KUSChatMessageTableViewCell *)cell didTapLink:(NSURL *)URL;
 - (void)chatMessageTableViewCellDidTapImage:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message;
 - (void)chatMessageTableViewCellDidTapError:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message;
+- (void)chatMessageTableViewCellDidTapAttachment:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message;
 
 @end

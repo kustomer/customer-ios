@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ μέρες πριν";
 "com.kustomer.param_week_ago" = "Πριν από %@ εβδομάδα";
 "com.kustomer.param_weeks_ago" = "πριν %@ εβδομάδες";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Αποτυχία φόρτωσης των ακόλουθων αρχείων: {fileNames}. Το μέγεθος τους ήταν μεγαλύτερο από {maxSize} MB ή υπερβαίνει το συνολικό μέγεθος όλων των συνημμένων του {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Εντάξει";

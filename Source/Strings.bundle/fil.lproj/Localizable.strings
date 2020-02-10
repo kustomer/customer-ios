@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ araw na nakalipas";
 "com.kustomer.param_week_ago" = "%@ linggo nakaraan";
 "com.kustomer.param_weeks_ago" = "%@ linggo nakaraan";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nabigong i-upload ang sumusunod na (mga) file: {fileNames}. Ang laki nila ay mas malaki sa {maxSize} MB o lumampas sa kabuuang sukat ng lahat ng mga attachment ng {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Ok";

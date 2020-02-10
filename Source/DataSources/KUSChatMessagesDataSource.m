@@ -19,6 +19,7 @@
 #import "KUSObjectDataSource_Private.h"
 #import "KUSVolumeControlTimerManager.h"
 #import <SDWebImage/SDImageCache.h>
+#import "KUSMediaAttachment.h"
 
 static const NSTimeInterval KUSChatAutoreplyDelay = 2.0;
 static const NSTimeInterval kKUSResendTypingStatusDelay = 3.0 * 1000;
@@ -537,12 +538,12 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     }
 }
 
-- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments
+- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments
 {
     [self sendMessageWithText:text attachments:attachments value:nil];
 }
 
-- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments value:(NSString *)value
+- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments value:(NSString *)value
 {
     _isProactiveCampaign = ![self isAnyMessageByCurrentUser];
     if ([_formDataSource getConversationalFormId] && ![self isActualSessionExist]) {
@@ -686,16 +687,16 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     }
 }
 
-- (void)_actuallySendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments
+- (void)_actuallySendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments
 {
     NSString *tempMessageId = [[NSUUID UUID] UUIDString];
     NSMutableArray<NSDictionary<NSString *, NSString *> *> *attachmentObjects = [[NSMutableArray alloc] initWithCapacity:attachments.count];
     NSMutableArray<NSString *> *cachedImageKeys = [[NSMutableArray alloc] initWithCapacity:attachments.count];
-    for (UIImage *attachment in attachments) {
+    for (KUSMediaAttachment *attachment in attachments) {
         NSString *attachmentId = [[NSUUID UUID] UUIDString];
         NSURL *attachmentURL = [KUSChatMessage attachmentURLForMessageId:tempMessageId attachmentId:attachmentId];
         NSString *imageKey = attachmentURL.absoluteString;
-        [[SDImageCache sharedImageCache] storeImage:attachment
+        [[SDImageCache sharedImageCache] storeImage:attachment.fullSizeImage
                                              forKey:imageKey
                                              toDisk:NO
                                          completion:nil];
@@ -721,7 +722,12 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     }
     
     NSArray<KUSChatMessage *> *temporaryMessages = [KUSChatMessage objectsWithJSON:json];
-
+    // temporaryMessages[0].isVerifiedAnAttachment = NO;
+    // temporaryMessages[0].isVerifiedAnImage = YES;
+    // temporaryMessages[1].isVerifiedAnAttachment = YES;
+    // temporaryMessages[1].isVerifiedAnImage = NO;
+    
+    
     // Insert the messages
     void(^insertMessagesWithState)(KUSChatMessageState) = ^void(KUSChatMessageState state) {
         [self removeObjects:temporaryMessages];
@@ -739,15 +745,22 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     // Logic to handle a successful message send
     void(^handleMessageSent)(NSDictionary *) = ^void(NSDictionary *response) {
         NSArray<KUSChatMessage *> *finalMessages = [KUSChatMessage objectsWithJSON:response[@"data"]];
-
+        
+        // finalMessages[0].isVerifiedAnAttachment = NO;
+        // finalMessages[0].isVerifiedAnImage = YES;
+        // finalMessages[0].isVerifiedAnAttachment = NO;
+        // finalMessages[0].isVerifiedAnImage = YES;
+        // finalMessages[1].isVerifiedAnAttachment = YES;
+        // finalMessages[1].isVerifiedAnImage = NO;
+        
         // Store the local image data in our cache for the remote image urls
         KUSChatMessage *firstMessage = finalMessages.firstObject;
         NSString *messageId = [firstMessage.oid componentsSeparatedByString:@"_"].firstObject ?: firstMessage.oid;
         for (NSUInteger i = 0; i < firstMessage.attachmentIds.count; i++) {
-            UIImage *attachment = [attachments objectAtIndex:i];
+            KUSMediaAttachment *attachment = [attachments objectAtIndex:i];
             NSString *attachmentId = [firstMessage.attachmentIds objectAtIndex:i];
             NSURL *attachmentURL = [KUSChatMessage attachmentURLForMessageId:messageId attachmentId:attachmentId];
-            [[SDImageCache sharedImageCache] storeImage:attachment
+            [[SDImageCache sharedImageCache] storeImage:attachment.fullSizeImage
                                                  forKey:attachmentURL.absoluteString
                                                  toDisk:YES
                                              completion:nil];
@@ -779,7 +792,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     // Logic to actually send a message
     void (^sendMessage)(void) = ^void() {
         [KUSUpload
-         uploadImages:attachments
+         uploadAttachments:attachments
          userSession:self.userSession
          completion:^(NSError *error, NSArray<KUSChatAttachment *> *attachments) {
              if (error) {

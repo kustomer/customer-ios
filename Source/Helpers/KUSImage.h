@@ -21,6 +21,14 @@
 + (UIImage *)awayImage;
 + (UIImage *)tickImage;
 
++ (UIImage *)docIconExcel;
++ (UIImage *)docIconOther;
++ (UIImage *)docIconText;
++ (UIImage *)docIconVideo;
++ (UIImage *)docIconWord;
++ (UIImage *)docIconZip;
++ (UIImage *)docIconPdf;
+
 + (UIImage *)attachImageWithSize:(CGSize)size;
 + (UIImage *)sendImageWithSize:(CGSize)size color:(UIColor *)color;
 + (UIImage *)submitImageWithSize:(CGSize)size color:(UIColor *)color;

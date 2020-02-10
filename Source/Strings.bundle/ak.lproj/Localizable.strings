@@ -34,3 +34,6 @@
 "com.kustomer.volume_control_phone_question" = "Mo, fon nɔma bԑn so na yԑbԑfa so anya wo?";
 "com.kustomer.volume_control_thankyou_response" = "Meda wo ase, ԑnkyԑ koraa wobԑte yԑnka.";
 
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Failed to upload the file(s). Their size was larger than {maxSize}MB or exceeded the total size of all attachments of {totalSize}MB";
+"com.kustomer.derived.okbutton" = "Ok";

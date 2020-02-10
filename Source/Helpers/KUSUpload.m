@@ -7,16 +7,17 @@
 //
 
 #import "KUSUpload.h"
+#import "KUSMediaAttachment.h"
 
 @implementation KUSUpload
 
 #pragma mark - Public methods
 
-+ (void)uploadImages:(NSArray<UIImage *> *)images
++ (void)uploadAttachments:(NSArray<KUSMediaAttachment *> *)originalAttachments
          userSession:(KUSUserSession *)userSession
           completion:(void(^)(NSError *error, NSArray<KUSChatAttachment *> *attachments))completion
 {
-    if (images.count == 0) {
+    if (originalAttachments.count == 0) {
         if (completion) {
             completion(nil, @[]);
         }
@@ -38,7 +39,7 @@
 
         uploadedCount++;
         [attachments replaceObjectAtIndex:index withObject:attachment];
-        if (uploadedCount == images.count) {
+        if (uploadedCount == originalAttachments.count) {
             if (completion && !didSendCompletion) {
                 didSendCompletion = YES;
                 completion(nil, attachments);
@@ -47,13 +48,13 @@
         }
     };
 
-    for (NSUInteger i = 0; i < images.count; i++) {
+    for (NSUInteger i = 0; i < originalAttachments.count; i++) {
         [attachments addObject:[NSNull null]];
-        UIImage *image = [images objectAtIndex:i];
+        KUSMediaAttachment *anAttachment = [originalAttachments objectAtIndex:i];
 
         NSUInteger index = i;
         [self
-         _uploadImage:image
+         _uploadAttachment:anAttachment
          userSession:userSession
          completion:^(NSError *error, KUSChatAttachment *attachment) {
              onUploadComplete(index, error, attachment);
@@ -63,20 +64,29 @@
 
 #pragma mark - Internal methods
 
-+ (void)_uploadImage:(UIImage *)image
++ (void)_uploadAttachment:(KUSMediaAttachment *)anAttachment
          userSession:(KUSUserSession *)userSession
           completion:(void(^)(NSError *error, KUSChatAttachment *attachment))completion
 {
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.8);
-    NSString *fileName = [NSString stringWithFormat:@"%@.jpg", [NSUUID UUID].UUIDString];
-
+    NSData *fileData;
+    NSString *fileName;
+  
+    if(anAttachment.isAnImage){
+      fileData = UIImageJPEGRepresentation(anAttachment.fullSizeImage, 0.8);
+      fileName = [NSString stringWithFormat:@"%@.jpg", [NSUUID UUID].UUIDString];
+      anAttachment.MIMEType = @"image/jpeg";
+    }else{
+      fileData = anAttachment.data;
+      fileName = [NSString stringWithFormat:@"%@.%@", [NSUUID UUID].UUIDString, anAttachment.fileExtension];
+    }
+    
     [userSession.requestManager
      performRequestType:KUSRequestTypePost
      endpoint:@"/c/v1/chat/attachments"
      params:@{
               @"name": fileName,
-              @"contentLength": @(imageData.length),
-              @"contentType": @"image/jpeg"
+              @"contentLength": @(fileData.length),
+              @"contentType": anAttachment.MIMEType
               }
      authenticated:YES
      completion:^(NSError *error, NSDictionary *response) {
@@ -93,7 +103,7 @@
 
          NSString *boundary = @"----FormBoundary";
          NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-         NSData *bodyData = KUSUploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(imageData, fileName, uploadFields, boundary);
+         NSData *bodyData = KUSUploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(fileData, fileName, anAttachment, uploadFields, boundary);
 
          [userSession.requestManager
           performRequestType:KUSRequestTypePost
@@ -120,8 +130,9 @@
 
 #pragma mark - Helper methods
 
-static NSData *KUSUploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(NSData *imageData,
+static NSData *KUSUploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(NSData *fileData,
                                                                          NSString *fileName,
+                                                                         KUSMediaAttachment *anAttachment,
                                                                          NSDictionary<NSString *, NSString *> *uploadFields,
                                                                          NSString *boundary)
 {
@@ -142,8 +153,13 @@ static NSData *KUSUploadBodyDataFromImageAndFileNameAndFieldsAndBoundary(NSData 
     }
 
     [bodyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", fileName] dataUsingEncoding:NSUTF8StringEncoding]];
-    [bodyData appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [bodyData appendData:[NSData dataWithData:imageData]];
+    
+    if(anAttachment.isAnImage){
+      [bodyData appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    }else{
+      [bodyData appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", anAttachment.MIMEType] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [bodyData appendData:[NSData dataWithData:fileData]];
     [bodyData appendData:[[NSString stringWithFormat:@"\r\n--%@--", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
 
     return bodyData;

@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
+#import "KUSMediaAttachment.h"
 #import "KUSChatAttachment.h"
 #import "KUSUserSession.h"
 
 @interface KUSUpload : NSObject
 
-+ (void)uploadImages:(NSArray<UIImage *> *)images
++ (void)uploadAttachments:(NSArray<KUSMediaAttachment *> *)attachments
          userSession:(KUSUserSession *)userSession
           completion:(void(^)(NSError *error, NSArray<KUSChatAttachment *> *attachments))completion;
 

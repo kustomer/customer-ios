@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "prieš %@ dienas";
 "com.kustomer.param_week_ago" = "prieš %@ savaitę";
 "com.kustomer.param_weeks_ago" = "prieš %@ savaites";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nepavyko įkelti šio failo (-ų): {fileNames}. Jų dydis buvo didesnis nei {maxSize} MB arba viršijo visų {totalSize} MB priedų dydį";
+"com.kustomer.derived.okbutton" = "Gerai";

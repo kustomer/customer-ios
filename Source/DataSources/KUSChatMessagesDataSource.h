@@ -13,6 +13,7 @@
 #import "KUSSessionQueuePollingManager.h"
 #import "KUSSatisfactionResponseDataSource.h"
 #import "KUSTypingIndicator.h"
+#import "KUSMediaAttachment.h"
 
 #import <UIKit/UIKit.h>
 
@@ -52,8 +53,8 @@
 - (BOOL)shouldShowSatisfactionForm;
 
 - (void)upsertNewMessages:(NSArray<KUSChatMessage *> *)chatMessages;
-- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments;
-- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<UIImage *> *)attachments value:(NSString *)value;
+- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments;
+- (void)sendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments value:(NSString *)value;
 - (void)resendMessage:(KUSChatMessage *)message;
 - (void)endChat:(NSString *)reason withCompletion:(void (^)(BOOL))completion;
 

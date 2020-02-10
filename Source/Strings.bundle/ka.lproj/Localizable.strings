@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ დღის წინ";
 "com.kustomer.param_week_ago" = "%@ კვირის წინ";
 "com.kustomer.param_weeks_ago" = "%@ კვირის წინ";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "ვერ მოხერხდა შემდეგი ფაილების (ფაილების) ატვირთვა: {fileNames}. მათი ზომა უფრო დიდია, ვიდრე {maxSize} მბაიტი ან გადააჭარბა საერთო ჯამურ მოცულობას [totalSize} MB- ს";
+"com.kustomer.derived.okbutton" = "Კარგი";

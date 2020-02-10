@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KUSMediaAttachment.h"
 
 @class KUSImageAttachmentCollectionViewCell;
 @protocol KUSImageAttachmentCollectionViewCellDelegate <NSObject>
@@ -19,6 +20,7 @@
 @interface KUSImageAttachmentCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) KUSMediaAttachment *mediaAttachment;
 @property (nonatomic, weak) id<KUSImageAttachmentCollectionViewCellDelegate> delegate;
 
 @end

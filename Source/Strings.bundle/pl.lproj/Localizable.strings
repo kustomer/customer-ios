@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dni temu";
 "com.kustomer.param_week_ago" = "%@ tydzień temu";
 "com.kustomer.param_weeks_ago" = "%@ tygodnie temu";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nie udało się przesłać następujących plików: {fileNames}. Ich rozmiar był większy niż {maxSize} MB lub przekraczał całkowity rozmiar wszystkich załączników {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Dobrze";

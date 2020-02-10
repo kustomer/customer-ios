@@ -69,6 +69,42 @@
     return [self imageNamed:@"tick"];
 }
 
++ (UIImage *)docIconExcel
+{
+    return [self imageNamed:@"docIconExcel"];
+}
+
++ (UIImage *)docIconOther
+{
+    return [self imageNamed:@"docIconOther"];
+}
+
++ (UIImage *)docIconText
+{
+    return [self imageNamed:@"docIconText"];
+}
+
++ (UIImage *)docIconVideo
+{
+    return [self imageNamed:@"docIconVideo"];
+}
+
++ (UIImage *)docIconWord
+{
+    return [self imageNamed:@"docIconWord"];
+}
+
++ (UIImage *)docIconZip
+{
+    return [self imageNamed:@"docIconZip"];
+}
+
++ (UIImage *)docIconPdf
+{
+    return [self imageNamed:@"docIconPdf"];
+}
+
+
 + (UIImage *)attachImageWithSize:(CGSize)size
 {
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);

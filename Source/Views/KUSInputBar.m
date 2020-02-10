@@ -16,6 +16,7 @@
 #import "KUSImageAttachmentCollectionViewCell.h"
 #import "KUSLocalization.h"
 #import "KUSUserSession.h"
+#import "KUSMediaAttachment.h"
 
 static const CGFloat kKUSInputBarMinimumHeight = 50.0;
 static const CGFloat kKUSInputBarPadding = 3.0;
@@ -33,11 +34,15 @@ static const CGFloat kKUSMaximumImagePixelCount = 1000000.0;
 
 static NSString *kCellIdentifier = @"ImageAttachment";
 
+static const double maxSingleFileSizeBytes = 5 * 1000 * 1000;
+static const double maxCombinedFileSizeBytes = 9.5 * 1000 * 1000;
+
+
 @interface KUSInputBar () <KUSImageAttachmentCollectionViewCellDelegate, KUSTextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, KUSObjectDataSourceListener> {
     KUSUserSession *_userSession;
     
     CGFloat _lastDesiredHeight;
-    NSMutableArray<UIImage *> *_imageAttachments;
+    NSMutableArray<KUSMediaAttachment *> *_mediaAttachments;
 }
 
 @property (nonatomic, strong) UIView *separatorView;
@@ -78,7 +83,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
         [_userSession.scheduleDataSource addListener:self];
         [self _updatePlaceholder];
         
-        _imageAttachments = [[NSMutableArray alloc] init];
+        _mediaAttachments = [[NSMutableArray alloc] init];
 
         _separatorView = [[UIView alloc] init];
         _separatorView.userInteractionEnabled = NO;
@@ -161,7 +166,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
         .size.height = kKUSInputBarButtonSize
     };
     
-    self.imageCollectionView.hidden = self.imageAttachments.count == 0;
+    self.imageCollectionView.hidden = (self.mediaAttachments.count) == 0;
     self.imageCollectionView.frame = (CGRect) {
         .origin.x = kKUSInputBarPadding + kKUSInputBarAttachmentsPadding,
         .origin.y = kKUSInputBarPadding,
@@ -190,7 +195,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
     textBarHeight += kKUSInputBarPadding;
     textBarHeight = MAX(textBarHeight, kKUSInputBarMinimumHeight);
 
-    if (self.imageAttachments.count) {
+    if (self.mediaAttachments.count) {
         textBarHeight += kKUSInputBarAttachmentsHeight;
     }
 
@@ -219,27 +224,86 @@ static NSString *kCellIdentifier = @"ImageAttachment";
     [self setNeedsLayout];
 }
 
-- (void)setImageAttachments:(NSArray<UIImage *> *)imageAttachments
+// - (void)setImageAttachments:(NSArray<UIImage *> *)imageAttachments
+// {
+//     [_imageAttachments removeAllObjects];
+//     for (UIImage *image in imageAttachments) {
+//         UIImage *resizedImage = [KUSImage resizeImage:image toFixedPixelCount:kKUSMaximumImagePixelCount];
+//         [_imageAttachments addObject:resizedImage];
+//     }
+//     [self _updateAttachmentsView];
+// }
+
+- (void)setMediaAttachments:(NSArray<KUSMediaAttachment *> *)mediaAttachments
 {
-    [_imageAttachments removeAllObjects];
-    for (UIImage *image in imageAttachments) {
-        UIImage *resizedImage = [KUSImage resizeImage:image toFixedPixelCount:kKUSMaximumImagePixelCount];
-        [_imageAttachments addObject:resizedImage];
+    [_mediaAttachments removeAllObjects];
+    for (KUSMediaAttachment *attachment in mediaAttachments) {
+        [_mediaAttachments addObject:attachment];
     }
     [self _updateAttachmentsView];
 }
 
-- (NSArray<UIImage *> *)imageAttachments
+- (NSArray<KUSMediaAttachment *> *)mediaAttachments
 {
-    return [_imageAttachments copy];
+    return [_mediaAttachments copy];
 }
+
+
+
 
 - (void)attachImage:(UIImage *)image
 {
     UIImage *resizedImage = [KUSImage resizeImage:image toFixedPixelCount:kKUSMaximumImagePixelCount];
-    [_imageAttachments addObject:resizedImage];
-    [self _updateAttachmentsView];
+    KUSMediaAttachment* ma = [[KUSMediaAttachment alloc] init];
+    ma.fullSizeImage = [resizedImage copy];
+    ma.previewImage = resizedImage;
+    ma.isAnImage = YES;
+    ma.fileSize = [NSNumber numberWithUnsignedLong: [UIImageJPEGRepresentation(ma.fullSizeImage, 0.8) length]];
+      
+    
+      
+    if(ma.fileSize.doubleValue > (maxSingleFileSizeBytes)){
+      
+      
+      NSString* errorString = [[[[[KUSLocalization sharedInstance] localizedString:@"globals.upload.component.failure.files.text"] stringByReplacingOccurrencesOfString:@"{maxSize}" withString:@"5"] stringByReplacingOccurrencesOfString:@"{totalSize}" withString:@"9.5"] stringByReplacingOccurrencesOfString:@"{fileNames}" withString:@""];
+      [[self delegate] inputBarShowErrorPopUp:self message:errorString title:nil];
+      return;
+    }
+  
+    double sumSize = 0;
+    for (KUSMediaAttachment* oma in _mediaAttachments) {
+      sumSize += oma.fileSize.doubleValue;
+    }
+    if(sumSize > maxCombinedFileSizeBytes){
+      NSString* errorString = [[[[[KUSLocalization sharedInstance] localizedString:@"globals.upload.component.failure.files.text"] stringByReplacingOccurrencesOfString:@"{maxSize}" withString:@"5"] stringByReplacingOccurrencesOfString:@"{totalSize}" withString:@"9.5"] stringByReplacingOccurrencesOfString:@"{fileNames}" withString:@""];
+      [[self delegate] inputBarShowErrorPopUp:self message:errorString title:nil];
+      return;
+    }
+  
+    [self attachMedia:ma];
+}
 
+- (void)attachMedia:(KUSMediaAttachment *)mediaAttachment
+{
+    if(mediaAttachment.fileSize.doubleValue > maxSingleFileSizeBytes){
+      NSString* errorString = [[[[[KUSLocalization sharedInstance] localizedString:@"globals.upload.component.failure.files.text"] stringByReplacingOccurrencesOfString:@"{maxSize}" withString:@"5"] stringByReplacingOccurrencesOfString:@"{totalSize}" withString:@"9.5"] stringByReplacingOccurrencesOfString:@"{fileNames}" withString:@""];
+      [[self delegate] inputBarShowErrorPopUp:self message:errorString title:nil];
+      return;
+    }
+  
+    double sumSize = 0;
+    for (KUSMediaAttachment* oma in _mediaAttachments) {
+      sumSize += oma.fileSize.doubleValue;
+    }
+    if(sumSize > maxCombinedFileSizeBytes){
+      NSString* errorString = [[[[[KUSLocalization sharedInstance] localizedString:@"globals.upload.component.failure.files.text"] stringByReplacingOccurrencesOfString:@"{maxSize}" withString:@"5"] stringByReplacingOccurrencesOfString:@"{totalSize}" withString:@"9.5"] stringByReplacingOccurrencesOfString:@"fileNames" withString:@""];
+      [[self delegate] inputBarShowErrorPopUp:self message:errorString title:nil];
+      return;
+    }
+    
+    [_mediaAttachments addObject:mediaAttachment];
+    [self _updateAttachmentsView];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         // Scroll the image collection view all the way to the right
         CGPoint rightOffset = CGPointMake(MAX(self.imageCollectionView.contentSize.width - self.imageCollectionView.bounds.size.width, 0.0), 0.0);
@@ -247,9 +311,9 @@ static NSString *kCellIdentifier = @"ImageAttachment";
     });
 }
 
-- (void)_removeImage:(UIImage *)image
+- (void)_removeMedia:(KUSMediaAttachment *)media
 {
-    [_imageAttachments removeObject:image];
+    [_mediaAttachments removeObject:media];
     [self _updateAttachmentsView];
 }
 
@@ -293,7 +357,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
 - (void)_pressSend
 {
     NSString *text = self.text;
-    BOOL shouldSend = [_imageAttachments count] || text.length > 0;
+    BOOL shouldSend = [_mediaAttachments count] || text.length > 0;
     if (!shouldSend) {
         return;
     }
@@ -305,7 +369,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
 - (void)_updateSendButton
 {
     NSString *text = self.text;
-    BOOL shouldEnableSend = [_imageAttachments count] || text.length > 0;
+    BOOL shouldEnableSend = [_mediaAttachments count] || text.length > 0;
     if (shouldEnableSend && [self.delegate respondsToSelector:@selector(inputBarShouldEnableSend:)]) {
         shouldEnableSend = [self.delegate inputBarShouldEnableSend:self];
     }
@@ -371,13 +435,15 @@ static NSString *kCellIdentifier = @"ImageAttachment";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return _imageAttachments.count;
+    return _mediaAttachments.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     KUSImageAttachmentCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
-    cell.image = [_imageAttachments objectAtIndex:indexPath.row];
+    cell.mediaAttachment = [_mediaAttachments objectAtIndex:indexPath.row];
+    cell.image = [[_mediaAttachments objectAtIndex:indexPath.row] previewImage];
+    
     cell.delegate = self;
     return cell;
 }
@@ -386,9 +452,9 @@ static NSString *kCellIdentifier = @"ImageAttachment";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(inputBar:wantsToPreviewImage:)]) {
-        UIImage *image = [_imageAttachments objectAtIndex:indexPath.row];
-        [self.delegate inputBar:self wantsToPreviewImage:image];
+    if ([self.delegate respondsToSelector:@selector(inputBar:wantsToPreviewAttachment:)]) {
+        KUSMediaAttachment *attachment = [_mediaAttachments objectAtIndex:indexPath.row];
+        [self.delegate inputBar:self wantsToPreviewAttachment:attachment];
     }
 }
 
@@ -396,7 +462,7 @@ static NSString *kCellIdentifier = @"ImageAttachment";
 
 - (void)imageAttachmentCollectionViewCellDidTapRemove:(KUSImageAttachmentCollectionViewCell *)cell
 {
-    [self _removeImage:cell.image];
+    [self _removeMedia:cell.mediaAttachment];
 }
 
 #pragma mark - KUSObjectDataSourceListener
