@@ -156,6 +156,8 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
         _commentBox.layer.borderWidth = 0.5f;
         [_commentBox setBackgroundColor:[UIColor clearColor]];
         [_formView addSubview:_commentBox];
+        [_commentBox setDelegate:self];
+      
 
         _submitButton = [[UIButton alloc] init];
         _submitButton.layer.masksToBounds = YES;
@@ -172,6 +174,13 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
     }
     return self;
 }
+
+#pragma mark UITextViewDelegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+  return textView.text.length + (text.length - range.length) <= (1024 - 20);
+}
+
 
 #pragma mark - Layout methods
 
