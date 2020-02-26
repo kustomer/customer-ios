@@ -16,7 +16,12 @@
   @property (nonatomic, retain) NSString *localFileName;
   @property (nonatomic, retain) NSString *localFileExtension;
   @property (nonatomic, readwrite) BOOL hasFinishedBeingDataSource;
+  @property (nonatomic, retain) NSData *mediaData;
+  @property (nonatomic, retain) NSURL *mediaURL;
+  @property (nonatomic, retain) NSString *mediaLocalFilePath;
+
 
 @end
 
 FOUNDATION_EXPORT NSString *const KUSAttachmentDirectoryName;
+FOUNDATION_EXPORT NSString *const KUSMovieAttachmentDirectoryName;
