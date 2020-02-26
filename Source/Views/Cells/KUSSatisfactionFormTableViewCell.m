@@ -178,7 +178,7 @@ static const CGFloat kKUSSubmitButtonHeight = 40.0;
 #pragma mark UITextViewDelegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-  return textView.text.length + (text.length - range.length) <= (1024 - 20);
+    return textView.text.length + (text.length - range.length) <= (1023);
 }
 
 
