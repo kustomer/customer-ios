@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "hace %@ días";
 "com.kustomer.param_week_ago" = "Hace %@ semana";
 "com.kustomer.param_weeks_ago" = "hace %@ semanas";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Error al cargar las siguientes archivos. Su tamaño era más grande que {maxSize} MB o excedía el tamaño total de todos los archivos adjuntos de {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Okay";

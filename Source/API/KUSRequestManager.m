@@ -176,6 +176,8 @@ typedef void (^KUSTrackingTokenCompletion)(NSError *error, NSString *trackingTok
         }
         KUSLogRequest(@"Performing request: %@ %@%@%@ ", KUSRequestTypeToString(type),
         URL.path, URL.query.length ? @"?" : @"", URL.query ?: @"");
+        //more detailed logging
+        //KUSLogRequest(@"Performing request: %@ %@%@%@ %@ %@", KUSRequestTypeToString(type), URL.path, URL.query.length ? @"?" : @"", URL.query ?: @"", params, bodyData);
 
         if (type != KUSRequestTypeGet) {
             if (bodyData) {

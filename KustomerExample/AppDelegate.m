@@ -8,8 +8,15 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
-
 #import "Kustomer.h"
+#import "KUSSatisfactionFormTableViewCell.h"
+#import "KUSRatingView.h"
+#import "KUSEditFeedbackTableViewCell.h"
+#import "KUSColor.h"
+#import "KUSChatTableView.h"
+#import "KUSChatMessageTableViewCell.h"
+
+
 
 #error A valid API key is required
 static NSString *const kKustomerAPIKey = @"API_KEY";
@@ -19,11 +26,11 @@ static NSString *const kKustomerAPIKey = @"API_KEY";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Kustomer initializeWithAPIKey:kKustomerAPIKey];
-    
+  
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = [[ViewController alloc] init];
     [self.window makeKeyAndVisible];
-
+  
     return YES;
 }
 

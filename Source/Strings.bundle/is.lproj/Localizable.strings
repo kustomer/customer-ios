@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "fyrir %@ dögum";
 "com.kustomer.param_week_ago" = "Fyrir %@ viku síðan";
 "com.kustomer.param_weeks_ago" = "Fyrir %@ vikum";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Mistókst að hlaða upp eftirfarandi skrá (n): {fileNames}. Stærð þeirra var stærri en {maxSize} MB eða hærri en heildarstærð allra viðhengja {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Allt í lagi";

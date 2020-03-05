@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dage siden";
 "com.kustomer.param_week_ago" = "%@ uge siden";
 "com.kustomer.param_weeks_ago" = "%@ uger siden";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Kunne ikke uploade følgende fil (er): {fileNames}. Deres størrelse var større end {maxSize} MB eller overskredet den samlede størrelse af alle vedhæftede filer af {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Okay";

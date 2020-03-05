@@ -65,3 +65,6 @@
 "com.kustomer.param_days_ago" = "преди %@ дни";
 "com.kustomer.param_week_ago" = "преди %@ седмица";
 "com.kustomer.param_weeks_ago" = "преди %@ седмици";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Неуспешно качване на следните файлове: {fileNames}. Техният размер е по-голям от {maxSize} MB или надвишава общия размер на всички прикачени файлове от {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Добре";

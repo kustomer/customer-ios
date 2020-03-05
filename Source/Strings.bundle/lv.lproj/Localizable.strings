@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "pirms %@ dienām";
 "com.kustomer.param_week_ago" = "Pirms %@ nedēļas";
 "com.kustomer.param_weeks_ago" = "pirms %@ nedēļām";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Neizdevās augšupielādēt šādu failu (-us): {fileNames}. To lielums bija lielāks par {maxSize} MB vai pārsniedza visu {totalSize} MB pielikumu kopējo lielumu";
+"com.kustomer.derived.okbutton" = "Labi";

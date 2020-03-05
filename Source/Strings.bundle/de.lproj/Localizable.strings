@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "Vor %@ Tagen";
 "com.kustomer.param_week_ago" = "Vor %@ Woche";
 "com.kustomer.param_weeks_ago" = "vor %@ Wochen";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Die folgenden Dateien konnten nicht hochgeladen werden: {fileNames}. Ihre Größe war größer als {maxSize} MB oder hat die Gesamtgröße aller Anhänge von {totalSize} MB überschritten";
+"com.kustomer.derived.okbutton" = "Okay";

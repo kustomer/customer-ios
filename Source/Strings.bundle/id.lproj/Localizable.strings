@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ hari yang lalu";
 "com.kustomer.param_week_ago" = "%@ minggu yang lalu";
 "com.kustomer.param_weeks_ago" = "%@ minggu yang lalu";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Gagal mengunggah file berikut: {fileNames}. Ukurannya lebih besar dari {maxSize} MB atau melebihi ukuran total semua lampiran dari {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Baik";

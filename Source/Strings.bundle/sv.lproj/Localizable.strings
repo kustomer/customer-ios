@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dagar sedan";
 "com.kustomer.param_week_ago" = "%@ vecka sedan";
 "com.kustomer.param_weeks_ago" = "%@ veckor sedan";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Det gick inte att ladda upp följande fil (er): {fileNames}. Deras storlek var större än {maxSize} MB eller översteg den totala storleken på alla bilagor på {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Ok";

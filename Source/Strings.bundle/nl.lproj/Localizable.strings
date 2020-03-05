@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dagen geleden";
 "com.kustomer.param_week_ago" = "%@ week geleden";
 "com.kustomer.param_weeks_ago" = "%@ weken geleden";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Uploaden van de volgende bestand (en): {fileNames} is mislukt. Hun grootte was groter dan {maxSize} MB of overschreed de totale grootte van alle bijlagen van {totalSize} MB";
+"com.kustomer.derived.okbutton" = "OK";

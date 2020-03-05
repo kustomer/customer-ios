@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ napja";
 "com.kustomer.param_week_ago" = "%@ hete";
 "com.kustomer.param_weeks_ago" = "%@ héttel ezelőtt";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nem sikerült feltölteni a következő fájlt: {fileNames}. Mérete nagyobb volt, mint a {maxSize} MB, vagy meghaladta a {totalSize} MB összes mellékletének teljes méretét";
+"com.kustomer.derived.okbutton" = "Rendben";

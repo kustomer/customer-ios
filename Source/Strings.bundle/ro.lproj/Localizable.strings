@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ zile în urmă";
 "com.kustomer.param_week_ago" = "%@ săptămână în urmă";
 "com.kustomer.param_weeks_ago" = "acum %@ saptamani";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nu s-au încărcat următoarele fișiere: {fileNames}. Dimensiunea lor a fost mai mare decât {maxSize} MB sau a depășit dimensiunea totală a tuturor atașărilor din {totalSize} MB";
+"com.kustomer.derived.okbutton" = "O.K";

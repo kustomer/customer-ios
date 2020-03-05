@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@日前";
 "com.kustomer.param_week_ago" = "%@週間前";
 "com.kustomer.param_weeks_ago" = "%@週間前";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "次のファイルをアップロードできませんでした：{fileNames}。サイズが{maxSize} MBを超えているか、すべての添付ファイルの合計サイズ{totalSize} MBを超えています";
+"com.kustomer.derived.okbutton" = "OK";

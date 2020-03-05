@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ दिन पहले";
 "com.kustomer.param_week_ago" = "%@ सप्ताह पहले";
 "com.kustomer.param_weeks_ago" = "%@ सप्ताह पहले";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "निम्न फ़ाइल अपलोड करने में विफल: {fileNames}। उनका आकार {maxSize} MB से बड़ा था या {totalSize} MB के सभी अनुलग्नकों के कुल आकार से अधिक था";
+"com.kustomer.derived.okbutton" = "ठीक है";

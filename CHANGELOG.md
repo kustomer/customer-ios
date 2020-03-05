@@ -1,5 +1,20 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.3
+
+Release Date: 03/06/2020
+
+* Support Additional Pusher "Clusters"
+* Better time zone support for business schedules in time zones other than the user's local time zone
+* Upload videos from iOS
+* View and download attachments from Kustomer web - PDF, MS Word, text, Excel, zip, and videos
+* Bug fix: conversational assistant form override ID is now enabled
+* Bug fix: If dark mode is enabled, background of chat screen defaults to white
+* Bug fix: Survey question comments limited to 1024 characters
+* Bug fix: Waiting label now shown even when volume control is disabled
+* Bug fix: Ability to set custom color for CSAT introduction text
+
+
 ## 0.3.2
 
 Release Date: 01/27/2019

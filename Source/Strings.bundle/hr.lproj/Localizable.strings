@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "Prije %@ dana";
 "com.kustomer.param_week_ago" = "Prije %@ tjedan";
 "com.kustomer.param_weeks_ago" = "Prije %@ tjedna";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Prijenos sljedećih datoteka nije uspio: {fileNames}. Njihova je veličina bila veća od {maxSize} MB ili premašila ukupnu veličinu svih privitaka od {totalSize} MB";
+"com.kustomer.derived.okbutton" = "U redu";

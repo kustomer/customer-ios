@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ дні тому";
 "com.kustomer.param_week_ago" = "%@ тиждень тому";
 "com.kustomer.param_weeks_ago" = "%@ тижні тому";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Не вдалося завантажити такі файли: {fileNames}. Їх розмір був більшим, ніж {maxSize} MB або перевищував загальний розмір всіх вкладень {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Добре";

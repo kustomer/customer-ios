@@ -26,7 +26,7 @@ The Kustomer iOS SDK requires a valid API Key with role `org.tracking`. See [Get
 The preferred installation method is with [CocoaPods](https://cocoapods.org). Add the following to your `Podfile`:
 
 ```ruby
-pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.2'
+pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.3'
 ```
 
 #### Carthage
@@ -34,7 +34,7 @@ pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => 
 For [Carthage](https://github.com/Carthage/Carthage), add the following to your `Cartfile`:
 
 ```ogdl
-github "kustomer/customer-ios" ~> 0.3.2
+github "kustomer/customer-ios" ~> 0.3.3
 ```
 
 ## Setup
@@ -291,7 +291,9 @@ You must set the language before calling `initializeWithAPIKey` method. The SDK 
 
 ### Appearance
 
-The majority of the user interface for the support screens can be configured using `UIAppearance`. As an example, if you are designing a Halloween-themed support interface, you could re-skin the Kustomer iOS support screens using the following:
+The majority of the user interface for the support screens can be configured using `UIAppearance`. You must call `[Kustomer initializeWithAPIKey:kKustomerAPIKey]` before changing any appearance values.
+
+As an example, if you are designing a Halloween-themed support interface, you could re-skin the Kustomer iOS support screens using the following:
 
 ##### Sessions screen:
 ```objective-c
@@ -367,6 +369,7 @@ The majority of the user interface for the support screens can be configured usi
 [[KUSSatisfactionFormTableViewCell appearance] setCommentBoxBorderColor:[UIColor whiteColor]];
 [[KUSSatisfactionFormTableViewCell appearance] setSatisfactionQuestionColor:[UIColor whiteColor]];
 [[KUSSatisfactionFormTableViewCell appearance] setCommentBoxTextColor:[UIColor whiteColor]];
+[[KUSSatisfactionFormTableViewCell appearance] setIntroductionQuestionColor:[UIColor whiteColor]];
 ```
 
 <p align="center" >

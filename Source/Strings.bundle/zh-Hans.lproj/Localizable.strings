@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@天前";
 "com.kustomer.param_week_ago" = "%@周前";
 "com.kustomer.param_weeks_ago" = "%@个星期前";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "无法上传以下文件：{fileNames}。它们的大小大于{maxSize} MB或超过{totalSize} MB的所有附件的总大小";
+"com.kustomer.derived.okbutton" = "好";

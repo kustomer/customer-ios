@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dias atrás";
 "com.kustomer.param_week_ago" = "%@ semana atrás";
 "com.kustomer.param_weeks_ago" = "%@ semanas atrás";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Falha ao carregar o (s) seguinte (s) arquivo (s): {fileNames}. Seu tamanho era maior que {maxSize} MB ou excedido o tamanho total de todos os anexos de {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Está bem";
