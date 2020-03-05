@@ -181,6 +181,7 @@ static const CGFloat kTimestampTopPadding = 4.0;
         [_bubbleView addSubview:_labelView];
       
         UITapGestureRecognizer *tapGestureRecognizerLabel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_didTapLabel)];
+        tapGestureRecognizerLabel.cancelsTouchesInView = NO;
         [_labelView addGestureRecognizer:tapGestureRecognizerLabel];
       
         
@@ -540,12 +541,19 @@ static const CGFloat kTimestampTopPadding = 4.0;
       if (error) {
           [strongSelf->_imageView setImage:[KUSImage errorImage]];
           [strongSelf->_imageView setContentMode:UIViewContentModeCenter];
+      } else {
+          [strongSelf->_imageView setContentMode:UIViewContentModeScaleAspectFill];
       }
   }];
 }
 
 - (void)_updateImageForMessage
 {
+  if(_chatMessage.attachmentIds.count == 0){
+    //do not download attachment -- it's in the body
+    NSString* imageUrl = _chatMessage.body;
+    
+  }else{
     if((_chatMessage.isVerifiedAnImage == NO || _chatMessage.isVerifiedAnImage == nil) && (_chatMessage.isVerifiedAnAttachment == NO || _chatMessage.isVerifiedAnAttachment == nil)){
       [self _doFirstImageOrAttachmentRequest];
     }else if(_chatMessage.isVerifiedAnImage){
@@ -553,6 +561,7 @@ static const CGFloat kTimestampTopPadding = 4.0;
     }else if(_chatMessage.isVerifiedAnAttachment){
       [self _updateBubbleForAttachment];
     }
+  }
 }
 
 #pragma mark - Property methods
@@ -604,7 +613,11 @@ static const CGFloat kTimestampTopPadding = 4.0;
             _bubbleView.backgroundColor = bubbleColor;
             _imageView.sd_imageIndicator = currentUser ? SDWebImageActivityIndicator.whiteIndicator : SDWebImageActivityIndicator.grayIndicator;
             [_imageView.sd_imageIndicator startAnimatingIndicator];
-            [self _updateImageForMessage];
+            if(_chatMessage.attachmentIds.count == 0){
+              [_imageView sd_setImageWithURL:[[NSURL alloc] initWithString:_chatMessage.body]];
+            }else{
+              [self _updateImageForMessage];
+            }
         }   break;
         case KUSChatMessageTypeAttachment: {
           _imageView.image = nil;

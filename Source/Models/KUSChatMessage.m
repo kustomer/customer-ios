@@ -71,7 +71,7 @@ static NSString *KUSUnescapeBackslashesFromString(NSString *string)
 
     NSMutableArray<KUSChatMessage *> *chatMessages = [[NSMutableArray alloc] init];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:imagePattern options:kNilOptions error:NULL];
-
+    
     __block NSUInteger lastId = 0;
     __block NSUInteger lastLocation = 0;
 
