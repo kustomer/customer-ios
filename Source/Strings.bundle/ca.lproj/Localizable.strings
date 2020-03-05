@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "fa %@ dies";
 "com.kustomer.param_week_ago" = "Fa %@ setmana";
 "com.kustomer.param_weeks_ago" = "Fa %@ setmanes";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "No s'ha pogut carregar els fitxers següents: {fileNames}. La seva mida era més gran que {maxSize} MB o superava la mida total de tots els fitxers adjunts de {totalSize} MB";
+"com.kustomer.derived.okbutton" = "D'acord";

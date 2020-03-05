@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ วันที่แล้ว";
 "com.kustomer.param_week_ago" = "%@ สัปดาห์ที่ผ่านมา";
 "com.kustomer.param_weeks_ago" = "%@ สัปดาห์ที่แล้ว";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "ไม่สามารถอัปโหลดไฟล์ต่อไปนี้: {fileNames} ขนาดของพวกเขาใหญ่กว่า {maxSize} MB หรือเกินขนาดรวมของสิ่งที่แนบทั้งหมดของ {totalSize} MB";
+"com.kustomer.derived.okbutton" = "ตกลง";

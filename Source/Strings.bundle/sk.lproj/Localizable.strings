@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "pred %@ dňami";
 "com.kustomer.param_week_ago" = "Pred %@ týždňom";
 "com.kustomer.param_weeks_ago" = "Pred %@ týždňami";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Nepodarilo sa nahrať nasledujúce súbory: {fileNames}. Ich veľkosť bola väčšia ako {maxSize} MB alebo prekročila celkovú veľkosť všetkých príloh {totalSize} MB";
+"com.kustomer.derived.okbutton" = "ok";

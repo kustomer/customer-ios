@@ -22,7 +22,7 @@ typedef NS_OPTIONS(NSUInteger, KUSLogOptions) {
 #define KUSLog(req, fmt, ...)       \
     do {                \
         if ([Kustomer logOptions] & req) {         \
-            NSLog((@"[Kustomer] " fmt), ##__VA_ARGS__); \
+            NSLog((@"🌕 [Kustomer] " fmt), ##__VA_ARGS__); \
         } \
     } while(0)
 

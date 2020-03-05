@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ ngày trước";
 "com.kustomer.param_week_ago" = "%@ tuần trước";
 "com.kustomer.param_weeks_ago" = "%@ tuần trước";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Không thể tải lên (các) tệp sau: {fileNames}. Kích thước của chúng lớn hơn {maxSize} MB hoặc vượt quá tổng kích thước của tất cả các tệp đính kèm của {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Được";

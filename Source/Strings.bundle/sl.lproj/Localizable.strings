@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dni nazaj";
 "com.kustomer.param_week_ago" = "Pred enim tednom";
 "com.kustomer.param_weeks_ago" = "%@ tedna nazaj";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Ni bilo mogoče naložiti naslednjih datotek: {fileNames}. Njihova velikost je bila večja od {maxSize} MB ali presegla skupno velikost vseh priponk {totalSize} MB";
+"com.kustomer.derived.okbutton" = "V redu";

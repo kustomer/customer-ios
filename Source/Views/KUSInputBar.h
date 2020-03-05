@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "KUSMediaAttachment.h"
 
 @protocol KUSInputBarDelegate;
 @class KUSUserSession;
@@ -28,13 +28,15 @@
 
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, assign) BOOL allowsAttachments;
-@property (nonatomic, copy) NSArray<UIImage *> *imageAttachments;
+@property (nonatomic, copy) NSArray<KUSMediaAttachment *> *mediaAttachments;
+
 
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession;
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
 - (void)attachImage:(UIImage *)image;
+- (void)attachMedia:(KUSMediaAttachment *)mediaAttachment;
 
 - (CGFloat)desiredHeight;
 
@@ -48,6 +50,7 @@
 - (void)inputBarDidTapAttachment:(KUSInputBar *)inputBar;
 - (void)inputBarTextDidChange:(KUSInputBar *)inputBar;
 - (void)inputBarDesiredHeightDidChange:(KUSInputBar *)inputBar;
-- (void)inputBar:(KUSInputBar *)inputBar wantsToPreviewImage:(UIImage *)image;
+- (void)inputBar:(KUSInputBar *)inputBar wantsToPreviewAttachment:(KUSMediaAttachment *)attachment;
+- (void)inputBarShowErrorPopUp:(KUSInputBar *)inputBar message:(NSString *)message title:(NSString *)title;
 
 @end

@@ -41,6 +41,8 @@
 - (NSString *)getConversationalFormId
 {
     NSString* formId = _formId;
+    formId = self.userSession.chatSessionsDataSource.formIdForConversationalForm;
+    
     if (formId == nil) {
         formId = [self.userSession.userDefaults formId];
     }

@@ -11,6 +11,7 @@
 #import "KUSColor.h"
 #import "KUSImage.h"
 #import "KUSFadingButton.h"
+#import "KUSMediaAttachment.h"
 
 static const CGSize kKUSImageAttachmentRemoveButtonSize = { 30.0, 30.0 };
 static const CGSize kKUSImageAttachmentXImageSize = { 14.0, 14.0 };
@@ -18,6 +19,7 @@ static const CGSize kKUSImageAttachmentXImageSize = { 14.0, 14.0 };
 @implementation KUSImageAttachmentCollectionViewCell {
     UIImageView *_imageView;
     UIButton *_removeButton;
+    KUSMediaAttachment *_mediaAttachment;
 }
 
 #pragma mark - Lifecycle methods

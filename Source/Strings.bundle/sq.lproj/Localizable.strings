@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ ditë më parë";
 "com.kustomer.param_week_ago" = "%@ javë më parë";
 "com.kustomer.param_weeks_ago" = "%@ jave me pare";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Dështoi në ngarkimin e skedarëve të mëposhtëm: {fileNames}. Madhësia e tyre ishte më e madhe se {maxSize} MB ose tejkalonte madhësinë totale të të gjitha bashkëngjitjeve të {totalSize} MB";
+"com.kustomer.derived.okbutton" = "Ne rregull";

@@ -30,6 +30,7 @@
         _greeting = NSStringFromKeyPath(json, @"attributes.greeting");
         _activeFormId = NSStringFromKeyPath(json, @"attributes.activeForm");
         _pusherAccessKey = NSStringFromKeyPath(json, @"attributes.pusherAccessKey");
+        _pusherCluster = NSStringFromKeyPath(json, @"attributes.pusherCluster");
         _enabled = BOOLFromKeyPath(json, @"attributes.enabled");
         _closableChat = BOOLFromKeyPath(json, @"attributes.closableChat");
         _waitMessage = NSStringFromKeyPath(json, @"attributes.waitMessage");

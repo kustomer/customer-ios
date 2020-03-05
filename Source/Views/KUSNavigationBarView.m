@@ -326,16 +326,20 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
     KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
     NSString *waitingLabelText;
     
-    if (!self.extraLarge && ![_userSession.scheduleDataSource isActiveBusinessHours]) {
+    if (![_userSession.scheduleDataSource isActiveBusinessHours]){
+      if (!self.extraLarge){
         waitingLabelText = chatSettings.offhoursMessage;
-    } else if (chatSettings.volumeControlEnabled) {
-        if (_waitingMessage) {
-            waitingLabelText = _waitingMessage;
-        } else if (chatSettings.useDynamicWaitMessage) {
-            waitingLabelText = chatSettings.waitMessage;
-        } else {
-            waitingLabelText = chatSettings.customWaitMessage;
-        }
+      }else{
+        waitingLabelText = nil;
+      }
+    } else {
+      if (_waitingMessage) {
+        waitingLabelText = _waitingMessage;
+      } else if (chatSettings.useDynamicWaitMessage) {
+        waitingLabelText = chatSettings.waitMessage;
+      } else {
+        waitingLabelText = chatSettings.customWaitMessage;
+      }
     }
     return waitingLabelText;
 }
@@ -364,7 +368,7 @@ static const CGSize kKUSNavigationBarDismissImageSize = { 17.0, 17.0 };
 - (BOOL)_shouldShowWaitingLabel
 {
     KUSChatSettings *chatSettings = [_userSession.chatSettingsDataSource object];
-    BOOL shouldShowWaitingLabel = chatSettings.enabled && (chatSettings.volumeControlEnabled || ![_userSession.scheduleDataSource isActiveBusinessHours]);
+    BOOL shouldShowWaitingLabel = chatSettings.enabled && [_userSession.scheduleDataSource isActiveBusinessHours];
     
     if(_chatMessagesDataSource) {
         shouldShowWaitingLabel = shouldShowWaitingLabel && !_chatMessagesDataSource.didAgentReply;

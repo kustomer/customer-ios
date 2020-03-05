@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ дня назад";
 "com.kustomer.param_week_ago" = "%@ неделю назад";
 "com.kustomer.param_weeks_ago" = "%@ недели назад";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Не удалось загрузить следующие файлы: {fileNames}. Их размер был больше чем {maxSize} МБ или превышал общий размер всех вложений {totalSize} МБ";
+"com.kustomer.derived.okbutton" = "Хорошо";

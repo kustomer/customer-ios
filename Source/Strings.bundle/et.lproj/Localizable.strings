@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ päeva tagasi";
 "com.kustomer.param_week_ago" = "%@ nädal tagasi";
 "com.kustomer.param_weeks_ago" = "%@ nädalat tagasi";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Järgmise faili (de) üleslaadimine ebaõnnestus: {fileNames}. Nende suurus oli suurem kui {maxSize} MB või ületas kõigi {totalSize} MB manuste kogumahu";
+"com.kustomer.derived.okbutton" = "Okei";

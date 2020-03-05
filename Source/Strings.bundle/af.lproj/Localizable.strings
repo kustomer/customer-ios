@@ -60,3 +60,6 @@
 "com.kustomer.param_days_ago" = "%@ dae gelede";
 "com.kustomer.param_week_ago" = "%@ week gelede";
 "com.kustomer.param_weeks_ago" = "%@ weke gelede";
+
+"com.kustomer.globals.upload.component.failure.files.text" = "Kon nie die volgende lêer (s) laai nie: {fileNames}. Hul grootte was groter as {maxSize} MB of het die totale grootte van alle aanhangsels van {totalSize} MB oorskry";
+"com.kustomer.derived.okbutton" = "ok";
