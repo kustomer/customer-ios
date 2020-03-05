@@ -369,6 +369,7 @@ As an example, if you are designing a Halloween-themed support interface, you co
 [[KUSSatisfactionFormTableViewCell appearance] setCommentBoxBorderColor:[UIColor whiteColor]];
 [[KUSSatisfactionFormTableViewCell appearance] setSatisfactionQuestionColor:[UIColor whiteColor]];
 [[KUSSatisfactionFormTableViewCell appearance] setCommentBoxTextColor:[UIColor whiteColor]];
+[[KUSSatisfactionFormTableViewCell appearance] setIntroductionQuestionColor:[UIColor whiteColor]];
 ```
 
 <p align="center" >
