@@ -1,5 +1,11 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.4
+Release Date: 04/21/2020
+
+* Added Form KB Deflect Functionality
+* Added Auto Start for Chat Assisstant
+
 ## 0.3.3
 
 Release Date: 03/06/2020

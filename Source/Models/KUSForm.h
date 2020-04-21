@@ -12,6 +12,7 @@
 @interface KUSForm : KUSModel
 
 @property (nonatomic, copy, readonly) NSArray<KUSFormQuestion *> *questions;
+@property (nonatomic, assign, readwrite) BOOL proactive;
 
 - (BOOL)containsEmailQuestion;
 

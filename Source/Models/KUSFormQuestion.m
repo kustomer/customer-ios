@@ -7,6 +7,7 @@
 //
 
 #import "KUSFormQuestion.h"
+#import "KUSLocalization.h"
 
 @implementation KUSFormQuestion
 
@@ -38,6 +39,46 @@
             [dic setObject:@"1" forKey:@"id"];
             _mlFormValues = [[KUSMLFormValue alloc] initWithJSON: dic];
         }
+        if(_type == KUSFormQuestionTypeKBDeflectQuestion){
+          NSString* followUpPrompt = NSStringFromKeyPath(json, @"followUpPrompt");
+          if(!followUpPrompt){
+            _followUpQuestion = [[KUSLocalization sharedInstance] localizedString:@"kus_com_kustomer_articles_followup_question"];
+          }else{
+            _followUpQuestion = NSStringFromKeyPath(json, @"followUpPrompt");
+          }
+          
+          // NSArray *filteredArray = [jsonInputResponses filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+          //   if([[object valueForKey:@"hasResults"] boolValue]){
+          //     _hasResultResponse = NSStringFromKeyPath(object, @"displayValue");
+          //   }else{
+          //     _noResultResponse = NSStringFromKeyPath(object, @"displayValue");
+          //   }
+          //   return rv;
+          // }]];
+          NSArray *jsonInputResponses = NSArrayFromKeyPath(json, @"inputResponses");
+          for(NSDictionary* item in jsonInputResponses){
+            if([[item valueForKey:@"hasResults"] boolValue]){
+              _hasResultResponse = NSStringFromKeyPath(item, @"displayValue");
+            }else{
+              _noResultResponse = NSStringFromKeyPath(item, @"displayValue");
+            }
+          }
+          
+          NSArray *jsonValues = NSArrayFromKeyPath(json, @"values");
+          for(NSDictionary* item in jsonValues){
+            if([[item valueForKey:@"endChat"] boolValue]){
+              _endChatDisplayName = NSStringFromKeyPath(item, @"displayName");
+            }else{
+              _continueChatDisplayName = NSStringFromKeyPath(item, @"displayName");
+            }
+          }
+          
+          // _hasResultResponse = ;
+          // _noResultResponse = ;
+          // _endChatDisplayName = ;
+          // _continueChatDisplayName = ;
+        }
+        
         NSArray<NSString *> *values = NSArrayFromKeyPath(json, @"values");
         if (values.count) {
             NSMutableArray<NSString *> *mappedValues = [[NSMutableArray alloc] initWithCapacity:values.count];
@@ -50,6 +91,23 @@
     return self;
 }
 
++ (NSArray<KUSFormQuestion *> *_Nullable)objectsWithJSONs:(NSArray<NSDictionary *> * _Nullable)jsons
+{
+  NSMutableArray<KUSFormQuestion *> *objects = [[NSMutableArray alloc] initWithCapacity:jsons.count];
+  for (NSDictionary *json in jsons) {
+    KUSFormQuestion *object = [[self alloc] initWithJSON:json];
+    if (object) {
+      [objects addObject:object];
+      if(object.type == KUSFormQuestionTypeKBDeflectQuestion){
+        KUSFormQuestion* kbResponse = [[KUSFormQuestion alloc] initWithJSON:json];
+        kbResponse.type = KUSFormQuestionTypeKBDeflectResponse;
+        [objects addObject:kbResponse];
+      }
+    }
+  }
+  return objects;
+}
+
 static KUSFormQuestionType KUSFormQuestionTypeFromString(NSString *string)
 {
     if ([string isEqualToString:@"message"]) {
@@ -58,6 +116,8 @@ static KUSFormQuestionType KUSFormQuestionTypeFromString(NSString *string)
         return KUSFormQuestionTypeProperty;
     } else if ([string isEqualToString:@"response"]) {
         return KUSFormQuestionTypeResponse;
+    } else if ([string isEqualToString:@"kbDeflect"]) {
+      return KUSFormQuestionTypeKBDeflectQuestion;
     }
     return KUSFormQuestionTypeUnknown;
 }
@@ -81,5 +141,22 @@ static KUSFormQuestionProperty KUSFormQuestionPropertyFromString(NSString *strin
     }
     return KUSFormQuestionPropertyUnknown;
 }
+
++ (BOOL)KUSFormQuestionRequiresResponse:(KUSFormQuestion *)question
+{
+  return question.type == KUSFormQuestionTypeProperty ||
+  question.type == KUSFormQuestionTypeResponse ||
+  question.type == KUSFormQuestionTypeKBDeflectQuestion ||
+  question.type == KUSFormQuestionTypeKBDeflectResponse;
+}
+
++ (BOOL)KUSFormQuestionIsEndChat:(KUSFormQuestion *)question
+{
+  if(question == nil || question.type == nil){
+    return false;
+  }
+  return question.type == KUSFormQuestionTypeKBDeflectedSuccessfully;
+}
+
 
 @end

@@ -17,7 +17,8 @@ typedef NS_ENUM(NSInteger, KUSChatMessageDirection) {
 typedef NS_ENUM(NSInteger, KUSChatMessageType) {
     KUSChatMessageTypeText,
     KUSChatMessageTypeImage,
-    KUSChatMessageTypeAttachment
+    KUSChatMessageTypeAttachment,
+    KUSChatMessageTypeArticle
 };
 
 typedef NS_ENUM(NSInteger, KUSChatMessageState) {
@@ -51,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readwrite) NSString *attachmentMIMEType;
 @property (atomic, readwrite) Boolean *isVerifiedAnImage;
 @property (atomic, readwrite) Boolean *isVerifiedAnAttachment;
+
+@property (atomic, readwrite) NSMutableDictionary* kbArticle;
 
 - (NSString *)displayAttachmentSize;
 

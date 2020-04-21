@@ -22,7 +22,7 @@
 - (void)createSessionWithTitle:(NSString *)title completion:(void(^)(NSError *error, KUSChatSession *session))completion;
 - (void)updateLastSeenAtForSessionId:(NSString *)sessionId completion:(void(^)(NSError *error, KUSChatSession *session))completion;
 - (void)updateLocallyLastSeenAtForSessionId:(NSString *)sessionId;
-- (void)submitFormMessages:(NSArray<NSDictionary *> *)messages
+- (void)submitFormWithParams:(NSArray<NSDictionary *> *)params
                     formId:(NSString *)formId
                 completion:(void(^)(NSError *error, KUSChatSession *session, NSArray<KUSChatMessage *> *messages))completion;
 

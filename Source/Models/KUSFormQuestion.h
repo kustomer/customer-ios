@@ -14,6 +14,10 @@ typedef NS_ENUM(NSInteger, KUSFormQuestionType) {
     KUSFormQuestionTypeMessage,
     KUSFormQuestionTypeProperty,
     KUSFormQuestionTypeResponse,
+    KUSFormQuestionTypeKBDeflectQuestion,
+    KUSFormQuestionTypeKBDeflectResponse,
+    KUSFormQuestionTypeKBDeflectNoResponseFound,
+    KUSFormQuestionTypeKBDeflectedSuccessfully
 };
 
 typedef NS_ENUM(NSInteger, KUSFormQuestionProperty) {
@@ -29,18 +33,27 @@ typedef NS_ENUM(NSInteger, KUSFormQuestionProperty) {
 
 @interface KUSFormQuestion : KUSModel
 
++ (BOOL)KUSFormQuestionRequiresResponse:(KUSFormQuestion *)question;
++ (BOOL)KUSFormQuestionIsEndChat:(KUSFormQuestion *)question;
+
 @property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSString *prompt;
 @property (nonatomic, copy, readonly) NSArray<NSString *> *values;
-@property (nonatomic, assign, readonly) KUSFormQuestionType type;
+@property (nonatomic, assign, readwrite) KUSFormQuestionType type;
 @property (nonatomic, assign, readonly) KUSFormQuestionProperty property;
 @property (nonatomic, assign, readonly) BOOL skipIfSatisfied;
 @property (nonatomic, copy, readonly) KUSMLFormValue *mlFormValues;
 
-@end
+#pragma mark - KUSKBDeflectFormInputResponse properties
+@property (nonatomic, copy, readwrite) NSString *hasResultResponse;
+@property (nonatomic, copy, readwrite) NSString *noResultResponse;
+@property (nonatomic, copy, readwrite) NSString *followUpQuestion;
 
-static inline BOOL KUSFormQuestionRequiresResponse(KUSFormQuestion *question)
-{
-    return question.type == KUSFormQuestionTypeProperty || question.type == KUSFormQuestionTypeResponse;
-}
+#pragma mark - KUSKBDeflectFormValue properties
+@property (nonatomic, copy, readwrite) NSString *endChatDisplayName;
+@property (nonatomic, copy, readwrite) NSString *continueChatDisplayName;
+
+
+
+@end
 
