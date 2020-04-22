@@ -168,7 +168,7 @@ CGFloat KUSChatSessionTableViewCellHeight = 88.0;
     // Subtitle text (from last message, or preview text)
     KUSChatMessage *latestTextMessage = nil;
     for (KUSChatMessage *message in _chatMessagesDataSource.allObjects) {
-        if (message.type == KUSChatMessageTypeText) {
+        if (message.type == KUSChatMessageTypeText || message.type == KUSChatMessageTypeArticle) {
             latestTextMessage = message;
             break;
         }

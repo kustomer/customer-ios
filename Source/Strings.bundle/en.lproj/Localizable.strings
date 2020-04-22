@@ -63,3 +63,4 @@
 
 "com.kustomer.globals.upload.component.failure.files.text" = "Failed to upload the file(s). Their size was larger than {maxSize}MB or exceeded the total size of all attachments of {totalSize}MB";
 "com.kustomer.derived.okbutton" = "Ok";
+"com.kustomer.kus_com_kustomer_articles_followup_question" = "Did you find those articles helpful?";

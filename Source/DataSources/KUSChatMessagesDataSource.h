@@ -30,6 +30,8 @@
 
 @interface KUSChatMessagesDataSource : KUSPaginatedDataSource
 
+@property (nonatomic, copy) void (^afterActuallySubmitFormMessages)(NSString *input);
+
 - (instancetype)initForNewConversationWithUserSession:(KUSUserSession *)userSession formId:(NSString *)formId;
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession sessionId:(NSString *)sessionId;
 - (instancetype)initWithUserSession:(KUSUserSession *)userSession NS_UNAVAILABLE;
@@ -61,5 +63,10 @@
 - (void)sendTypingStatusToPusher:(KUSTypingStatus)typingStatus;
 - (void)startListeningForTypingUpdate;
 - (void)stopListeningForTypingUpdate;
+
+#pragma mark - KB deflect changes
+- (void)insertMessageForFormQuestion:(KUSChatMessage *)question withLastMessage:(KUSChatMessage*)lastMessage;
+// End the chat early
+- (void)endChatForm;
 
 @end

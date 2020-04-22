@@ -564,14 +564,35 @@
                 }
             }
         }
+      
+      BOOL idsMatch = NO;
+      KUSChatMessage* liveLatestMessage = (KUSChatMessage*)[_chatMessagesDataSource objectAtIndex:0];
+      if(liveLatestMessage != nil){
+        idsMatch = [[liveLatestMessage oid] isEqualToString:[NSString stringWithFormat:@"question_%@_%@", currentQuestion.oid, @"2"]];
+      }
+      
+      BOOL isKbDeflectResultsShown = currentQuestion != nil && currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse && idsMatch;
         
         BOOL wantsOptionPicker = isFollowupChannelQuestion
                                     || isPropertyValueQuestion
-                                    || (isConversationTeamQuestion && !teamOptionsDidFail);
+                                    || (isConversationTeamQuestion && !teamOptionsDidFail)
+                                    || isKbDeflectResultsShown;
         if (wantsOptionPicker) {
             [self _showOptionPickerView];
             return;
         }
+      
+      
+        BOOL wantsOptionPickerDeflect = currentQuestion != nil &&
+                                        currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse &&
+                                        (currentQuestion.endChatDisplayName != nil ||
+                                         currentQuestion.continueChatDisplayName != nil);
+                                        
+        if (wantsOptionPickerDeflect) {
+          [self _showOptionPickerView];
+          return;
+        }
+      
         
         BOOL isMLVPropertyFormQuestion = (currentQuestion
                                           && currentQuestion.property == KUSFormQuestionPropertyMLV);
@@ -644,6 +665,20 @@
         
         return;
     }
+  
+    BOOL wantsOptionPickerDeflect = currentQuestion != nil &&
+    currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse &&
+    (currentQuestion.endChatDisplayName != nil ||
+     currentQuestion.continueChatDisplayName != nil);
+    
+    if (wantsOptionPickerDeflect) {
+      [self.optionPickerView setOptions:@[currentQuestion.endChatDisplayName,
+                                          currentQuestion.continueChatDisplayName]];
+      [self.view setNeedsLayout];
+      [self.view layoutIfNeeded];
+      
+      return;
+    }
     
     NSMutableArray<NSString *> *options = [[NSMutableArray alloc] init];
     for (KUSTeam *team in _teamOptionsDataSource.allObjects) {
@@ -703,7 +738,8 @@
     KUSFormQuestion *currentQuestion = _chatMessagesDataSource.currentQuestion;
     if (currentQuestion) {
         NSString *questionId = [NSString stringWithFormat:@"question_%@", currentQuestion.oid];
-        return [questionId isEqualToString:latestMessage.oid];
+        NSString *followUpQuestionId = [NSString stringWithFormat:@"question_%@_2", currentQuestion.oid];
+        return latestMessage != nil && ([questionId isEqualToString:latestMessage.oid] || [followUpQuestionId isEqualToString:latestMessage.oid]);
     }
     
     return NO;
@@ -1076,12 +1112,27 @@
 
 - (void)chatMessageTableViewCell:(KUSChatMessageTableViewCell *)cell didTapLink:(NSURL *)URL
 {
+    [self incrementDeflectLinkIfNeeded:URL];
     if ([URL.scheme isEqualToString:@"http"] || [URL.scheme isEqualToString:@"https"]) {
-        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:URL];
+        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:URL entersReaderIfAvailable:YES];
         [self presentViewController:safariViewController animated:YES completion:nil];
     } else {
         [[UIApplication sharedApplication] openURL:URL];
     }
+}
+
+- (void)incrementDeflectLinkIfNeeded:(NSURL*)URL
+{
+  for(KUSChatMessage* chatM in [_chatMessagesDataSource allObjects]){
+    if([[chatM.kbArticle valueForKeyPath:@"url"] isEqualToString:URL.absoluteString]){
+       
+      NSInteger newCount = [(NSString*)[chatM.kbArticle valueForKey:@"viewCount"] integerValue];
+      newCount++;
+      NSString* newCountString = [NSString stringWithFormat:@"%d",(long)newCount];
+      
+      [chatM.kbArticle setValue:newCountString forKeyPath:@"viewCount"];
+    }
+  }
 }
 
 - (void)chatMessageTableViewCellDidTapError:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message
@@ -1148,6 +1199,12 @@
     KUSTeam *team = nil;
     NSUInteger optionIndex = [pickerView.options indexOfObject:option];
     KUSFormQuestion *currentQuestion = _chatMessagesDataSource.currentQuestion;
+
+    if(currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse){
+      if(optionIndex == 0){
+        [_chatMessagesDataSource endChatForm];
+      }
+    }
     if (optionIndex != NSNotFound && currentQuestion.property == KUSFormQuestionPropertyConversationTeam && optionIndex < _teamOptionsDataSource.count) {
         team = [_teamOptionsDataSource objectAtIndex:optionIndex];
     }
@@ -1176,7 +1233,8 @@
     KUSFormQuestion *question = _chatMessagesDataSource.volumeControlCurrentQuestion;
     if (!question) {
         question = _chatMessagesDataSource.currentQuestion;
-        if (question && !KUSFormQuestionRequiresResponse(question)) {
+      
+        if (question && ![KUSFormQuestion KUSFormQuestionRequiresResponse: question]) {
             return NO;
         }
     }
