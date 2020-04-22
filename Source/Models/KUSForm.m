@@ -24,6 +24,12 @@
     self = [super initWithJSON:json];
     if (self) {
         _questions = [KUSFormQuestion objectsWithJSONs:NSArrayFromKeyPath(json, @"attributes.questions")];
+        NSString* qtType = NSStringFromKeyPath(json, @"type");
+        if([qtType isEqualToString:@"form"]){ //check case sensitivity
+          _proactive = BOOLFromKeyPath(json, @"attributes.proactive");
+        }else{
+          _proactive = NO;
+        }
     }
     return self;
 }

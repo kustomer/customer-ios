@@ -63,3 +63,4 @@
 
 "com.kustomer.globals.upload.component.failure.files.text" = "Error al cargar las siguientes archivos. Su tamaño era más grande que {maxSize} MB o excedía el tamaño total de todos los archivos adjuntos de {totalSize} MB";
 "com.kustomer.derived.okbutton" = "Okay";
+"com.kustomer.kus_com_kustomer_articles_followup_question" = "¿Le resultaron útiles esos artículos?";

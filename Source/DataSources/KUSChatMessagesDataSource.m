@@ -21,7 +21,9 @@
 #import <SDWebImage/SDImageCache.h>
 #import "KUSMediaAttachment.h"
 
-static const NSTimeInterval KUSChatAutoreplyDelay = 2.0;
+static const NSTimeInterval KUSChatAutoreplyDelay = 1.0;
+static const NSTimeInterval KUSChatDeflectMessageDelay = 1.0;
+static const NSTimeInterval KUSChatDeflectMessageAdditonalDelayForArticles = 1.0;
 static const NSTimeInterval kKUSResendTypingStatusDelay = 3.0 * 1000;
 static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
@@ -81,6 +83,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         _vcChatClosed = NO;
         _nonBusinessHours = NO;
         _isChatEnding = NO;
+        _afterActuallySubmitFormMessages = ^void(NSString* input) {
+              
+        };
         _temporaryVCMessagesResponses = [[NSMutableArray alloc] init];
         _delayedChatMessageIds = [[NSMutableSet alloc] init];
         _messageRetryBlocksById = [[NSMutableDictionary alloc] init];
@@ -855,6 +860,22 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     }
 }
 
+- (void)endChatForm
+{
+  _formQuestion.type = KUSFormQuestionTypeKBDeflectedSuccessfully;
+  
+  self.afterActuallySubmitFormMessages = ^void(NSString* input) {
+      // if server auto-ends, force the UI to update as ended now. the lockedAt date will be wrong locally.
+      KUSChatSession *session = [self.userSession.chatSessionsDataSource objectWithId:_sessionId];
+      session.lockedAt = [[NSDate alloc] init];
+      [self notifyAnnouncersDidEndChatSession];
+
+      //or trigger end direct from client:
+      //[self endChat:@"customer_ended" withCompletion:nil];
+  };
+}
+
+
 - (void)endChat:(NSString *)reason withCompletion:(void (^)(BOOL))completion
 {
     _isChatEnding = YES;
@@ -1021,6 +1042,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
 - (void)notifyAnnouncersDidEndChatSession
 {
+    self.afterActuallySubmitFormMessages = ^void(NSString* input) {
+      
+    };
     for (id<KUSChatMessagesDataSourceListener> listener in [self.listeners copy]) {
         if ([listener respondsToSelector:@selector(chatMessagesDataSourceDidEndChatSession:)]) {
             [listener chatMessagesDataSourceDidEndChatSession:self];
@@ -1070,13 +1094,13 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     if ([_formDataSource getConversationalFormId] == nil) {
         return;
     }
-    if ([self count] == 0) {
+    if (_form == nil) {
+      return;
+    }
+    if (!_form.proactive && [self count] == 0) {
         return;
     }
     if ([self isActualSessionExist]) {
-        return;
-    }
-    if (_form == nil) {
         return;
     }
 
@@ -1086,71 +1110,302 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         return;
     }
     
-    BOOL isResponseRequired = _formQuestion && KUSFormQuestionRequiresResponse(_formQuestion);
+    
+    BOOL isResponseRequired = _formQuestion && [KUSFormQuestion KUSFormQuestionRequiresResponse: _formQuestion];
     BOOL isAnswered = KUSChatMessageSentByUser(lastMessage);
     if (isResponseRequired && !isAnswered) {
         return;
     }
     
-    BOOL isLastQuestion = _questionIndex == _form.questions.count - 1;
-    if (isLastQuestion && !_submittingForm) {
-        [self _submitFormResponses];
-        return;
+    //000 >= not ==
+    BOOL isLastQuestion = _questionIndex >= (NSInteger)(_form.questions.count - 1);
+  
+  
+  
+  
+    BOOL endChat = (isLastQuestion || [KUSFormQuestion KUSFormQuestionIsEndChat: _formQuestion]);
+    
+    if (endChat && !_submittingForm) {
+      
+        //000 //set isAnswered to true if Response is not required for current question
+        isAnswered = isResponseRequired ? isAnswered : true;
+      
+        if(isAnswered){
+          [self _submitFormResponses];
+          return;
+        }
     }
     
     _questionIndex++;
     _formQuestion = _form.questions[_questionIndex];
-    NSDate *createdAt = [lastMessage.createdAt dateByAddingTimeInterval:KUSChatAutoreplyDelay];
-    NSString *questionId = [NSString stringWithFormat:@"question_%@", _formQuestion.oid];
-    NSDictionary *json = @{
-                           @"type": @"chat_message",
-                           @"id": questionId,
-                           @"attributes": @{
-                                   @"body": _formQuestion.prompt,
-                                   @"direction": @"out",
-                                   @"createdAt": [KUSDate stringFromDate:createdAt]
-                                   }
-                           };
-    KUSChatMessage *formMessage = [[KUSChatMessage alloc] initWithJSON:json];
-    [self _insertDelayedMessage:formMessage];
+    
+    NSString* formQuestionId = _formQuestion.oid;
+    NSDate* baseDate = lastMessage.createdAt ? lastMessage.createdAt : [NSDate now];
+    
+    if(_formQuestion.type == KUSFormQuestionTypeKBDeflectResponse){
+      [self searchKbForString:lastMessage.body completion:^void(NSArray* matches) {
+        
+        if(matches.count == 0){
+          [self createFormQuestion:[NSString stringWithFormat:@"question_%@_0", formQuestionId]
+                            prompt:[_formQuestion noResultResponse]
+                     timeWithDelay:[baseDate dateByAddingTimeInterval:KUSChatDeflectMessageDelay]];
+          
+          _formQuestion.type = KUSFormQuestionTypeKBDeflectNoResponseFound;
+        }else{
+          [self createFormQuestion:[NSString stringWithFormat:@"question_%@_1", formQuestionId]
+                            prompt:[_formQuestion hasResultResponse]
+                     timeWithDelay:[baseDate dateByAddingTimeInterval:KUSChatDeflectMessageDelay]];
+          
+          for(NSMutableDictionary* article in matches) {
+            [self createKBSearchResult:[NSString stringWithFormat:@"question_%@", formQuestionId]
+                              article:article
+                       timeWithDelay:[baseDate dateByAddingTimeInterval:KUSChatDeflectMessageDelay + KUSChatDeflectMessageAdditonalDelayForArticles]];
+          }
+          
+          [self createFormQuestion:[NSString stringWithFormat:@"question_%@_2", formQuestionId]
+                            prompt:[_formQuestion followUpQuestion]
+                     timeWithDelay:[baseDate dateByAddingTimeInterval:KUSChatDeflectMessageDelay + KUSChatDeflectMessageAdditonalDelayForArticles + 1.3]];
+        }
+      }];
+    } else {
+      [self createFormQuestion:[NSString stringWithFormat:@"question_%@", _formQuestion.oid]
+                        prompt:_formQuestion.prompt
+                   timeWithDelay:[baseDate dateByAddingTimeInterval:KUSChatDeflectMessageDelay]];
+      // [self insertMessageForFormQuestion:_formQuestion withLastMessage:lastMessage];
+    }
+}
 
+#pragma mark - KB deflect changes
+- (void)searchKbForString:(NSString *)string completion:(void(^)(NSArray * matches))completion
+{
+  NSString *searchKbString = [NSString stringWithFormat:@"/c/v1/kb/deflection/chat?term=%@&pageSize=3", string];
+  [[Kustomer sharedInstance].userSession.requestManager
+   performRequestType:KUSRequestTypeGet
+   endpoint:searchKbString
+   params: @{ }
+   authenticated:YES
+   completion:^(NSError *error, NSDictionary *response) {
+    if (error) {
+      return;
+    }
+    NSArray *rawData = [response valueForKeyPath:@"data"];
+    NSMutableArray *matches = [@[] mutableCopy]; //[[NSMutableArray alloc] init];
+    
+    NSInteger maxItems = 3;
+    NSInteger itemCounter = 0;
+    for(NSDictionary* articleDict in rawData){
+      if(itemCounter > maxItems){
+        break;
+      }
+      itemCounter++;
+      NSString* lang = [articleDict valueForKeyPath:@"attributes.lang"];
+      NSString* slug = [articleDict valueForKeyPath:@"attributes.slug"];
+      NSString* hash = [articleDict valueForKeyPath:@"attributes.hash"];
+      NSString* title = [articleDict valueForKeyPath:@"attributes.title"];
+      NSString* articleId = [articleDict valueForKeyPath:@"id"];
+      NSString* urlOfArticle = [NSString stringWithFormat:@"https://%@.kustomer.help/%@/%@-%@", [Kustomer sharedInstance].userSession.orgName, lang, slug, hash];
+      
+      [matches addObject:[@{
+        @"id": articleId,
+        @"url": urlOfArticle,
+        @"title": title,
+        @"viewCount": @"0"
+      } mutableCopy]];
+    }
+    completion(matches);
+  }];
+    
+}
+- (KUSChatMessage*)getLatestMessage
+{
+  return [self latestMessage];
+}
+- (void)createFormQuestion:(NSString *)questionId prompt:(NSString*)prompt timeWithDelay:(NSDate*)timeWithDelay
+{
+  NSDate *createdAt = timeWithDelay;
+  NSDictionary *json = @{
+    @"type": @"chat_message",
+    @"id": questionId,
+    @"attributes": @{
+        @"body": prompt,
+        @"direction": @"out",
+        @"createdAt": [KUSDate stringFromDate:createdAt]
+    }
+  };
+  KUSChatMessage *formMessage = [[KUSChatMessage alloc] initWithJSON:json];
+  [self _insertDelayedMessage:formMessage];
+}
+- (void)createKBSearchResult:(NSString *)questionId article:(NSMutableDictionary*)article timeWithDelay:(NSDate*)timeWithDelay
+{
+  NSDate *createdAt = timeWithDelay;
+  NSDictionary *json = @{
+    @"type": @"chat_message",
+    @"id": [NSString stringWithFormat:@"%@_article_%@", questionId, [article valueForKey:@"id"]],
+    @"attributes": @{
+      @"body": [NSString stringWithFormat:@"📖 [%@](%@)", [article valueForKey:@"title"], [article valueForKey:@"url"]],
+      @"direction": @"out",
+      @"createdAt": [KUSDate stringFromDate:createdAt],
+      @"kbDeflectUrl": [article valueForKey:@"url"]
+    }
+  };
+
+  KUSChatMessage *formMessage = [[KUSChatMessage alloc] initWithJSON:json];
+  formMessage.type = KUSChatMessageTypeArticle;
+  [formMessage setKbArticle:article];
+  [self _insertDelayedMessage:formMessage];
+}
+
+#pragma mark - KB deflect unused
+- (void)xxcreateFormQuestion:(KUSFormQuestion *)question withLastMessage:(KUSChatMessage*)lastMessage
+{
+  [self insertMessageForFormQuestion:question withLastMessage:lastMessage];
+}
+
+
+#pragma mark - Form submission
+-(NSMutableDictionary*)getFormMessage:(KUSFormQuestion*)kusFormQuestion questionMessage:(KUSChatMessage*)questionMessage responseMessage:(KUSChatMessage*)responseMessage
+{
+  NSMutableDictionary<NSString *, NSObject *> *formMessage = [[NSMutableDictionary alloc] init];
+  [formMessage setObject:kusFormQuestion.oid forKey:@"id"];
+  [formMessage setObject:kusFormQuestion.prompt forKey:@"prompt"];
+  [formMessage setObject:[KUSDate stringFromDate:questionMessage.createdAt] forKey:@"promptAt"];
+  
+  if(responseMessage != nil){
+    [formMessage setObject:responseMessage.body forKey:@"input"];
+    [formMessage setObject:[KUSDate stringFromDate:responseMessage.createdAt] forKey:@"inputAt"];
+    if(responseMessage.value != nil){
+      [formMessage setObject:responseMessage.value forKey:@"value"];
+    }
+  }
+  
+  // old way
+  // if ([KUSFormQuestion KUSFormQuestionRequiresResponse: question]) {
+  //   KUSChatMessage *responseMessage = [self objectAtIndex:currentMessageIndex];
+  //  //BEWARE: currentMessageIndex--;
+  //
+  //   [formMessage setObject:responseMessage.body forKey:@"input"];
+  //   [formMessage setObject:[KUSDate stringFromDate:responseMessage.createdAt] forKey:@"inputAt"];
+  //   if (responseMessage.value) {
+  //     [formMessage setObject:responseMessage.value forKey:@"value"];
+  //   }
+  // }
+  
+  return formMessage;
 }
 
 - (void)_submitFormResponses
 {
     NSMutableArray<NSDictionary<NSString *, NSObject *> *> *messagesJSON = [[NSMutableArray alloc] init];
     
-    NSUInteger currentMessageIndex = self.count - 1;
-    KUSChatMessage *firstUserMessage = [self objectAtIndex:currentMessageIndex];
-    currentMessageIndex--;
-    
-    [messagesJSON addObject:@{
-                              @"input": firstUserMessage.body,
-                              @"inputAt": [KUSDate stringFromDate:firstUserMessage.createdAt]
-                              }];
+    NSMutableDictionary* lastDeflectionJSON = [@{
+      @"query": [[NSMutableDictionary alloc] init],
+      @"articles": [[NSMutableArray alloc] init],
+      @"type": @"kb-search"
+    } mutableCopy];
+  // [@{
+  //     @"type": @"kb-search",
+  //     @"status": deflectQuestion.deflectStatus,
+      // @"query": [[NSMutableDictionary alloc] init],
+      // @"articles": [[NSMutableArray alloc] init]
+  //   } mutableCopy];
+  //   [lastDeflectionJSON setValue:deflectQuestion.deflectSearchedFor forKeyPath:@"query.rawText"];
+  //   params[@"lastDeflection"] = dvi;
+  //
+    NSInteger currentMessageIndex = self.count - 1;
+  
+    if(!_form.proactive) {
+      KUSChatMessage *firstUserMessage = [self objectAtIndex:currentMessageIndex];
+      currentMessageIndex--;
+      
+      [messagesJSON addObject:@{
+        @"input": firstUserMessage.body,
+        @"inputAt": [KUSDate stringFromDate:firstUserMessage.createdAt]
+      }];
+    }
     
     for (KUSFormQuestion *question in _form.questions) {
-        NSMutableDictionary<NSString *, NSObject *> *formMessage = [[NSMutableDictionary alloc] init];
+      if(currentMessageIndex < 0) {
+        continue;
+      }
         
-        KUSChatMessage *questionMessage = [self objectAtIndex:currentMessageIndex];
+      if(question.type == KUSFormQuestionTypeKBDeflectQuestion){
+        KUSChatMessage* questionMessage = [self objectAtIndex:currentMessageIndex];
+        currentMessageIndex--;
+        KUSChatMessage* queryMessage = [self objectAtIndex:currentMessageIndex];
         currentMessageIndex--;
         
-        [formMessage setObject:question.oid forKey:@"id"];
-        [formMessage setObject:question.prompt forKey:@"prompt"];
-        [formMessage setObject:[KUSDate stringFromDate:questionMessage.createdAt] forKey:@"promptAt"];
+        [lastDeflectionJSON setValue:queryMessage.body forKeyPath:@"query.rawText"];
         
-        if (KUSFormQuestionRequiresResponse(question)) {
-            KUSChatMessage *responseMessage = [self objectAtIndex:currentMessageIndex];
-            currentMessageIndex--;
-            
-            [formMessage setObject:responseMessage.body forKey:@"input"];
-            [formMessage setObject:[KUSDate stringFromDate:responseMessage.createdAt] forKey:@"inputAt"];
-            if (responseMessage.value) {
-                [formMessage setObject:responseMessage.value forKey:@"value"];
-            }
-        }
+        NSMutableDictionary* formMessage = [self getFormMessage:question
+                                                questionMessage:questionMessage
+                                                responseMessage:queryMessage];
         [messagesJSON addObject:formMessage];
+      }else if(question.type == KUSFormQuestionTypeKBDeflectResponse || question.type == KUSFormQuestionTypeKBDeflectedSuccessfully) {
+      // }else if(question.type == KUSFormQuestionTypeKBDeflectResponse || question.type == KUSFormQuestionTypeKBDeflectedSuccessfully) {
+        NSMutableArray* articlesJSON = [@[] mutableCopy];
+        currentMessageIndex--;
+        KUSChatMessage* articleMessage = [self objectAtIndex:currentMessageIndex];
+        currentMessageIndex--;
+        while(articleMessage != nil) {
+          if([articleMessage.kbArticle count] != 0){
+            NSMutableDictionary* articleDetails = [articleMessage.kbArticle copy];
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            formatter.numberStyle = NSNumberFormatterNoStyle;
+            NSNumber *visitedNsn = [formatter numberFromString: (NSString*)[articleDetails valueForKey:@"viewCount"]];
+            
+            NSMutableDictionary* articleJsonObject = [[NSMutableDictionary alloc] init];
+            [articleJsonObject setValue:[articleDetails valueForKey:@"id"] forKey:@"version"];
+            [articleJsonObject setValue:visitedNsn forKey:@"visited"];
+            
+            [articlesJSON addObject:articleJsonObject];
+          }
+          if(currentMessageIndex < 0 || currentMessageIndex >= [self count]){
+            articleMessage = nil;
+          }else{
+            articleMessage = [self objectAtIndex:currentMessageIndex];
+            if([articleMessage.kbArticle count] == 0){
+              articleMessage = nil;
+            }
+          }
+          
+          currentMessageIndex--;
+        }
+        
+        [lastDeflectionJSON setValue:articlesJSON forKeyPath:@"articles"];
+        // KUSChatMessage* userKBDeflectResponse = [self objectAtIndex:currentMessageIndex];
+        currentMessageIndex--;
+        
+        [lastDeflectionJSON setValue:[KUSDate stringFromDate:[[self latestMessage] createdAt]] forKeyPath:@"deflectedAt"];
+        
+        if(question.type == KUSFormQuestionTypeKBDeflectedSuccessfully) {
+          [lastDeflectionJSON setValue:@"accepted" forKeyPath:@"status"];
+        } else {
+          [lastDeflectionJSON setValue:@"rejected" forKeyPath:@"status"];
+        }
+        
+      }else if(question.type == KUSFormQuestionTypeKBDeflectNoResponseFound){
+        currentMessageIndex--;
+        [lastDeflectionJSON setValue:@"status" forKeyPath:@"no-match"];
+      }else{
+        //default case
+        KUSChatMessage* questionMessage = [self objectAtIndex:currentMessageIndex];
+        currentMessageIndex--;
+        KUSChatMessage* responseMessage = nil;
+        
+        if ([KUSFormQuestion KUSFormQuestionRequiresResponse: question]) {
+          if(currentMessageIndex >= 0){
+            responseMessage = [self objectAtIndex:currentMessageIndex];
+            currentMessageIndex--;
+          }
+        }
+        
+        NSMutableDictionary* formMessage = [self getFormMessage:question
+                                                questionMessage:questionMessage
+                                                responseMessage:responseMessage];
+        [messagesJSON addObject:formMessage];
+      }
     }
+    //A1
     
     _submittingForm = YES;
     KUSChatMessage *lastUserChatMessage = nil;
@@ -1171,8 +1426,15 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     };
     
     void (^actuallySubmitForm)(void) = ^void() {
+        NSMutableDictionary<NSString *, id> *params = [[NSMutableDictionary alloc] init];
+        params[@"messages"] = messagesJSON;
+        
+        if([[lastDeflectionJSON valueForKey:@"status"] isEqualToString:@"rejected"] || [[lastDeflectionJSON valueForKey:@"status"] isEqualToString:@"accepted"] || [[lastDeflectionJSON valueForKey:@"status"] isEqualToString:@"no-match"]){
+          params[@"lastDeflection"] = lastDeflectionJSON;
+        }
+        
         [self.userSession.chatSessionsDataSource
-         submitFormMessages:messagesJSON
+         submitFormWithParams:params
          formId:_form.oid
          completion:^(NSError *error, KUSChatSession *session, NSArray<KUSChatMessage *> *messages) {
              if (error) {
@@ -1222,6 +1484,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
              
              // Update last seen locally for the session
              [self.userSession.chatSessionsDataSource updateLocallyLastSeenAtForSessionId:_sessionId];
+          
+            // to auto close the convo. see implementation.
+            _afterActuallySubmitFormMessages(@"token");
          }];
     };
     

@@ -122,6 +122,8 @@ static const CGFloat kTimestampTopPadding = 4.0;
 {
     switch (message.type) {
         default:
+        case KUSChatMessageTypeArticle:
+            return [self boundingSizeForText:message.body maxWidth:maxWidth];
         case KUSChatMessageTypeText:
             return [self boundingSizeForText:message.body maxWidth:maxWidth];
         case KUSChatMessageTypeImage:
@@ -271,6 +273,19 @@ static const CGFloat kTimestampTopPadding = 4.0;
     switch (_chatMessage.type) {
         default:
         case KUSChatMessageTypeText: {
+            _labelView.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter;
+            _labelView.frame = (CGRect) {
+                .origin.x = (_bubbleView.bounds.size.width - boundingSizeForContent.width) / 2.0,
+                .origin.y = (_bubbleView.bounds.size.height - boundingSizeForContent.height) / 2.0,
+                .size = boundingSizeForContent
+            };
+        }   break;
+        case KUSChatMessageTypeArticle: {
+            // _documentIcon.frame = (CGRect) {
+            //   .origin.x = 9,
+            //   .origin.y = 9,
+            //   .size = CGSizeMake(18, 18)
+            // };
             _labelView.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter;
             _labelView.frame = (CGRect) {
                 .origin.x = (_bubbleView.bounds.size.width - boundingSizeForContent.width) / 2.0,
@@ -584,7 +599,7 @@ static const CGFloat kTimestampTopPadding = 4.0;
     _subLabelView.backgroundColor = bubbleColor;
     _subLabelView.textColor = textColor;
 
-    _labelView.hidden = _chatMessage.type != KUSChatMessageTypeText;
+    _labelView.hidden = (_chatMessage.type != KUSChatMessageTypeText) && (_chatMessage.type != KUSChatMessageTypeArticle);
     _imageView.hidden = _chatMessage.type != KUSChatMessageTypeImage;
     
     if(_chatMessage.type == KUSChatMessageTypeAttachment){
@@ -599,6 +614,13 @@ static const CGFloat kTimestampTopPadding = 4.0;
 
     switch (_chatMessage.type) {
         case KUSChatMessageTypeText: {
+            _labelView.text = [KUSText attributedStringFromText:_chatMessage.body fontSize:[[self class] fontSize] color:textColor];
+            _imageView.image = nil;
+            _documentIcon.image = nil;
+            _subLabelView.text = nil;
+            [_imageView sd_setImageWithURL:nil];
+        }   break;
+        case KUSChatMessageTypeArticle: {
             _labelView.text = [KUSText attributedStringFromText:_chatMessage.body fontSize:[[self class] fontSize] color:textColor];
             _imageView.image = nil;
             _documentIcon.image = nil;

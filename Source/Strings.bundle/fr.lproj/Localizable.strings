@@ -63,3 +63,4 @@
 
 "com.kustomer.globals.upload.component.failure.files.text" = "Échec du téléchargement du (des) fichier (s) suivant (s): {fileNames}. Leur taille était supérieure à {maxSize} MB ou supérieure à la taille totale de toutes les pièces jointes de {totalSize} MB.";
 "com.kustomer.derived.okbutton" = "D'accord";
+"com.kustomer.kus_com_kustomer_articles_followup_question" = "Avez-vous trouvé ces articles utiles?";

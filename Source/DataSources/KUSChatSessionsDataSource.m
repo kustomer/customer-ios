@@ -194,7 +194,7 @@
     [_localLastSeenAtBySessionId setObject:[NSDate date] forKey:sessionId];
 }
 
-- (void)submitFormMessages:(NSArray<NSDictionary *> *)messages
+- (void)submitFormWithParams:(NSArray<NSDictionary *> *)params
                     formId:(NSString *)formId
                 completion:(void (^)(NSError *, KUSChatSession *, NSArray<KUSChatMessage *> *))completion
 {
@@ -202,7 +202,7 @@
     [self.userSession.requestManager
      performRequestType:KUSRequestTypePost
      endpoint:[NSString stringWithFormat:@"/c/v1/chat/forms/%@/responses", formId]
-     params:@{ @"messages": messages }
+     params:params
      authenticated:YES
      completion:^(NSError *error, NSDictionary *response) {
          if (error) {
