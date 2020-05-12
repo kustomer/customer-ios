@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.5
+Release Date: 05/11/2020
+
+* Added support for CSAT inbound and outbound message requirement overrides
+
 ## 0.3.4
 Release Date: 04/21/2020
 
