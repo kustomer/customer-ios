@@ -550,7 +550,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 
 - (void)sendMessageWithText:(NSString *)text attachments:(NSArray<KUSMediaAttachment *> *)attachments value:(NSString *)value
 {
-    _isProactiveCampaign = ![self isAnyMessageByCurrentUser];
+    _isProactiveCampaign = ([self allObjects].count > 0) && ![self isAnyMessageByCurrentUser];
     if ([_formDataSource getConversationalFormId] && ![self isActualSessionExist]) {
         NSAssert(attachments.count == 0, @"Should not have been able to send attachments without a _sessionId");
         
@@ -920,17 +920,38 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
         return;
     }
     
+    
+    
     KUSChatSession *chatSession = [self.userSession.chatSessionsDataSource objectWithId:_sessionId];
     BOOL isChatClosed = chatSession.lockedAt != nil;
     BOOL isSatisfactionResponseFetched = [self.satisfactionResponseDataSource didFetch];
     BOOL isSatisfactionFormEnabled = [self.satisfactionResponseDataSource isSatisfactionEnabled];
     BOOL hasAgentMessage = [self otherUserIds].count > 0;
+  
+    
     BOOL isSatisfactionFormCompleted = NO;
     if (chatSession.satisfactionLockedAt) {
         isSatisfactionFormCompleted = [[NSDate date] compare:chatSession.satisfactionLockedAt] != NSOrderedAscending;
     }
+  
+    KUSChatSettings *settings = self.userSession.chatSettingsDataSource.object;
+    if (!settings || !settings.shouldShowTypingIndicatorWeb) {
+      return;
+    }
     
-    BOOL needSatisfactionForm = isChatClosed && hasAgentMessage && !isSatisfactionFormCompleted;
+    if(settings.outboundMessagesOverride) {
+      hasAgentMessage = YES;
+    }
+    
+    BOOL passesAtLeastOneMessageByUserRestriction = NO;
+    if(settings.inboundMessagesOverride) {
+        passesAtLeastOneMessageByUserRestriction = YES;
+    } else {
+        //default. make sure at least one user msg
+        passesAtLeastOneMessageByUserRestriction = [self isAnyMessageByCurrentUser];
+    }
+    
+    BOOL needSatisfactionForm = isChatClosed && hasAgentMessage && !isSatisfactionFormCompleted && passesAtLeastOneMessageByUserRestriction;
     BOOL shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && isSatisfactionFormEnabled && needSatisfactionForm;
     
     if (shouldFetchSatisfactionForm) {
@@ -1076,8 +1097,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 - (void)chatMessagesDataSource:(KUSChatMessagesDataSource *)dataSource didCreateSessionId:(NSString *)sessionId
 {
     [self _startVolumeControlTracking];
-    [self _closeProactiveCampaignIfNecessary];
-    
+    if(_isProactiveCampaign){
+        [self _closeProactiveCampaignIfNecessary];
+    }
 }
 
 - (void)chatMessagesDataSourceDidEndChatSession:(KUSChatMessagesDataSource *)dataSource
@@ -1140,7 +1162,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
     _formQuestion = _form.questions[_questionIndex];
     
     NSString* formQuestionId = _formQuestion.oid;
-    NSDate* baseDate = lastMessage.createdAt ? lastMessage.createdAt : [NSDate now];
+    NSDate* baseDate = lastMessage.createdAt ? lastMessage.createdAt : [[NSDate alloc] init];
     
     if(_formQuestion.type == KUSFormQuestionTypeKBDeflectResponse){
       [self searchKbForString:lastMessage.body completion:^void(NSArray* matches) {
@@ -1452,10 +1474,12 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
                  _nonBusinessHours = YES;
              }
              
-             if (![self isActualSessionExist]) {
+             if (![self isActualSessionExist] && _sessionId != NULL) {
                  KUSChatSession *tempSession = [self.userSession.chatSessionsDataSource objectWithId:_sessionId];
-                 [self.userSession.chatMessagesDataSources removeObjectForKey:_sessionId];
-                 [self.userSession.chatSessionsDataSource removeObjects: @[tempSession]];
+                 if(tempSession != NULL){
+                     [self.userSession.chatMessagesDataSources removeObjectForKey:_sessionId];
+                     [self.userSession.chatSessionsDataSource removeObjects: @[tempSession]];
+                 }
              }
              // Grab the session id
              _sessionId = session.oid;
@@ -1467,8 +1491,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
              // Replace all of the local messages with the new ones
              [self removeObjects:self.allObjects];
              [self upsertNewMessages:messages];
-             [_messageRetryBlocksById removeObjectForKey:lastUserChatMessage.oid];
-             
+             if (lastUserChatMessage) {
+                 [_messageRetryBlocksById removeObjectForKey:lastUserChatMessage.oid];
+             }
              // Create queue polling manager for volume control form
              sessionQueuePollingManager = [[KUSSessionQueuePollingManager alloc] initWithUserSession:self.userSession sessionId:_sessionId];
              

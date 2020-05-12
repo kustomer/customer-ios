@@ -56,6 +56,9 @@
         
         _shouldShowTypingIndicatorCustomerWeb = BOOLFromKeyPath(json, @"attributes.showTypingIndicatorCustomerWeb");
         _shouldShowTypingIndicatorWeb = BOOLFromKeyPath(json, @"attributes.showTypingIndicatorWeb");
+      
+        _inboundMessagesOverride = BOOLFromKeyPath(json, @"attributes.csat.data.inboundMessagesOverride");
+        _outboundMessagesOverride = BOOLFromKeyPath(json, @"attributes.csat.data.outboundMessagesOverride");
     }
     return self;
 }

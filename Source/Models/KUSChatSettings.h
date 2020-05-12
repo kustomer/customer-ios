@@ -55,5 +55,8 @@ typedef NS_ENUM(NSInteger, KUSVolumeControlMode) {
 @property (nonatomic, assign, readonly) BOOL shouldShowTypingIndicatorCustomerWeb;
 @property (nonatomic, assign, readonly) BOOL shouldShowTypingIndicatorWeb;
 
+@property (nonatomic, assign, readonly) BOOL outboundMessagesOverride;
+@property (nonatomic, assign, readonly) BOOL inboundMessagesOverride;
+
 
 @end
