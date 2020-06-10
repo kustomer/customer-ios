@@ -36,7 +36,13 @@ double const KUSMaxAttachmentDirectorySizeBytes = 9.5 * 1000 * 1000;
   [super viewDidLoad];
   
   self.title = [NSString stringWithFormat:@"Loading %@", self.chatMessage.displayAttachmentFileName];
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:self action:@selector(cancelTap)];
+  
+  if(@available(iOS 13, *)) {
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:self action:@selector(cancelTap)];
+  }else{
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(cancelTap)];
+  }
+  
   self.view.backgroundColor = UIColor.whiteColor;
   UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] init];
   spinner.center = self.view.center;
@@ -53,7 +59,12 @@ double const KUSMaxAttachmentDirectorySizeBytes = 9.5 * 1000 * 1000;
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:self action:@selector(cancelTap)];
+  
+  if(@available(iOS 13, *)) {
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:self action:@selector(cancelTap)];
+  }else{
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(cancelTap)];
+  }
 }
 
 #pragma mark - Other methods
