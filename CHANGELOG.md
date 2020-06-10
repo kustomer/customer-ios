@@ -1,5 +1,11 @@
 # Changelog for Kustomer iOS SDK
 
+
+## 0.3.6
+Release Date: 06/10/2020
+
+* Fixed pre iOS 13 incompatibility
+
 ## 0.3.5
 Release Date: 05/11/2020
 
