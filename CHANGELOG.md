@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.8
+Release Date: 07/20/2020
+
+* Marking sessions as new if no tracking token (port of android - #93)
+
 ## 0.3.7
 Release Date: 07/07/2020
 
