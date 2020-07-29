@@ -333,6 +333,9 @@
         
         if (cachedTrackingToken || chatSettings.campaignsEnabled) {
             [self fetchStatsAndSessions];
+        } else {
+          KUSLogDebug("TT is null");
+          [self.chatSessionsDataSource markSessionAsNew];  // Marking session as new to not show loading indicator
         }
         if(chatSettings.campaignsEnabled) {
             //Initialize pusher when campaigns is enabled

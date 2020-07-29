@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.8
+Release Date: 07/20/2020
+
+* Marking sessions as new if no tracking token (port of android - #93)
+
 ## 0.3.7
 Release Date: 07/07/2020
 
@@ -72,8 +77,6 @@ Release Date: 10/09/2019
 * Removed SpinKit Library from pod file
 
 ## 0.2.3
-Release Date: 06/28/2019
-
 * Wrap chat Greeting text to 2 lines and truncate past that. 
 * Optimized & Improved Performance of API calls that fetch Satisfaction Forms data
 
