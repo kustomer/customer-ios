@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DCB201259D8C51727B83293957A2B799"
+               BlueprintIdentifier = "4B7D0E92B94486D076D5947331ABB77C"
                BuildableName = "NYTPhotoViewer.framework"
                BlueprintName = "NYTPhotoViewer"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -45,14 +43,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DCB201259D8C51727B83293957A2B799"
+            BlueprintIdentifier = "4B7D0E92B94486D076D5947331ABB77C"
             BuildableName = "NYTPhotoViewer.framework"
             BlueprintName = "NYTPhotoViewer"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -63,7 +59,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DCB201259D8C51727B83293957A2B799"
+            BlueprintIdentifier = "4B7D0E92B94486D076D5947331ABB77C"
             BuildableName = "NYTPhotoViewer.framework"
             BlueprintName = "NYTPhotoViewer"
             ReferencedContainer = "container:Pods.xcodeproj">
