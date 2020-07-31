@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "83B5B60C676A8D31829A6AE91CE86A75"
+               BlueprintIdentifier = "4A8E8992707D01510894596DB9BCCA00"
                BuildableName = "FLAnimatedImage.framework"
                BlueprintName = "FLAnimatedImage"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -45,14 +43,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "83B5B60C676A8D31829A6AE91CE86A75"
+            BlueprintIdentifier = "4A8E8992707D01510894596DB9BCCA00"
             BuildableName = "FLAnimatedImage.framework"
             BlueprintName = "FLAnimatedImage"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -63,7 +59,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "83B5B60C676A8D31829A6AE91CE86A75"
+            BlueprintIdentifier = "4A8E8992707D01510894596DB9BCCA00"
             BuildableName = "FLAnimatedImage.framework"
             BlueprintName = "FLAnimatedImage"
             ReferencedContainer = "container:Pods.xcodeproj">
