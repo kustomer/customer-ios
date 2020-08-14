@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name = 'Kustomer'
   s.authors = 'Kustomer.com'
   s.summary = 'The iOS SDK for the Kustomer.com mobile client'
-  s.version = '0.3.8'
+  s.version = '0.3.9'
   s.ios.deployment_target = '9.0'
 
   s.homepage = 'https://github.com/kustomer/customer-ios.git'
