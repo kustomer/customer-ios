@@ -51,21 +51,21 @@
 #import <Photos/Photos.h>
 
 @interface KUSChatViewController () <KUSEmailInputViewDelegate, KUSInputBarDelegate, KUSOptionPickerViewDelegate,
-                                     KUSChatMessagesDataSourceListener, KUSChatMessageTableViewCellDelegate,
-                                     NYTPhotosViewControllerDelegate, UITableViewDataSource, UITableViewDelegate,
-                                     UINavigationControllerDelegate, UIImagePickerControllerDelegate,
-                                     KUSNavigationBarViewDelegate,KUSCloseChatButtonViewDelegate,
-                                     KUSMLFormValuesPickerViewDelegate,
-                                     KUSObjectDataSourceListener,KUSSatisfactionFormTableViewCellDelegate,
-                                     KUSEditFeedbackTableViewCellDelegate> {
+KUSChatMessagesDataSourceListener, KUSChatMessageTableViewCellDelegate,
+NYTPhotosViewControllerDelegate, UITableViewDataSource, UITableViewDelegate,
+UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+KUSNavigationBarViewDelegate,KUSCloseChatButtonViewDelegate,
+KUSMLFormValuesPickerViewDelegate,
+KUSObjectDataSourceListener,KUSSatisfactionFormTableViewCellDelegate,
+KUSEditFeedbackTableViewCellDelegate> {
     KUSUserSession *_userSession;
-
+    
     BOOL _showBackButton;
     BOOL _showNonBusinessHoursImage;
     NSString *_chatSessionId;
     KUSChatMessagesDataSource *_chatMessagesDataSource;
     KUSTypingIndicator *_typingIndicator;
-
+    
     KUSTeamsDataSource *_teamOptionsDataSource;
     BOOL _showSatisfactionForm;
     CGFloat _keyboardHeight;
@@ -141,10 +141,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     self.view.backgroundColor = [UIColor whiteColor];
     self.edgesForExtendedLayout = UIRectEdgeTop;
-
+    
     self.tableView = [[KUSChatTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
     self.tableView.scrollsToTop = YES;
@@ -153,7 +153,7 @@
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     self.tableView.transform = CGAffineTransformMakeScale(1.0, -1.0);
     [self.view addSubview:self.tableView];
-
+    
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
     if (@available(ios 11.0, *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -185,14 +185,14 @@
     [self.fauxNavigationBar setShowsBackButton:_showBackButton];
     [self.fauxNavigationBar setShowsDismissButton:YES];
     [self.view addSubview:self.fauxNavigationBar];
-
+    
     self.inputBarView = [[KUSInputBar alloc] initWithUserSession:_userSession];
     self.inputBarView.delegate = self;
     self.inputBarView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
     
     self.inputBarView.allowsAttachments = [_chatMessagesDataSource shouldAllowAttachments];
     [self.view addSubview:self.inputBarView];
-
+    
     [_chatMessagesDataSource addListener:self];
     
     if (!_chatMessagesDataSource.didFetch && !_chatMessagesDataSource.isFetching) {
@@ -201,7 +201,7 @@
     if (!_chatMessagesDataSource.didFetch) {
         [self showLoadingIndicator];
     }
-
+    
     NSArray<NSString *> *keyboardNotificationNames = @[
         UIKeyboardWillShowNotification,
         UIKeyboardWillChangeFrameNotification,
@@ -214,11 +214,11 @@
                                                      name:notificationName
                                                    object:nil];
     }
-
+    
     [self _checkShouldShowEmailInput];
     [self _checkShouldUpdateInputView];
     [self _checkShouldShowCloseChatButtonView];
-
+    
     // Force layout so that animated presentations start from the right state
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
@@ -227,7 +227,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
     [_inputBarView setNeedsLayout];
     [self.view setNeedsLayout];
 }
@@ -235,14 +235,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
+    
     // Only bring up the keyboard if the chat is being presented/pushed
     if (self.isBeingPresented || self.isMovingToParentViewController) {
         if (!_inputBarView.hidden && !_showNonBusinessHoursImage) {
             [_inputBarView becomeFirstResponder];
         }
     }
-
+    
     //TODO Swapna removing fetching of messages on view appear
     //[_userSession.chatSessionsDataSource updateLastSeenAtForSessionId:_chatSessionId completion:nil];
     [_chatMessagesDataSource startListeningForTypingUpdate];
@@ -251,9 +251,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
+    
     [_inputBarView resignFirstResponder];
-
+    
     [_userSession.chatSessionsDataSource updateLastSeenAtForSessionId:_chatSessionId completion:nil];
     [_chatMessagesDataSource stopListeningForTypingUpdate];
 }
@@ -261,11 +261,11 @@
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-
+    
     [self.fauxNavigationBar setExtraLarge:_chatMessagesDataSource.count == 0];
     self.fauxNavigationBar.topInset = self.edgeInsets.top;
     CGFloat navigationBarHeight = [self.fauxNavigationBar desiredHeight];
-
+    
     CGFloat inputBarHeight = [self.inputBarView desiredHeight];
     CGFloat inputBarY = self.view.bounds.size.height - MAX(self.edgeInsets.bottom, _keyboardHeight) - inputBarHeight;
     self.inputBarView.frame = (CGRect) {
@@ -273,7 +273,7 @@
         .size.width = self.view.bounds.size.width,
         .size.height = inputBarHeight
     };
-
+    
     CGFloat optionPickerHeight = [self.optionPickerView desiredHeight];
     CGFloat optionPickerY = self.view.bounds.size.height - MAX(self.edgeInsets.bottom, _keyboardHeight) - optionPickerHeight;
     self.optionPickerView.frame = (CGRect) {
@@ -303,12 +303,12 @@
         .size.width = self.view.bounds.size.width,
         .size.height = 50.0
     };
-
+    
     self.fauxNavigationBar.frame = (CGRect) {
         .size.width = self.view.bounds.size.width,
         .size.height = navigationBarHeight
     };
-
+    
     // Hide the email input view in landscape to save space on iPhones
     BOOL isIphone = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone;
     BOOL isLandscape = UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
@@ -318,7 +318,7 @@
         .size.width = self.view.bounds.size.width,
         .size.height = emailInputHeight
     };
-
+    
     self.closeChatButtonView.frame = (CGRect) {
         .origin.y = self.fauxNavigationBar.frame.size.height,
         .size.width = self.view.bounds.size.width,
@@ -333,7 +333,7 @@
         .size.width = self.view.bounds.size.width,
         .size.height = shouldHideStartNewConversation ? self.view.frame.size.height : MIN(inputBarY, MIN(optionPickerY, mlFormValuesViewY))
     };
-
+    
     self.tableView.contentInset = (UIEdgeInsets) {
         .top = 4.0,
         .bottom = navigationBarHeight + MAX(self.emailInputView.frame.size.height, self.closeChatButtonView.frame.size.height) + 4.0
@@ -390,8 +390,8 @@
     KUSChatSettings *settings = [_userSession.chatSettingsDataSource object];
     BOOL isChatCloseable = settings != nil && settings.closableChat;
     BOOL shouldShowEmailInput = [_userSession shouldCaptureEmail] &&
-                                [self getValidChatSessionId] != nil &&
-                                !isChatCloseable;
+    [self getValidChatSessionId] != nil &&
+    !isChatCloseable;
     if (shouldShowEmailInput) {
         if (self.emailInputView == nil) {
             self.emailInputView = [[KUSEmailInputView alloc] init];
@@ -542,14 +542,14 @@
         KUSFormQuestion *currentQuestion = _chatMessagesDataSource.currentQuestion;
         
         BOOL isFollowupChannelQuestion = (vcCurrentQuestion
-                                            && vcCurrentQuestion.property == KUSFormQuestionPropertyFollowupChannel
-                                            && vcCurrentQuestion.values.count > 0);
+                                          && vcCurrentQuestion.property == KUSFormQuestionPropertyFollowupChannel
+                                          && vcCurrentQuestion.values.count > 0);
         BOOL isPropertyValueQuestion = (currentQuestion
-                                            && currentQuestion.property == KUSFormQuestionPropertyValues
-                                            && currentQuestion.values.count > 0);
+                                        && currentQuestion.property == KUSFormQuestionPropertyValues
+                                        && currentQuestion.values.count > 0);
         BOOL isConversationTeamQuestion = (currentQuestion
-                                               && currentQuestion.property == KUSFormQuestionPropertyConversationTeam
-                                               && currentQuestion.values.count > 0);
+                                           && currentQuestion.property == KUSFormQuestionPropertyConversationTeam
+                                           && currentQuestion.values.count > 0);
         
         BOOL teamOptionsDidFail = NO;
         if (isConversationTeamQuestion) {
@@ -564,41 +564,41 @@
                 }
             }
         }
-      
-      BOOL idsMatch = NO;
-      KUSChatMessage* liveLatestMessage = (KUSChatMessage*)[_chatMessagesDataSource objectAtIndex:0];
-      if(liveLatestMessage != nil){
-        idsMatch = [[liveLatestMessage oid] isEqualToString:[NSString stringWithFormat:@"question_%@_%@", currentQuestion.oid, @"2"]];
-      }
-      
-      BOOL isKbDeflectResultsShown = currentQuestion != nil && currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse && idsMatch;
+        
+        BOOL idsMatch = NO;
+        KUSChatMessage* liveLatestMessage = (KUSChatMessage*)[_chatMessagesDataSource objectAtIndex:0];
+        if(liveLatestMessage != nil){
+            idsMatch = [[liveLatestMessage oid] isEqualToString:[NSString stringWithFormat:@"question_%@_%@", currentQuestion.oid, @"2"]];
+        }
+        
+        BOOL isKbDeflectResultsShown = currentQuestion != nil && currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse && idsMatch;
         
         BOOL wantsOptionPicker = isFollowupChannelQuestion
-                                    || isPropertyValueQuestion
-                                    || (isConversationTeamQuestion && !teamOptionsDidFail)
-                                    || isKbDeflectResultsShown;
+        || isPropertyValueQuestion
+        || (isConversationTeamQuestion && !teamOptionsDidFail)
+        || isKbDeflectResultsShown;
         if (wantsOptionPicker) {
             [self _showOptionPickerView];
             return;
         }
-      
-      
+        
+        
         BOOL wantsOptionPickerDeflect = currentQuestion != nil &&
-                                        currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse &&
-                                        (currentQuestion.endChatDisplayName != nil ||
-                                         currentQuestion.continueChatDisplayName != nil);
-                                        
+        currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse &&
+        (currentQuestion.endChatDisplayName != nil ||
+         currentQuestion.continueChatDisplayName != nil);
+        
         if (wantsOptionPickerDeflect) {
-          [self _showOptionPickerView];
-          return;
+            [self _showOptionPickerView];
+            return;
         }
-      
+        
         
         BOOL isMLVPropertyFormQuestion = (currentQuestion
                                           && currentQuestion.property == KUSFormQuestionPropertyMLV);
         BOOL hasMLFormValues = currentQuestion.mlFormValues
-                                && currentQuestion.mlFormValues.mlNodes
-                                && currentQuestion.mlFormValues.mlNodes.count > 0;
+        && currentQuestion.mlFormValues.mlNodes
+        && currentQuestion.mlFormValues.mlNodes.count > 0;
         BOOL wantsMultiLevelValuesPicker = isMLVPropertyFormQuestion && hasMLFormValues;
         
         if (wantsMultiLevelValuesPicker) {
@@ -665,19 +665,19 @@
         
         return;
     }
-  
+    
     BOOL wantsOptionPickerDeflect = currentQuestion != nil &&
     currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse &&
     (currentQuestion.endChatDisplayName != nil ||
      currentQuestion.continueChatDisplayName != nil);
     
     if (wantsOptionPickerDeflect) {
-      [self.optionPickerView setOptions:@[currentQuestion.endChatDisplayName,
-                                          currentQuestion.continueChatDisplayName]];
-      [self.view setNeedsLayout];
-      [self.view layoutIfNeeded];
-      
-      return;
+        [self.optionPickerView setOptions:@[currentQuestion.endChatDisplayName,
+                                            currentQuestion.continueChatDisplayName]];
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        
+        return;
     }
     
     NSMutableArray<NSString *> *options = [[NSMutableArray alloc] init];
@@ -685,7 +685,7 @@
         [options addObject:team.fullDisplay];
     }
     [self.optionPickerView setOptions:options];
-
+    
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
@@ -807,7 +807,7 @@
     
     KUSChatSettings *chatSettings = [[_userSession chatSettingsDataSource] object];
     _showBackButton = !chatSettings.noHistory;
-
+    
     self.navigationController.interactivePopGestureRecognizer.enabled = _showBackButton;
     [self.fauxNavigationBar setShowsBackButton:_showBackButton];
     [self _checkShouldShowEmailInput];
@@ -856,27 +856,27 @@
 {
     CGRect keyboardEndFrameWindow;
     [[notification.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrameWindow];
-
+    
     double keyboardTransitionDuration;
     [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&keyboardTransitionDuration];
-
+    
     UIViewAnimationCurve keyboardTransitionAnimationCurve;
     [[notification.userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&keyboardTransitionAnimationCurve];
-
+    
     CGRect keyboardEndFrameView = [self.view convertRect:keyboardEndFrameWindow fromView:nil];
     _keyboardHeight = self.view.frame.size.height - keyboardEndFrameView.origin.y;
-
+    
     UIViewAnimationOptions options = keyboardTransitionAnimationCurve << 16 | UIViewAnimationOptionBeginFromCurrentState;
-
+    
     BOOL shouldAnimate = keyboardTransitionDuration > 0.0 && self.optionPickerView == nil;
     if (shouldAnimate) {
         [UIView animateWithDuration:keyboardTransitionDuration
                               delay:0.0
                             options:options
                          animations:^{
-                             [self.view setNeedsLayout];
-                             [self.view layoutIfNeeded];
-                         }
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+        }
                          completion:nil];
     } else {
         [self.view setNeedsLayout];
@@ -979,12 +979,12 @@
     else if (_typingIndicator && _typingIndicator.typingStatus == KUSTyping) {
         adjustRowCount = -1;
     }
-
+    
     KUSChatMessage *chatMessage = [self messageForRow:indexPath.row+adjustRowCount];
     KUSChatMessage *previousChatMessage = [self messageBeforeRow:indexPath.row+adjustRowCount];
     KUSChatMessage *nextChatMessage = [self messageAfterRow:indexPath.row+adjustRowCount];
     BOOL currentUser = KUSChatMessageSentByUser(chatMessage);
-
+    
     NSString *messageCellIdentifier = (currentUser ? @"CurrentUserMessageCell" : @"OtherUserMessageCell");
     KUSChatMessageTableViewCell *cell = (KUSChatMessageTableViewCell *)[tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
     if (cell == nil) {
@@ -992,20 +992,20 @@
         cell.transform = tableView.transform;
         cell.delegate = self;
     }
-
+    
     [cell setChatMessage:chatMessage];
-
+    
     BOOL previousMessageDiffSender = !KUSChatMessagesSameSender(previousChatMessage, chatMessage);
     BOOL nextMessageOlderThan5Min = nextChatMessage == nil || [nextChatMessage.createdAt timeIntervalSinceDate:chatMessage.createdAt] > 5.0 * 60.0;
     [cell setShowsAvatar:previousMessageDiffSender];
     [cell setShowsTimestamp:nextMessageOlderThan5Min];
-
+    
     // Make sure that we've fetched all of the latest messages by loading the next page
     static NSUInteger kPrefetchPadding = 20;
     if (!_chatMessagesDataSource.didFetchAll && indexPath.row >= _chatMessagesDataSource.count - 1 - kPrefetchPadding) {
         [_chatMessagesDataSource fetchNext];
     }
-
+    
     return cell;
 }
 
@@ -1015,7 +1015,7 @@
 {
     KUSChatSession *session = [_userSession.chatSessionsDataSource objectWithId:[self getValidChatSessionId]];
     BOOL shouldShowSatisfactionCell = _showSatisfactionForm &&
-                                            session.lockedAt && indexPath.row == 0;
+    session.lockedAt && indexPath.row == 0;
     if (shouldShowSatisfactionCell) {
         KUSSatisfactionResponse *satisfactionResponse = (KUSSatisfactionResponse *)_chatMessagesDataSource.satisfactionResponseDataSource.object;
         
@@ -1045,7 +1045,7 @@
             CGFloat feedbackCellHeight = [KUSEditFeedbackTableViewCell heightForEditFeedbackCellWithEditButton:showEditButton maxWidth:tableView.bounds.size.width];
             return feedbackCellHeight;
         }
-    
+        
     }
     NSInteger chatEndedCellAdjustedIndex = _showSatisfactionForm ? 1 : 0;
     BOOL isChatEndedCell = session.lockedAt && indexPath.row == chatEndedCellAdjustedIndex;
@@ -1057,7 +1057,7 @@
     if (isTypingIndicatorCell) {
         return [KUSTypingIndicatorTableViewCell heightForBubble];
     }
-
+    
     int adjustRowCount = 0;
     if (session.lockedAt) {
         adjustRowCount = -1;
@@ -1066,7 +1066,7 @@
     else if (_typingIndicator && _typingIndicator.typingStatus == KUSTyping) {
         adjustRowCount = -1;
     }
-
+    
     KUSChatMessage *chatMessage = [self messageForRow:indexPath.row+adjustRowCount];
     KUSChatMessage *nextChatMessage = [self messageAfterRow:indexPath.row+adjustRowCount];
     BOOL nextMessageOlderThan5Min = nextChatMessage == nil || [nextChatMessage.createdAt timeIntervalSinceDate:chatMessage.createdAt] > 5.0 * 60.0;
@@ -1123,16 +1123,16 @@
 
 - (void)incrementDeflectLinkIfNeeded:(NSURL*)URL
 {
-  for(KUSChatMessage* chatM in [_chatMessagesDataSource allObjects]){
-    if([[chatM.kbArticle valueForKeyPath:@"url"] isEqualToString:URL.absoluteString]){
-       
-      NSInteger newCount = [(NSString*)[chatM.kbArticle valueForKey:@"viewCount"] integerValue];
-      newCount++;
-      NSString* newCountString = [NSString stringWithFormat:@"%d",(long)newCount];
-      
-      [chatM.kbArticle setValue:newCountString forKeyPath:@"viewCount"];
+    for(KUSChatMessage* chatM in [_chatMessagesDataSource allObjects]){
+        if([[chatM.kbArticle valueForKeyPath:@"url"] isEqualToString:URL.absoluteString]){
+            
+            NSInteger newCount = [(NSString*)[chatM.kbArticle valueForKey:@"viewCount"] integerValue];
+            newCount++;
+            NSString* newCountString = [NSString stringWithFormat:@"%d",(long)newCount];
+            
+            [chatM.kbArticle setValue:newCountString forKeyPath:@"viewCount"];
+        }
     }
-  }
 }
 
 - (void)chatMessageTableViewCellDidTapError:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message
@@ -1144,18 +1144,18 @@
 {
     id<NYTPhoto> initialPhoto = nil;
     NSMutableArray<id<NYTPhoto>> *photos = [[NSMutableArray alloc] init];
-
+    
     for (KUSChatMessage *chatMessage in [_chatMessagesDataSource.allObjects reverseObjectEnumerator]) {
         if (chatMessage.type == KUSChatMessageTypeImage) {
             KUSNYTChatMessagePhoto *messagePhoto = [[KUSNYTChatMessagePhoto alloc] initWithChatMessage:chatMessage];
             [photos addObject:messagePhoto];
-
+            
             if ([chatMessage.oid isEqualToString:message.oid]) {
                 initialPhoto = messagePhoto;
             }
         }
     }
-
+    
     [_inputBarView resignFirstResponder];
     _nytPhotosDataSource = [[NYTPhotoViewerArrayDataSource alloc] initWithPhotos:photos];
     NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithDataSource:_nytPhotosDataSource initialPhoto:initialPhoto delegate:self];
@@ -1164,11 +1164,11 @@
 
 - (void)chatMessageTableViewCellDidTapAttachment:(KUSChatMessageTableViewCell *)cell forMessage:(KUSChatMessage *)message
 {
-  KUSAttachmentViewer *viewer = [[KUSAttachmentViewer alloc] init];
-  viewer.fileName = message.displayAttachmentFileName;
-  viewer.chatMessage = message;
-  KUSAttachmentViewerNavigationController *viewerNav = [[KUSAttachmentViewerNavigationController alloc] initWithRootViewController:viewer];
-  [self presentViewController:viewerNav animated:true completion:NULL];
+    KUSAttachmentViewer *viewer = [[KUSAttachmentViewer alloc] init];
+    viewer.fileName = message.displayAttachmentFileName;
+    viewer.chatMessage = message;
+    KUSAttachmentViewerNavigationController *viewerNav = [[KUSAttachmentViewerNavigationController alloc] initWithRootViewController:viewer];
+    [self presentViewController:viewerNav animated:true completion:NULL];
 }
 
 
@@ -1199,11 +1199,11 @@
     KUSTeam *team = nil;
     NSUInteger optionIndex = [pickerView.options indexOfObject:option];
     KUSFormQuestion *currentQuestion = _chatMessagesDataSource.currentQuestion;
-
+    
     if(currentQuestion.type == KUSFormQuestionTypeKBDeflectResponse){
-      if(optionIndex == 0){
-        [_chatMessagesDataSource endChatForm];
-      }
+        if(optionIndex == 0){
+            [_chatMessagesDataSource endChatForm];
+        }
     }
     if (optionIndex != NSNotFound && currentQuestion.property == KUSFormQuestionPropertyConversationTeam && optionIndex < _teamOptionsDataSource.count) {
         team = [_teamOptionsDataSource objectAtIndex:optionIndex];
@@ -1214,18 +1214,18 @@
 #pragma mark - KUSInputBarDelegate methods
 - (void)inputBarShowErrorPopUp:(KUSInputBar *)inputBar message:(NSString *) message title:(NSString *) title
 {
-  
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
-                             message:message
-                             preferredStyle:UIAlertControllerStyleAlert];
-
-  
-  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance] localizedString:@"derived.okbutton"] style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action) {}];
-
-  [alert addAction:defaultAction];
-  [self presentViewController:alert animated:YES completion:nil];
-  
+    
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance] localizedString:@"derived.okbutton"] style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+    
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+    
 }
 
 - (BOOL)inputBarShouldEnableSend:(KUSInputBar *)inputBar
@@ -1233,7 +1233,7 @@
     KUSFormQuestion *question = _chatMessagesDataSource.volumeControlCurrentQuestion;
     if (!question) {
         question = _chatMessagesDataSource.currentQuestion;
-      
+        
         if (question && ![KUSFormQuestion KUSFormQuestionRequiresResponse: question]) {
             return NO;
         }
@@ -1254,7 +1254,7 @@
     if ([_chatMessagesDataSource shouldPreventSendingMessage]) {
         return;
     }
-
+    
     [_chatMessagesDataSource sendTypingStatusToPusher:KUSTypingEnded];
     [_chatMessagesDataSource sendMessageWithText:inputBar.text attachments:inputBar.mediaAttachments];
     
@@ -1270,75 +1270,75 @@
     UIAlertController *actionController = [UIAlertController alertControllerWithTitle:nil
                                                                               message:nil
                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
-
+    
     if ([KUSPermissions cameraAccessIsAvailable]) {
         
         UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance] localizedString:@"Camera"]
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *action) {
-                                                                 [self _presentImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
-                                                             }];
+            [self _presentImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
         [actionController addAction:cameraAction];
     }
-  
+    
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-      if(status == PHAuthorizationStatusAuthorized){
-        //allowed
-        if ([KUSPermissions photoLibraryAccessIsAvailable]) {
-          dispatch_async(dispatch_get_main_queue(), ^{
+        if(status == PHAuthorizationStatusAuthorized){
+            //allowed
+            if ([KUSPermissions photoLibraryAccessIsAvailable]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    __strong KUSChatViewController *strongSelf = weakSelf;
+                    if (strongSelf == nil) {
+                        return;
+                    }
+                    
+                    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance]
+                                                                                 localizedString:@"Photo Library"]
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction *action) {
+                        [strongSelf _presentImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                    }];
+                    [actionController addAction:photoAction];
+                });
+                
+            }
+        }else{
+            //denied, PHAuthorizationStatusNotDetermined, or user not allowed to change
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong KUSChatViewController *strongSelf = weakSelf;
+                if (strongSelf == nil) {
+                    return;
+                }
+                
+                UIAlertAction *photoAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance]
+                                                                             localizedString:@"Allow access to photo library"]
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction *action) {
+                    [strongSelf _openGlobalPhotoSettings];
+                }];
+                [actionController addAction:photoAction];
+            });
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
             __strong KUSChatViewController *strongSelf = weakSelf;
             if (strongSelf == nil) {
                 return;
             }
             
-            UIAlertAction *photoAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance]
-                                                                         localizedString:@"Photo Library"]
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction *action) {
-                                                                    [strongSelf _presentImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-                                                                }];
-            [actionController addAction:photoAction];
-          });
-          
-        }
-      }else{
-        //denied, PHAuthorizationStatusNotDetermined, or user not allowed to change
-        dispatch_async(dispatch_get_main_queue(), ^{
-          __strong KUSChatViewController *strongSelf = weakSelf;
-          if (strongSelf == nil) {
-              return;
-          }
-          
-          UIAlertAction *photoAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance]
-                                                                       localizedString:@"Allow access to photo library"]
-                                                                style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction *action) {
-                                                                  [strongSelf _openGlobalPhotoSettings];
-                                                              }];
-          [actionController addAction:photoAction];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance] localizedString:@"Cancel"]
+                                                                   style:UIAlertActionStyleCancel
+                                                                 handler:nil];
+            [actionController addAction:cancelAction];
+            
+            [strongSelf presentViewController:actionController animated:YES completion:nil];
         });
-      }
-      
-      dispatch_async(dispatch_get_main_queue(), ^{
-        __strong KUSChatViewController *strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[[KUSLocalization sharedInstance] localizedString:@"Cancel"]
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:nil];
-        [actionController addAction:cancelAction];
-        
-        [strongSelf presentViewController:actionController animated:YES completion:nil];
-      });
     }];
 }
 
 - (void)_openGlobalPhotoSettings
 {
-  NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-  [[UIApplication sharedApplication] openURL:url];
+    NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (void)_presentImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType
@@ -1347,17 +1347,17 @@
     imagePickerController.delegate = self;
     imagePickerController.sourceType = sourceType;
     imagePickerController.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString*) kUTTypeImage];
-
+    
     UIModalPresentationStyle presentationStyle = (sourceType == UIImagePickerControllerSourceTypeCamera
                                                   ? UIModalPresentationFullScreen
                                                   : UIModalPresentationPopover);
     imagePickerController.modalPresentationStyle = presentationStyle;
-
+    
     UIPopoverPresentationController *presentationController = imagePickerController.popoverPresentationController;
     presentationController.sourceView = self.inputBarView.attachmentButton;
     presentationController.sourceRect = self.inputBarView.attachmentButton.bounds;
     presentationController.permittedArrowDirections = UIPopoverArrowDirectionDown;
-
+    
     imagePickerController.view.backgroundColor = [UIColor whiteColor];
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
@@ -1391,24 +1391,24 @@
 - (void)inputBar:(KUSInputBar *)inputBar wantsToPreviewAttachment:(KUSMediaAttachment *)attachment
 {
     if(!attachment.isAnImage){
-      [_inputBarView resignFirstResponder];
-      AVPlayer *player = [AVPlayer playerWithURL:attachment.mediaURLForPreviewing];
-      AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
-      controller.player = player;
-      [self presentViewController:controller animated:YES completion:^{
-        [player play];
-      }];
-      return;
+        [_inputBarView resignFirstResponder];
+        AVPlayer *player = [AVPlayer playerWithURL:attachment.mediaURLForPreviewing];
+        AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
+        controller.player = player;
+        [self presentViewController:controller animated:YES completion:^{
+            [player play];
+        }];
+        return;
     }
-  
+    
     [_inputBarView resignFirstResponder];
-
+    
     NSMutableArray<id<NYTPhoto>> *photos = [[NSMutableArray alloc] init];
     id<NYTPhoto> initialPhoto = nil;
-
+    
     id<NYTPhoto> photo = [[KUSNYTImagePhoto alloc] initWithImage:attachment.fullSizeImage];
     [photos addObject:photo];
-
+    
     _nytPhotosDataSource = [[NYTPhotoViewerArrayDataSource alloc] initWithPhotos:photos];
     NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithDataSource:_nytPhotosDataSource initialPhoto:attachment.fullSizeImage delegate:self];
     [self presentViewController:photosViewController animated:YES completion:nil];
@@ -1443,60 +1443,81 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     [picker dismissViewControllerAnimated:YES completion:^ {
-      NSString* mediaType = [info valueForKey:UIImagePickerControllerMediaType];
-      if([mediaType isEqualToString:@"public.movie"]){
-        NSURL* videoMediaUrl = [info valueForKey:UIImagePickerControllerMediaURL];
-        NSString* videoMediaUrlString = [info valueForKey:UIImagePickerControllerMediaURL];
-        NSURL* videoReferenceUrl = [info valueForKey:UIImagePickerControllerReferenceURL];
-        
-        NSData* videoData = [NSData dataWithContentsOfFile:videoMediaUrlString];
-        AVURLAsset* asset = [[AVURLAsset alloc] initWithURL:videoMediaUrl options:nil];
-        
-        AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        gen.appliesPreferredTrackTransform = YES;
-        CMTime time = CMTimeMakeWithSeconds(0.0, 600);
-        NSError *error = nil;
-        CMTime actualTime;
-        
-        CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
-        UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
-        
-        KUSMediaAttachment* ma = [[KUSMediaAttachment alloc] init];
-        ma.isAnImage = NO;
-        ma.data = videoData;
-        ma.previewImage = thumb;
-        ma.mediaURLForPreviewing = videoMediaUrl;
-        
-        PHFetchResult<PHAsset *>* phAssets = [PHAsset fetchAssetsWithALAssetURLs:@[videoReferenceUrl] options:nil];
-        PHAsset* phAsset = phAssets.firstObject;
-        
-        NSArray *resourceList = [PHAssetResource assetResourcesForAsset:phAsset];
-        [resourceList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            PHAssetResource *resource = obj;
-            ma.fileName = resource.originalFilename;
-            ma.fileSize = [resource valueForKey:@"fileSize"];
-            NSString *MIME = (__bridge NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)resource.uniformTypeIdentifier, kUTTagClassMIMEType);
-            ma.MIMEType = MIME;
+        NSString* mediaType = [info valueForKey:UIImagePickerControllerMediaType];
+        if([mediaType isEqualToString:@"public.movie"]){
+            NSURL* videoMediaUrl = [info valueForKey:UIImagePickerControllerMediaURL];
+            NSString* videoMediaUrlString = [info valueForKey:UIImagePickerControllerMediaURL];
+            NSURL* videoReferenceUrl = [info valueForKey:UIImagePickerControllerReferenceURL];
             
-            NSDictionary *extensionsForMimeTypes = @{
-              @"video/mp4": @"mp4",
-              @"video/quicktime": @"mov"
-            };
+            NSData* videoData = [NSData dataWithContentsOfFile:videoMediaUrlString];
+            AVURLAsset* asset = [[AVURLAsset alloc] initWithURL:videoMediaUrl options:nil];
             
-            ma.fileExtension = [extensionsForMimeTypes valueForKey:ma.MIMEType];
+            AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+            gen.appliesPreferredTrackTransform = YES;
+            CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+            NSError *error = nil;
+            CMTime actualTime;
             
-            [[self inputBarView] attachMedia:ma];
-        }];
-        
-      }else{
-        UIImage *originalImage = [info valueForKey:UIImagePickerControllerOriginalImage];
-        UIImage *editedImage = [info valueForKey:UIImagePickerControllerEditedImage];
-        UIImage *chosenImage = editedImage ?: originalImage;
-    
-        if (chosenImage != nil) {
-            [self.inputBarView attachImage:chosenImage];
+            CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+            UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
+            
+            KUSMediaAttachment* ma = [[KUSMediaAttachment alloc] init];
+            ma.isAnImage = NO;
+            ma.data = videoData;
+            ma.previewImage = thumb;
+            ma.mediaURLForPreviewing = videoMediaUrl;
+            
+            if(videoReferenceUrl == NULL && videoMediaUrl != NULL) {
+                // uploaded video from camera
+                NSString *fileExtension = [videoMediaUrl pathExtension];
+                NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
+                NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+                
+                NSString *theFileName = [[videoMediaUrl lastPathComponent] stringByDeletingPathExtension];
+                
+                unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:[videoMediaUrl relativePath] error:nil] fileSize];
+                
+                ma.fileName = theFileName;
+                ma.fileSize = [[NSNumber alloc] initWithUnsignedLongLong:fileSize];
+                ma.MIMEType = contentType;
+                ma.fileExtension = [videoMediaUrl pathExtension];
+                
+                [[self inputBarView] attachMedia:ma];
+                
+            } else {
+                // video from camera roll
+                PHFetchResult<PHAsset *>* phAssets = [PHAsset fetchAssetsWithALAssetURLs:@[videoReferenceUrl] options:nil];
+                PHAsset* phAsset = phAssets.firstObject;
+                
+                NSArray *resourceList = [PHAssetResource assetResourcesForAsset:phAsset];
+                [resourceList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    PHAssetResource *resource = obj;
+                    ma.fileName = resource.originalFilename;
+                    ma.fileSize = [resource valueForKey:@"fileSize"];
+                    NSString *MIME = (__bridge NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)resource.uniformTypeIdentifier, kUTTagClassMIMEType);
+                    ma.MIMEType = MIME;
+                    
+                    NSDictionary *extensionsForMimeTypes = @{
+                        @"video/mp4": @"mp4",
+                        @"video/quicktime": @"mov"
+                    };
+                    
+                    ma.fileExtension = [extensionsForMimeTypes valueForKey:ma.MIMEType];
+                    
+                    [[self inputBarView] attachMedia:ma];
+                }];
+            }
+            
+            
+        }else{
+            UIImage *originalImage = [info valueForKey:UIImagePickerControllerOriginalImage];
+            UIImage *editedImage = [info valueForKey:UIImagePickerControllerEditedImage];
+            UIImage *chosenImage = editedImage ?: originalImage;
+            
+            if (chosenImage != nil) {
+                [self.inputBarView attachImage:chosenImage];
+            }
         }
-      }
         
     }];
 }
@@ -1556,4 +1577,5 @@
 
 
 @end
+
 
