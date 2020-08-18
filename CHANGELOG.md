@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.9
+Release Date: 08/14/2020
+
+* Fixed bug with video uploading directly from camera
+
 ## 0.3.8
 Release Date: 07/20/2020
 
