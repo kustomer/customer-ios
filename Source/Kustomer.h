@@ -32,7 +32,7 @@ static NSString* _Nonnull const kKUSCustomAttributes = @"KUSCustomAttributesKey"
 + (void)describeConversation:(NSDictionary<NSString *, NSObject *> *_Nonnull)customAttributes;
 + (void)describeNextConversation:(NSDictionary<NSString *, NSObject *> *_Nonnull)customAttributes;
 + (void)describeCustomer:(KUSCustomerDescription *_Nonnull)customerDescription;
-+ (void)identify:(nonnull NSString *)externalToken callback:(void (^_Nonnull)(BOOL success))handler;
++ (void)identify:(NSString * _Nonnull)externalToken callback:(void (^_Nullable)(BOOL success))handler;
 + (void)resetTracking;
 
 + (void)setCurrentPageName:(NSString *_Nonnull)currentPageName;
@@ -66,7 +66,7 @@ static NSString* _Nonnull const kKUSCustomAttributes = @"KUSCustomAttributesKey"
 + (NSInteger)openConversationsCount;
 
 // The current SDK version
-+ (NSString * _Nullable)sdkVersion;
++ (NSString * _Nonnull)sdkVersion;
 
 // Show/Hide new conversation button in closed chat
 + (void)hideNewConversationButtonInClosedChat:(BOOL)status;

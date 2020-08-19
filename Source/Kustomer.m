@@ -317,7 +317,7 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
     [self.userSession describeCustomer:customerDescription completion:nil];
 }
 
-- (void)identify:(nonnull NSString *)externalToken callback:(void (^_Nullable)(BOOL success))handler
+- (void)identify:(NSString * _Nonnull)externalToken callback:(void (^_Nullable)(BOOL success))handler
 {
     NSAssert(externalToken, @"Kustomer expects externalToken to be non-nil");
     if (externalToken == nil) {
