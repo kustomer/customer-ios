@@ -14,7 +14,7 @@
 @property (nonatomic, readonly, null_resettable) NSMutableDictionary<NSString *, KUSChatMessagesDataSource *> *chatMessagesDataSources;
 
 
-@property (nonatomic, strong) KUSRequestManager *requestManager;
-@property (nonatomic, strong) KUSChatSessionsDataSource *chatSessionsDataSource;
+@property (nonatomic, strong) KUSRequestManager * _Nonnull requestManager;
+@property (nonatomic, strong) KUSChatSessionsDataSource * _Nonnull chatSessionsDataSource;
 
 @end

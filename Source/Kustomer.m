@@ -60,7 +60,7 @@ static NSString *kKustomerOrgNameKey = @"orgName";
     [[self sharedInstance] describeCustomer:customerDescription];
 }
 
-+ (void)identify:(nonnull NSString *)externalToken callback:(void (^_Nullable)(BOOL success))handler;
++ (void)identify:(NSString * _Nonnull)externalToken callback:(void (^)(BOOL success))handler;
 {
   [[self sharedInstance] identify:externalToken callback:handler];
 }

@@ -10,9 +10,9 @@
 
 @interface KUSMLNode : KUSModel
 
-@property (nonatomic, copy, readonly) NSString *displayName;
-@property (nonatomic, copy, readonly) NSString *nodeId;
+@property (nonatomic, copy, readonly) NSString * _Nonnull displayName;
+@property (nonatomic, copy, readonly) NSString * _Nonnull nodeId;
 @property (nonatomic, assign, readonly) BOOL deleted;
-@property (nonatomic, copy, nullable) NSArray<KUSMLNode *> *nodeChilds;
+@property (nonatomic, copy) NSArray<KUSMLNode *> * _Nullable nodeChilds;
 
 @end
