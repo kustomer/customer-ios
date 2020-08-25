@@ -65,6 +65,11 @@
     }
 }
 
+- (void)setKbDeflectLanguage:(NSString *)language
+{
+  _kbDeflectLanguage = language;
+}
+
 - (void)setTable:(NSString *)table
 {
     _table = table;

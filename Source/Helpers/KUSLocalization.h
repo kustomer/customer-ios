@@ -13,6 +13,7 @@
 
 @property (nonatomic, copy) NSString *table;
 @property (nonatomic, copy) NSString *language;
+@property (nonatomic, copy) NSString *kbDeflectLanguage;
 
 + (instancetype)sharedInstance;
 - (instancetype)init NS_UNAVAILABLE;

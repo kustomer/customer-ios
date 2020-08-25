@@ -40,6 +40,7 @@ static NSString* const kKUSCustomAttributes = @"KUSCustomAttributesKey";
 + (void)printLocalizationKeys;
 + (void)registerLocalizationTableName:(NSString *)table;
 + (void)setLanguage:(NSString *)language;
++ (void)setKbDeflectLanguage:(NSString *)language;
 
 // Returns the current count of unread messages. It might not be immediately available.
 + (NSUInteger)unreadMessageCount;
