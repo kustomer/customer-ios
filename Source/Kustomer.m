@@ -95,6 +95,11 @@ static NSString *kKustomerOrgNameKey = @"orgName";
     [[self sharedInstance] setLanguage:language];
 }
 
++ (void)setKbDeflectLanguage:(NSString *)language
+{
+  [[self sharedInstance] setKbDeflectLanguage:language];
+}
+
 + (void)isChatAvailable:(void (^)(BOOL success, BOOL enabled))block
 {
     [[self sharedInstance] isChatAvailable:block];
@@ -375,6 +380,11 @@ static KUSLogOptions _logOptions = KUSLogOptionInfo | KUSLogOptionErrors;
 - (void)setLanguage:(NSString *)language
 {
     [[KUSLocalization sharedInstance] setLanguage:language];
+}
+
+- (void)setKbDeflectLanguage:(NSString *)language
+{
+  [[KUSLocalization sharedInstance] setKbDeflectLanguage:language];
 }
 
 - (void)isChatAvailable:(void (^)(BOOL success, BOOL enabled))block

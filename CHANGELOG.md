@@ -1,5 +1,11 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.10
+Release Date: 08/26/2020
+
+* Added `[Kustomer setKbDeflectLanguage:]` to allow for overriding of language used when searching in a KB deflect form
+* Bug fix for certain types of KB deflect search strings
+
 ## 0.3.9
 Release Date: 08/14/2020
 

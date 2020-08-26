@@ -1200,7 +1200,13 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
 #pragma mark - KB deflect changes
 - (void)searchKbForString:(NSString *)string completion:(void(^)(NSArray * matches))completion
 {
-  NSString *searchKbString = [NSString stringWithFormat:@"/c/v1/kb/deflection/chat?term=%@&pageSize=3", string];
+  NSString *langString = [[KUSLocalization sharedInstance] kbDeflectLanguage];
+  if(langString == nil) {
+    langString = @"en_us";
+  }
+  NSString *encodedString = [string stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+  NSString *searchKbString = [NSString stringWithFormat:@"/c/v1/kb/deflection/chat?term=%@&pageSize=3&lang=%@", encodedString, langString];
+  
   [[Kustomer sharedInstance].userSession.requestManager
    performRequestType:KUSRequestTypeGet
    endpoint:searchKbString
