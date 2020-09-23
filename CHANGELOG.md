@@ -1,5 +1,11 @@
 # Changelog for Kustomer iOS SDK
 
+
+## 0.3.11
+Release Date: 09/23/2020
+
+* Fixed syntax error in `Source/Info.plist`
+
 ## 0.3.10
 Release Date: 08/26/2020
 
