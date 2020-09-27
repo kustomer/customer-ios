@@ -26,7 +26,7 @@ The Kustomer iOS SDK requires a valid API Key with role `org.tracking`. See [Get
 The preferred installation method is with [CocoaPods](https://cocoapods.org). Add the following to your `Podfile`:
 
 ```ruby
-pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.11'
+pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => '0.3.12'
 ```
 
 #### Carthage
@@ -34,7 +34,7 @@ pod 'Kustomer', :git => 'https://github.com/kustomer/customer-ios.git', :tag => 
 For [Carthage](https://github.com/Carthage/Carthage), add the following to your `Cartfile`:
 
 ```ogdl
-github "kustomer/customer-ios" ~> 0.3.11
+github "kustomer/customer-ios" ~> 0.3.12
 ```
 
 ## Setup

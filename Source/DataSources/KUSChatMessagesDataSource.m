@@ -574,6 +574,7 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
             };
 
             KUSChatMessage *temporaryMessage = [[KUSChatMessage alloc] initWithJSON: json];
+            temporaryMessage.value = value;
             KUSChatSession *temporarySession = [KUSChatSession tempSessionFromChatMessage:temporaryMessage];
             [self upsertNewMessages: @[ temporaryMessage ]];
             [self.userSession.chatSessionsDataSource upsertNewSessions:@[ temporarySession ]];
@@ -1772,7 +1773,9 @@ static const NSTimeInterval kKUSTypingEndDelay = 5.0;
                  NSString *type = includedModelJSON[@"type"];
                  if ([type isEqual:[KUSChatMessage modelType]]) {
                      KUSChatMessage *chatMessage = [[KUSChatMessage alloc] initWithJSON:includedModelJSON];
-                     [chatMessages addObject:chatMessage];
+                     if(chatMessage != NULL) {
+                        [chatMessages addObject:chatMessage];
+                     }
                  }
              }
 

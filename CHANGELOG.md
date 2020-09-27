@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.12
+Release Date: 09/27/2020
+
+* MLL and conversation assistant bugfix (KDEV-19341)
+* Volume control bugfix (KDEV-15824)
 
 ## 0.3.11
 Release Date: 09/23/2020
