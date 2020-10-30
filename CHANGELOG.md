@@ -1,5 +1,10 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.13
+Release Date: 10/30/2020
+* Ran pod update
+* Updated SDWebImage version to 5.9 
+
 ## 0.3.12
 Release Date: 09/27/2020
 

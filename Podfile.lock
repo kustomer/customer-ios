@@ -1,8 +1,8 @@
 PODS:
   - FLAnimatedImage (1.0.12)
-  - libPusher (1.6.3):
-    - libPusher/Core (= 1.6.3)
-  - libPusher/Core (1.6.3):
+  - libPusher (1.6.4):
+    - libPusher/Core (= 1.6.4)
+  - libPusher/Core (1.6.4):
     - SocketRocket (= 0.5.1)
   - NYTPhotoViewer (2.0.0):
     - NYTPhotoViewer/AnimatedGifSupport (= 2.0.0)
@@ -11,10 +11,10 @@ PODS:
     - FLAnimatedImage (~> 1.0.12)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (2.0.0)
-  - OCMock (3.4.3)
-  - SDWebImage (5.8.1):
-    - SDWebImage/Core (= 5.8.1)
-  - SDWebImage/Core (5.8.1)
+  - OCMock (3.7.1)
+  - SDWebImage (5.9.0):
+    - SDWebImage/Core (= 5.9.0)
+  - SDWebImage/Core (5.9.0)
   - SocketRocket (0.5.1)
   - TSMarkdownParser (2.1.5)
   - TTTAttributedLabel (2.0.0)
@@ -23,7 +23,7 @@ DEPENDENCIES:
   - libPusher (< 2.0.0, >= 1.6.2)
   - NYTPhotoViewer (= 2.0.0)
   - OCMock (~> 3.4)
-  - SDWebImage (= 5.8.1)
+  - SDWebImage (= 5.9)
   - TSMarkdownParser (< 3.0.0, >= 2.0.0)
   - TTTAttributedLabel (< 3.0.0, >= 2.0.0)
 
@@ -40,14 +40,14 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  libPusher: b7fcf16e2db51c37915613652311d66065743ead
+  libPusher: 1bb7fbb234de7e4ecb1c7caf3d1c40a4ca693008
   NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
-  OCMock: 43565190abc78977ad44a61c0d20d7f0784d35ab
-  SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
+  OCMock: 75fbeaa46a9b11f8c182bbb1d1f7e9a35ccc9955
+  SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   TSMarkdownParser: 3224ea196ecc7148fa7e03bc438f9390d4edfb6d
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: dc299440bccdfec07002b03f09339f207b20c74d
+PODFILE CHECKSUM: 37f05a38ed8fe44022651ab9c8a5cc88411efbe6
 
 COCOAPODS: 1.9.1
