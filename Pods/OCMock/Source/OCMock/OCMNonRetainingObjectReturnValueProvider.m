@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2009-2018 Erik Doernenburg and contributors
+ *  Copyright (c) 2019-2020 Erik Doernenburg and contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may
  *  not use these files except in compliance with the License. You may obtain
@@ -14,27 +14,17 @@
  *  under the License.
  */
 
-#import "NSMethodSignature+OCMAdditions.h"
-#import "OCMReturnValueProvider.h"
 #import "OCMFunctions.h"
+#import "OCMNonRetainingObjectReturnValueProvider.h"
+#import "NSInvocation+OCMAdditions.h"
 
-
-@implementation OCMReturnValueProvider
+@implementation OCMNonRetainingObjectReturnValueProvider
 
 - (instancetype)initWithValue:(id)aValue
 {
     if ((self = [super init]))
-    {
-        returnValue = [aValue retain];
-    }
-	
-	return self;
-}
-
-- (void)dealloc
-{
-	[returnValue release];
-	[super dealloc];
+        returnValue = aValue;
+    return self;
 }
 
 - (void)handleInvocation:(NSInvocation *)anInvocation
@@ -43,13 +33,20 @@
     {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Expected invocation with object return type. Did you mean to use andReturnValue: instead?" userInfo:nil];
     }
-    NSString *sel = NSStringFromSelector([anInvocation selector]);
-    if([sel hasPrefix:@"alloc"] || [sel hasPrefix:@"new"] || [sel hasPrefix:@"copy"] || [sel hasPrefix:@"mutableCopy"])
+
+    if([anInvocation methodIsInAllocFamily] || [anInvocation methodIsInNewFamily] ||
+            [anInvocation methodIsInCopyFamily] || [anInvocation methodIsInMutableCopyFamily])
     {
         // methods that "create" an object return it with an extra retain count
         [returnValue retain];
     }
-	[anInvocation setReturnValue:&returnValue];
+    else if([anInvocation methodIsInInitFamily])
+    {
+        // init family methods "consume" self and retain their return value. Do the retain first in case the return value and self are the same.
+        [returnValue retain];
+        [[anInvocation target] release];
+    }
+    [anInvocation setReturnValue:&returnValue];
 }
-
 @end
+

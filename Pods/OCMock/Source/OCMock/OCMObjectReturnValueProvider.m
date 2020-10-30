@@ -16,8 +16,21 @@
 
 #import "OCMObjectReturnValueProvider.h"
 
-@interface OCMBoxedReturnValueProvider : OCMObjectReturnValueProvider
+
+@implementation OCMObjectReturnValueProvider
+
+- (instancetype)initWithValue:(id)aValue
 {
+    if((self = [super initWithValue:aValue]))
+        [returnValue retain];
+    return self;
 }
+
+- (void)dealloc
+{
+    [returnValue release];
+    [super dealloc];
+}
+
 
 @end
