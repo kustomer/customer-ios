@@ -6,7 +6,7 @@ target 'Kustomer' do
   # Pods for Kustomer
   pod 'libPusher', '>= 1.6.2', '< 2.0.0'
   pod 'TSMarkdownParser', '>= 2.0.0', '< 3.0.0'
-  pod 'SDWebImage', '5.9' #>= 5.0.0', '< 6.0.0'
+  pod 'SDWebImage', '~> 5.9'
   pod 'TTTAttributedLabel', '>= 2.0.0', '< 3.0.0'
   pod 'NYTPhotoViewer', '2.0.0'
 end
