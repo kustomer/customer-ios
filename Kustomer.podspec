@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name = 'Kustomer'
   s.authors = 'Kustomer.com'
   s.summary = 'The iOS SDK for the Kustomer.com mobile client'
-  s.version = '0.3.13'
+  s.version = '0.3.14'
   s.ios.deployment_target = '9.0'
 
   s.homepage = 'https://github.com/kustomer/customer-ios.git'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'libPusher', '~> 1.6.3'
   s.dependency 'TSMarkdownParser', '~> 2.1.5'
-  s.dependency 'SDWebImage', '~> 5.8.1'
+  s.dependency 'SDWebImage', '~> 5.9'
   s.dependency 'TTTAttributedLabel', '~> 2.0.0'
   s.dependency 'NYTPhotoViewer', '~> 2.0.0'
 

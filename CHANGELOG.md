@@ -1,5 +1,9 @@
 # Changelog for Kustomer iOS SDK
 
+## 0.3.14
+Release Date: 11/11/2020
+* Fixed issue with podspec
+
 ## 0.3.13
 Release Date: 10/30/2020
 * Ran pod update
